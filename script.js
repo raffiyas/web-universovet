@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * IMPORTANTE: Cambiar este número por el real de la clínica
      * Formato: código de país + número (sin espacios ni símbolos)
      */
-    const WHATSAPP_NUMBER = '56900000000';
+    const WHATSAPP_NUMBER = '56935677904';
     const WHATSAPP_MESSAGE = 'Hola, quiero agendar una cita en UniversoVet';
     
     // Selectores de elementos

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const scrollTopBtn = document.getElementById('scroll-top');
+    const whatsappFab = document.getElementById('whatsapp-fab');
     const currentYearSpan = document.getElementById('current-year');
     const navLinks = document.querySelectorAll('.nav__link');
     
@@ -58,12 +59,23 @@ document.addEventListener('DOMContentLoaded', function() {
      * Actualiza todos los enlaces de WhatsApp en la página
      */
     function updateWhatsAppLinks() {
-        const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
-        const newLink = generateWhatsAppLink(WHATSAPP_NUMBER, WHATSAPP_MESSAGE);
-        
-        whatsappLinks.forEach(function(link) {
-            link.href = newLink;
+        const whatsappCTAs = document.querySelectorAll('.js-whatsapp-cta');
+        const whatsappLink = generateWhatsAppLink(WHATSAPP_NUMBER, WHATSAPP_MESSAGE);
+
+        whatsappCTAs.forEach(function(link, index) {
+            link.href = whatsappLink;
+            // Agregar data-attribute para tracking futuro
+            link.setAttribute('data-wa-cta', 'cta-' + (index + 1));
         });
+    }
+
+    /**
+     * Rastrea clics en CTAs de WhatsApp (para analytics futuro)
+     */
+    function trackWhatsAppClick(ctaId) {
+        // Log para desarrollo (puede integrarse con GA/Pixel más adelante)
+        console.log('WhatsApp CTA clicked:', ctaId);
+        // Futuro: window.gtag || window.fbq || etc.
     }
     
     // ============================================
@@ -158,9 +170,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (scrollTopBtn) {
         scrollTopBtn.addEventListener('click', scrollToTop);
     }
-    
+
     // ============================================
-    // 6. SMOOTH SCROLL PARA ENLACES INTERNOS
+    // 6. BOTÓN FLOTANTE WHATSAPP
+    // ============================================
+
+    /**
+     * Muestra/oculta el botón flotante de WhatsApp
+     */
+    function handleWhatsAppFabVisibility() {
+        const scrollY = window.scrollY;
+
+        if (scrollY > 250) {
+            whatsappFab.classList.add('whatsapp-fab--visible');
+        } else {
+            whatsappFab.classList.remove('whatsapp-fab--visible');
+        }
+    }
+
+    /**
+     * Maneja el clic en los CTAs de WhatsApp
+     */
+    function setupWhatsAppTracking() {
+        const whatsappCTAs = document.querySelectorAll('.js-whatsapp-cta');
+
+        whatsappCTAs.forEach(function(link) {
+            link.addEventListener('click', function() {
+                const ctaId = this.getAttribute('data-wa-cta');
+                trackWhatsAppClick(ctaId);
+            });
+        });
+    }
+
+    // ============================================
+    // 7. SMOOTH SCROLL PARA ENLACES INTERNOS
     // ============================================
     
     /**
@@ -203,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupScrollAnimations() {
         // Elementos a animar
         const animatedElements = document.querySelectorAll(
-            '.feature-card, .service-card, .section__header, .trust__content, .cta__content'
+            '.feature-card, .service-card, .section__header, .trust__content, .location__block, .cta__content'
         );
         
         // Añadir clase inicial para animación
@@ -292,6 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.requestAnimationFrame(function() {
                 handleHeaderScroll();
                 handleScrollTopVisibility();
+                handleWhatsAppFabVisibility();
                 ticking = false;
             });
             ticking = true;
@@ -310,23 +354,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         // Actualizar año
         updateCurrentYear();
-        
+
         // Configurar enlaces de WhatsApp
         updateWhatsAppLinks();
-        
+
+        // Configurar tracking de WhatsApp
+        setupWhatsAppTracking();
+
         // Configurar smooth scroll
         setupSmoothScroll();
-        
+
         // Configurar animaciones
         setupScrollAnimations();
-        
+
         // Configurar highlight de navegación
         setupActiveNavHighlight();
-        
+
         // Ejecutar handlers iniciales
         handleHeaderScroll();
         handleScrollTopVisibility();
-        
+        handleWhatsAppFabVisibility();
+
         // Log de confirmación (remover en producción)
         console.log('UniversoVet - Landing page inicializada correctamente');
     }

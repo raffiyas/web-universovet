@@ -173,7 +173,98 @@ button {
 }
 
 /* ============================================
-   4. HEADER / NAVEGACIÓN
+   4. TOPBAR - BARRA SUPERIOR DE CONTACTO
+   ============================================ */
+.topbar {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: var(--spacing-sm) 0;
+    font-size: var(--font-size-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: calc(var(--z-header) + 1);
+}
+
+.topbar__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.topbar__left,
+.topbar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.topbar__link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--color-white);
+    transition: all var(--transition-fast);
+    padding: var(--spacing-xs);
+}
+
+.topbar__link:hover {
+    color: var(--color-secondary-light);
+    transform: translateY(-1px);
+}
+
+.topbar__link--social {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-full);
+}
+
+.topbar__link--social:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.topbar__icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.topbar__text {
+    font-weight: var(--font-weight-medium);
+}
+
+/* Responsive para topbar */
+@media (max-width: 767px) {
+    .topbar__content {
+        justify-content: center;
+        font-size: var(--font-size-xs);
+    }
+    
+    .topbar__text {
+        display: none;
+    }
+    
+    .topbar__link {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .topbar__left,
+    .topbar__right {
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (min-width: 768px) {
+    .topbar__link {
+        padding: var(--spacing-xs) var(--spacing-md);
+    }
+}
+
+/* ============================================
+   5. HEADER / NAVEGACIÓN
    ============================================ */
 .header {
     position: fixed;

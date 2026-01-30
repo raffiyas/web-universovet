@@ -410,7 +410,7 @@ button {
 }
 
 /* ============================================
-   5. HERO SECTION
+   6. HERO SECTION
    ============================================ */
 .hero {
     position: relative;
@@ -419,7 +419,7 @@ button {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 100px var(--spacing-md) var(--spacing-2xl);
+    padding: 140px var(--spacing-md) var(--spacing-2xl); /* Ajustado para topbar + header */
     background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-white) 50%, var(--color-accent-light) 100%);
     overflow: hidden;
 }

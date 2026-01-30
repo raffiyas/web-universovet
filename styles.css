@@ -1284,7 +1284,7 @@ button {
 }
 
 /* ============================================
-   16. BOTÓN PEQUEÑO (VARIANTE)
+   17. BOTÓN PEQUEÑO (VARIANTE)
    ============================================ */
 .btn--small {
     padding: var(--spacing-sm) var(--spacing-lg);

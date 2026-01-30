@@ -1402,7 +1402,7 @@ button {
 }
 
 /* ============================================
-   17. RESPONSIVE - LARGE DESKTOP (1280px+)
+   21. RESPONSIVE - LARGE DESKTOP (1280px+)
    ============================================ */
 @media (min-width: 1280px) {
     .hero__title {

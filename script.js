@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const WHATSAPP_NUMBER = '56935677904';
     const WHATSAPP_MESSAGE = 'Hola, quiero agendar una cita en UniversoVet';
     
+    /**
+     * Instagram de la clínica
+     */
+    const INSTAGRAM_USERNAME = 'universovetspa';
+    
     // Selectores de elementos
     const header = document.getElementById('header');
     const navToggle = document.getElementById('nav-toggle');

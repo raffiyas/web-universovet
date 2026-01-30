@@ -238,22 +238,31 @@ button {
 
 /* Responsive para topbar */
 @media (max-width: 767px) {
+    .topbar {
+        padding: var(--spacing-xs) 0;
+    }
+    
     .topbar__content {
-        justify-content: center;
+        justify-content: space-between;
         font-size: var(--font-size-xs);
     }
     
     .topbar__text {
-        display: none;
+        font-size: 11px;
     }
     
     .topbar__link {
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: var(--spacing-xs);
     }
     
     .topbar__left,
     .topbar__right {
-        gap: var(--spacing-sm);
+        gap: var(--spacing-xs);
+    }
+    
+    .topbar__icon {
+        width: 14px;
+        height: 14px;
     }
 }
 

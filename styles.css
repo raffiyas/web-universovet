@@ -268,7 +268,7 @@ button {
    ============================================ */
 .header {
     position: fixed;
-    top: 0;
+    top: 38px; /* Espacio para topbar */
     left: 0;
     width: 100%;
     z-index: var(--z-header);

@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupScrollAnimations() {
         // Elementos a animar
         const animatedElements = document.querySelectorAll(
-            '.feature-card, .service-card, .section__header, .trust__content, .location__block, .cta__content'
+            '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .bts-banner__card'
         );
         
         // Añadir clase inicial para animación
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (entry.isIntersecting) {
                     // Añadir delay escalonado para cards
                     const parent = entry.target.parentElement;
-                    if (parent && (parent.classList.contains('features__grid') || parent.classList.contains('services__grid'))) {
+                    if (parent && (parent.classList.contains('services__grid') || parent.classList.contains('trust__list'))) {
                         const siblings = Array.from(parent.children);
                         const index = siblings.indexOf(entry.target);
                         entry.target.style.transitionDelay = (index * 0.1) + 's';

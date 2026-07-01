@@ -10,13 +10,16 @@ function firstName(name){ return (name || '').trim().split(/\s+/)[0] || 'Hola'; 
 function setMessage(el, text, type='info'){ el.innerHTML = text; el.className = `message ${type}`; el.hidden = false; }
 async function lookupCoupons(phone){
   const sb = requireSupabase();
-  const normalized = cleanPhone(phone);
-  const { data: participants, error } = await sb.from('participants').select('id,full_name,phone,pets(name),coupons(code,status,created_at)').or(`phone.eq.${phone},phone.eq.${normalized}`).limit(1);
+  const { data, error } = await sb.rpc('lookup_bts_coupons_public', { p_phone: phone });
   if(error) throw error;
-  const participant = participants?.[0];
-  if(!participant) return null;
-  const coupons = (participant.coupons || []).filter(c => c.status === 'valid').sort((a,b)=>a.code.localeCompare(b.code));
-  return { participant, coupons, pets: participant.pets || [] };
+  const result = Array.isArray(data) ? data[0] : data;
+  if(!result) return null;
+  const coupons = (result.coupon_codes || []).map(code => ({ code, status: 'valid' })).sort((a,b)=>a.code.localeCompare(b.code));
+  return {
+    participant: { full_name: result.tutor_name, coupon_count: result.total_coupons },
+    coupons,
+    pets: result.pet_name ? [{ name: result.pet_name }] : []
+  };
 }
 async function ensureSession(){
   const sb = requireSupabase();

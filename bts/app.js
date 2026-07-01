@@ -5,7 +5,7 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
 const cleanPhone = (p) => (p || '').replace(/\D/g, '');
 const moneyCoupons = (amount) => Math.floor((Number(amount) || 0) / 5000);
-function requireSupabase(){ if(!supabaseClient) throw new Error('Configura window.UNIVERSOVET_SUPABASE_URL y window.UNIVERSOVET_SUPABASE_ANON_KEY antes de /bts/app.js'); return supabaseClient; }
+function requireSupabase(){ if(!supabaseClient) throw new Error('Falta la clave pública/publishable de Supabase. Configura la variable pública de Vercel y ejecuta el build antes de publicar.'); return supabaseClient; }
 function firstName(name){ return (name || '').trim().split(/\s+/)[0] || 'Hola'; }
 function setMessage(el, text, type='info'){ el.innerHTML = text; el.className = `message ${type}`; el.hidden = false; }
 async function lookupCoupons(phone){

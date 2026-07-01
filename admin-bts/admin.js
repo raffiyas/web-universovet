@@ -1,6 +1,74 @@
-const A=BTSApp; async function boot(){try{if(await A.ensureSession()) showPanel();}catch(e){A.setMessage(A.$('#loginMsg'),e.message,'danger')}}
-function showPanel(){A.$('#login').hidden=true;A.$('#panel').hidden=false;A.$('#logout').hidden=false;A.loadDashboard();A.loadCoupons();updateRaffleCount();}
-A.$('#loginForm').onsubmit=async(e)=>{e.preventDefault();const {error}=await A.signIn(A.$('#email').value,A.$('#password').value);if(error) return A.setMessage(A.$('#loginMsg'),error.message,'danger');showPanel();};
+const A = BTSApp;
+const ADMIN_DENIED_MESSAGE = 'No tienes permisos para acceder a este panel.';
+
+async function verifyAdminAccess(session) {
+  if (!session?.user?.id) return false;
+  const { data, error } = await A.requireSupabase()
+    .from('admin_users')
+    .select('id,active')
+    .eq('user_id', session.user.id)
+    .eq('active', true)
+    .maybeSingle();
+  if (error) throw error;
+  return Boolean(data);
+}
+
+async function requireAdminSession() {
+  const session = await A.ensureSession();
+  if (!session) return false;
+  const allowed = await verifyAdminAccess(session);
+  if (!allowed) {
+    await A.signOut();
+    A.setMessage(A.$('#loginMsg'), ADMIN_DENIED_MESSAGE, 'danger');
+    return false;
+  }
+  return true;
+}
+
+async function boot() {
+  hidePanel();
+  try {
+    if (await requireAdminSession()) showPanel();
+  } catch (e) {
+    await A.signOut();
+    A.setMessage(A.$('#loginMsg'), e.message, 'danger');
+  }
+}
+
+function hidePanel() {
+  A.$('#panel').hidden = true;
+  A.$('#logout').hidden = true;
+  A.$('#login').hidden = false;
+}
+
+function showPanel() {
+  A.$('#login').hidden = true;
+  A.$('#panel').hidden = false;
+  A.$('#logout').hidden = false;
+  A.loadDashboard();
+  A.loadCoupons();
+  updateRaffleCount();
+}
+
+A.$('#loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const loginMsg = A.$('#loginMsg');
+  loginMsg.hidden = true;
+  const { data, error } = await A.signIn(A.$('#email').value, A.$('#password').value);
+  if (error) return A.setMessage(loginMsg, error.message, 'danger');
+  try {
+    if (await verifyAdminAccess(data.session)) showPanel();
+    else {
+      await A.signOut();
+      hidePanel();
+      A.setMessage(loginMsg, ADMIN_DENIED_MESSAGE, 'danger');
+    }
+  } catch (err) {
+    await A.signOut();
+    hidePanel();
+    A.setMessage(loginMsg, err.message, 'danger');
+  }
+};
 A.$('#logout').onclick=async()=>{await A.signOut();location.reload();};
 A.$$('.tab-btn').forEach(b=>b.onclick=()=>{A.$$('.tab-btn,.admin-section').forEach(x=>x.classList.remove('active'));b.classList.add('active');A.$('#'+b.dataset.tab).classList.add('active');if(b.dataset.tab==='cupones')A.loadCoupons();if(b.dataset.tab==='sorteo')updateRaffleCount();});
 A.$('#participantForm').onsubmit=async(e)=>{e.preventDefault();const f=new FormData(e.target);try{const p=await A.createParticipant({full_name:f.get('full_name'),phone:A.cleanPhone(f.get('phone')),email:f.get('email')||null,instagram:f.get('instagram')||null},{name:f.get('pet_name'),species:f.get('species'),breed:f.get('breed')||null});A.setMessage(A.$('#participantMsg'),`Participante creado: ${p.full_name}`,'success');e.target.reset();A.loadDashboard();}catch(err){A.setMessage(A.$('#participantMsg'),err.message,'danger')}};

@@ -119,10 +119,17 @@ stable
 security definer
 set search_path = public
 as $$
-  with matched_participant as (
+  with phone_lookup as (
+    select regexp_replace(coalesce(p_phone, ''), '\\D', '', 'g') as digits
+  ), matched_participant as (
     select p.id, p.full_name
     from participants p
-    where p.phone = regexp_replace(coalesce(p_phone, ''), '\\D', '', 'g')
+    cross join phone_lookup pl
+    cross join lateral (select regexp_replace(coalesce(p.phone, ''), '\\D', '', 'g') as phone_digits) pp
+    where pp.phone_digits = pl.digits
+       or pp.phone_digits = '56' || pl.digits
+       or pl.digits = '56' || pp.phone_digits
+       or (length(pl.digits) >= 9 and length(pp.phone_digits) >= 9 and right(pp.phone_digits, 9) = right(pl.digits, 9))
        or p.phone = coalesce(p_phone, '')
     order by p.created_at desc
     limit 1

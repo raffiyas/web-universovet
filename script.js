@@ -78,9 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * Rastrea clics en CTAs de WhatsApp (para analytics futuro)
      */
     function trackWhatsAppClick(ctaId) {
-        // Log para desarrollo (puede integrarse con GA/Pixel más adelante)
-        console.log('WhatsApp CTA clicked:', ctaId);
-        // Futuro: window.gtag || window.fbq || etc.
+        // Reservado para integración futura con analytics.
+        void ctaId;
     }
     
     // ============================================
@@ -270,7 +269,20 @@ document.addEventListener('DOMContentLoaded', function() {
             '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .bts-banner__card, .preventive-editorial-card, .path-card, .featured-program-card, .program-card, .process-timeline li, .difference-card, .clinical-trust__grid article, .faq-list details, .final-preventive-cta__card'
         );
         
-        // Añadir clase inicial para animación
+        function showElementsImmediately() {
+            animatedElements.forEach(function(element) {
+                element.classList.add('fade-in--visible');
+            });
+        }
+
+        const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+            showElementsImmediately();
+            return;
+        }
+
+        // Añadir clase inicial para animación solo cuando el observer está disponible.
         animatedElements.forEach(function(element) {
             element.classList.add('fade-in');
         });
@@ -300,13 +312,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
         
-        // Crear observer
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-        
-        // Observar elementos
-        animatedElements.forEach(function(element) {
-            observer.observe(element);
-        });
+        try {
+            // Crear observer
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+            // Observar elementos
+            animatedElements.forEach(function(element) {
+                observer.observe(element);
+            });
+        } catch (error) {
+            showElementsImmediately();
+        }
     }
     
     // ============================================
@@ -344,30 +360,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', highlightActiveSection);
     }
     
-
-
-    /**
-     * Mejora progresiva de acordeones FAQ nativos para exponer aria-expanded.
-     */
-    function setupFAQAccordions() {
-        const faqItems = document.querySelectorAll('.faq-list details');
-
-        faqItems.forEach(function(item, index) {
-            const summary = item.querySelector('summary');
-            const panel = item.querySelector('p');
-            if (!summary || !panel) return;
-
-            const panelId = panel.id || 'faq-panel-' + (index + 1);
-            panel.id = panelId;
-            summary.setAttribute('role', 'button');
-            summary.setAttribute('aria-controls', panelId);
-            summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
-
-            item.addEventListener('toggle', function() {
-                summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
-            });
-        });
-    }
 
     // ============================================
     // 9. EVENT LISTENERS GLOBALES
@@ -419,16 +411,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Configurar highlight de navegación
         setupActiveNavHighlight();
 
-        // Configurar acordeones FAQ
-        setupFAQAccordions();
-
         // Ejecutar handlers iniciales
         handleHeaderScroll();
         handleScrollTopVisibility();
         handleWhatsAppFabVisibility();
 
-        // Log de confirmación (remover en producción)
-        console.log('UniversoVet - Landing page inicializada correctamente');
     }
     
     // Ejecutar inicialización

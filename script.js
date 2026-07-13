@@ -65,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function updateWhatsAppLinks() {
         const whatsappCTAs = document.querySelectorAll('.js-whatsapp-cta');
-        const whatsappLink = generateWhatsAppLink(WHATSAPP_NUMBER, WHATSAPP_MESSAGE);
 
         whatsappCTAs.forEach(function(link, index) {
-            link.href = whatsappLink;
+            const message = link.getAttribute('data-whatsapp-message') || WHATSAPP_MESSAGE;
+            link.href = generateWhatsAppLink(WHATSAPP_NUMBER, message);
             // Agregar data-attribute para tracking futuro
             link.setAttribute('data-wa-cta', 'cta-' + (index + 1));
         });
@@ -186,11 +186,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleWhatsAppFabVisibility() {
         const scrollY = window.scrollY;
 
-        if (scrollY > 250) {
-            whatsappFab.classList.add('whatsapp-fab--visible');
-        } else {
-            whatsappFab.classList.remove('whatsapp-fab--visible');
+        if (!whatsappFab) return;
+
+        const isPreventivePage = document.body.classList.contains('planes-page');
+        const hero = document.querySelector('.preventive-hero');
+        const finalCta = document.querySelector('.final-preventive-cta');
+        const footer = document.querySelector('.footer');
+        let shouldShow = scrollY > 250;
+
+        if (isPreventivePage && hero) {
+            shouldShow = scrollY > Math.max(250, hero.offsetHeight - 140);
         }
+
+        if (isPreventivePage) {
+            const hideTarget = finalCta || footer;
+            if (hideTarget) {
+                const hideFrom = hideTarget.getBoundingClientRect().top + window.scrollY - window.innerHeight + 120;
+                if (scrollY > hideFrom) shouldShow = false;
+            }
+        }
+
+        whatsappFab.classList.toggle('whatsapp-fab--visible', shouldShow);
     }
 
     /**
@@ -251,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupScrollAnimations() {
         // Elementos a animar
         const animatedElements = document.querySelectorAll(
-            '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .bts-banner__card'
+            '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .bts-banner__card, .preventive-editorial-card, .path-card, .featured-program-card, .program-card, .process-timeline li, .difference-card, .clinical-trust__grid article, .faq-list details, .final-preventive-cta__card'
         );
         
         // Añadir clase inicial para animación
@@ -302,6 +318,9 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function setupActiveNavHighlight() {
         const sections = document.querySelectorAll('section[id]');
+        const sectionNavLinks = Array.from(navLinks).filter(function(link) {
+            return (link.getAttribute('href') || '').charAt(0) === '#';
+        });
         
         function highlightActiveSection() {
             const scrollY = window.scrollY;
@@ -312,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const sectionId = section.getAttribute('id');
                 
                 if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    navLinks.forEach(function(link) {
+                    sectionNavLinks.forEach(function(link) {
                         link.classList.remove('nav__link--active');
                         if (link.getAttribute('href') === '#' + sectionId) {
                             link.classList.add('nav__link--active');
@@ -325,6 +344,31 @@ document.addEventListener('DOMContentLoaded', function() {
         window.addEventListener('scroll', highlightActiveSection);
     }
     
+
+
+    /**
+     * Mejora progresiva de acordeones FAQ nativos para exponer aria-expanded.
+     */
+    function setupFAQAccordions() {
+        const faqItems = document.querySelectorAll('.faq-list details');
+
+        faqItems.forEach(function(item, index) {
+            const summary = item.querySelector('summary');
+            const panel = item.querySelector('p');
+            if (!summary || !panel) return;
+
+            const panelId = panel.id || 'faq-panel-' + (index + 1);
+            panel.id = panelId;
+            summary.setAttribute('role', 'button');
+            summary.setAttribute('aria-controls', panelId);
+            summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+
+            item.addEventListener('toggle', function() {
+                summary.setAttribute('aria-expanded', item.open ? 'true' : 'false');
+            });
+        });
+    }
+
     // ============================================
     // 9. EVENT LISTENERS GLOBALES
     // ============================================
@@ -374,6 +418,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Configurar highlight de navegación
         setupActiveNavHighlight();
+
+        // Configurar acordeones FAQ
+        setupFAQAccordions();
 
         // Ejecutar handlers iniciales
         handleHeaderScroll();

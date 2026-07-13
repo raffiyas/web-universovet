@@ -3,13 +3,13 @@
 /* Universo Preventivo */
 .planes-page{background:linear-gradient(180deg,#fbfdff 0%,#fff 42%,#fbf7ff 100%)}
 .preventive-section{padding:74px 0}
-.preventive-hero{position:relative;overflow:hidden;padding:152px 0 72px;background:radial-gradient(circle at 14% 24%,rgba(255,215,234,.78),transparent 25%),radial-gradient(circle at 82% 18%,rgba(217,200,255,.75),transparent 26%),linear-gradient(135deg,#f3fcff 0%,#fff 48%,#fbf5ff 100%)}
+.preventive-hero{position:relative;overflow:hidden;padding:146px 0 66px;background:radial-gradient(circle at 14% 24%,rgba(255,215,234,.78),transparent 25%),radial-gradient(circle at 82% 18%,rgba(217,200,255,.75),transparent 26%),linear-gradient(135deg,#f3fcff 0%,#fff 48%,#fbf5ff 100%)}
 .preventive-hero__dust:before{content:'✦ ✧ ✦';position:absolute;left:8%;top:23%;letter-spacing:30px;color:rgba(107,53,216,.22);font-size:24px}
 .preventive-hero__dust:after{content:'✧ ✦ ✧';position:absolute;right:8%;bottom:18%;letter-spacing:26px;color:rgba(32,164,157,.24);font-size:22px}
-.preventive-hero__grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:54px}
+.preventive-hero__grid{position:relative;display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:48px}
 .preventive-hero__title{max-width:760px;font-size:clamp(2.45rem,5.6vw,4.9rem);line-height:1.02;margin:20px 0;color:var(--primary);letter-spacing:-.05em}
-.preventive-hero__lead{max-width:680px;color:var(--muted);font-size:1.18rem;margin-bottom:30px}
-.preventive-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.preventive-hero__lead{max-width:680px;color:var(--muted);font-size:1.18rem;margin-bottom:26px}
+.preventive-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .preventive-chips li{display:inline-flex;align-items:center;min-height:40px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.84);border:1px solid rgba(107,53,216,.12);color:#48636c;font-weight:760;box-shadow:0 10px 22px rgba(38,65,74,.06)}
 .preventive-visual{position:relative;min-height:430px}
 .preventive-orbit{position:absolute;border:2px dashed rgba(107,53,216,.22);border-radius:50%}
@@ -101,7 +101,7 @@
 @media (max-width:1020px){.nav__menu{gap:4px}
 .nav__link{padding-inline:10px;font-size:.93rem}
 .preventive-hero__grid,.featured-program-card,.preventive-editorial-card{grid-template-columns:1fr}
-.preventive-visual{min-height:340px;order:-1}
+.preventive-visual{min-height:300px}
 .preventive-hero__copy{text-align:center}
 .preventive-hero__copy .hero__badge{margin:auto}
 .preventive-hero__copy .hero__actions,.preventive-chips{justify-content:center}
@@ -114,14 +114,23 @@
 .clinical-trust__grid article:last-child{grid-column:1/-1}
 }
 @media (max-width:700px){.preventive-section{padding:54px 0}
-.preventive-hero{padding:132px 0 50px}
-.preventive-hero__grid{gap:24px}
-.preventive-visual{min-height:240px}
-.preventive-visual__card{inset:54px 28px}
-.preventive-visual__card span{font-size:2rem}
-.preventive-node{width:44px;height:44px;border-radius:16px;font-size:1.15rem}
-.preventive-planet--main{width:78px;height:78px}
-.preventive-planet--mint{width:44px;height:44px}
+.preventive-hero{padding:122px 0 42px}
+.preventive-hero__grid{gap:18px}
+.preventive-hero__title{margin:16px 0}
+.preventive-hero__lead{font-size:1.05rem;margin-bottom:22px}
+.preventive-chips{margin-top:14px}
+.preventive-visual{min-height:178px;max-width:380px;width:100%;margin:4px auto 0}
+.preventive-orbit{border-width:1px;opacity:.52}
+.preventive-orbit--outer{inset:12px 42px}
+.preventive-orbit--inner{display:none}
+.preventive-visual__card{inset:42px 74px;gap:4px;padding:14px 16px;border-radius:24px;box-shadow:0 14px 28px rgba(77,78,143,.1)}
+.preventive-visual__card span{font-size:1.55rem}
+.preventive-visual__card strong{font-size:1rem}
+.preventive-visual__card small{font-size:.78rem;line-height:1.3}
+.preventive-node{width:36px;height:36px;border-radius:14px;font-size:.95rem;box-shadow:0 10px 20px rgba(38,65,74,.08)}
+.preventive-node--two,.preventive-node--three,.preventive-planet--mint{display:none}
+.preventive-node--one{left:15%;top:22%}
+.preventive-planet--main{width:56px;height:56px;right:17%;top:18%;opacity:.78;box-shadow:0 12px 24px rgba(107,53,216,.1)}
 .preventive-chips li{width:100%;justify-content:center}
 .mini-pillars,.path-selector__grid,.upcoming-programs__grid,.difference-grid,.clinical-trust__grid{grid-template-columns:1fr}
 .path-card--guide{order:-1}
@@ -141,8 +150,10 @@
 .planes-page .whatsapp-fab:after{content:'Quiero orientación'}
 .planes-page .whatsapp-fab__tooltip{display:none}
 }
-@media (max-width:420px){.preventive-visual{min-height:210px}
-.preventive-visual__card{inset:52px 12px}
+@media (max-width:420px){.preventive-hero{padding-bottom:38px}
+.preventive-visual{min-height:156px;max-width:340px}
+.preventive-orbit--outer{inset:10px 34px}
+.preventive-visual__card{inset:38px 58px;padding:12px 14px}
 .preventive-hero__title{font-size:2.3rem}
 .mini-pillars article,.path-card,.program-card,.clinical-trust__grid article{padding:20px}
 .featured-program-card__price{width:100%;justify-content:center}

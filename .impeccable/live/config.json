@@ -1,0 +1,6 @@
+{
+  "files": ["index.html", "planes/index.html", "bts/index.html", "bts/consultar/index.html", "planes-preview/index.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}

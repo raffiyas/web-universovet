@@ -7,18 +7,36 @@ const cleanPhone = (p) => (p || '').replace(/\D/g, '');
 const moneyCoupons = (amount) => Math.floor((Number(amount) || 0) / 5000);
 function requireSupabase(){ if(!supabaseClient) throw new Error('Falta la clave pública/publishable de Supabase. Configura la variable pública de Vercel y ejecuta el build antes de publicar.'); return supabaseClient; }
 function firstName(name){ return (name || '').trim().split(/\s+/)[0] || 'Hola'; }
-function setMessage(el, text, type='info'){ el.innerHTML = text; el.className = `message ${type}`; el.hidden = false; }
+function safeString(value, fallback = ''){ return typeof value === 'string' ? value : fallback; }
+function normalizeCoupons(coupons, limit = 100){
+  if(!Array.isArray(coupons)) return [];
+  return coupons.slice(0, limit).map((coupon) => {
+    const rawCode = typeof coupon === 'string' ? coupon : coupon?.code;
+    return { code: safeString(rawCode).trim(), status: safeString(coupon?.status, 'valid') || 'valid' };
+  }).filter((coupon) => coupon.code);
+}
+function safeCouponTotal(total, fallback){
+  const safeFallback = Number.isSafeInteger(Number(fallback)) && Number(fallback) >= 0 ? Number(fallback) : 0;
+  if(total === null || total === undefined) return safeFallback;
+  if(typeof total === 'string' && !total.trim()) return safeFallback;
+  const parsed = Number(total);
+  if(!Number.isSafeInteger(parsed) || parsed < 0) return safeFallback;
+  return Math.max(parsed, safeFallback);
+}
+function setMessage(el, text, type='info'){ if(!el) return; el.textContent = safeString(text, ''); el.className = `message ${type}`; el.hidden = false; }
 async function lookupCoupons(phone){
   const sb = requireSupabase();
   const { data, error } = await sb.rpc('lookup_bts_coupons_public', { p_phone: phone });
   if(error) throw error;
   const result = Array.isArray(data) ? data[0] : data;
-  if(!result) return null;
-  const coupons = (result.coupon_codes || []).map(code => ({ code, status: 'valid' })).sort((a,b)=>a.code.localeCompare(b.code));
+  if(!result || typeof result !== 'object') return null;
+  const coupons = normalizeCoupons(result.coupon_codes).sort((a,b)=>a.code.localeCompare(b.code));
+  const tutorName = safeString(result.tutor_name, '').trim();
+  const petName = safeString(result.pet_name, '').trim();
   return {
-    participant: { full_name: result.tutor_name, coupon_count: result.total_coupons },
+    participant: { full_name: tutorName, coupon_count: safeCouponTotal(result.total_coupons, coupons.length) },
     coupons,
-    pets: result.pet_name ? [{ name: result.pet_name }] : []
+    pets: petName ? [{ name: petName }] : []
   };
 }
 async function ensureSession(){
@@ -56,4 +74,4 @@ async function loadCoupons(){
  $('#couponsTable').innerHTML = rows.map(c=>`<tr><td>${c.code}</td><td>${c.participants?.full_name||''}</td><td>${c.participants?.phone||''}</td><td>${c.participants?.pets?.[0]?.name||''}</td><td>${c.source_type}</td><td>${new Date(c.created_at).toLocaleDateString('es-CL')}</td><td><span class="status ${c.status==='void'?'danger':c.status==='winner'?'success':''}">${c.status}</span></td><td>${c.status==='valid'?`<button class="btn btn-secondary" data-void="${c.id}">Anular</button>`:''}</td></tr>`).join('');
  $$('[data-void]').forEach(b=>b.onclick=async()=>{ if(confirm('¿Anular este cupón?')){ await sb.from('coupons').update({status:'void'}).eq('id',b.dataset.void); loadCoupons(); loadDashboard(); }});
 }
-window.BTSApp={setMessage, firstName, $, $$, cleanPhone, moneyCoupons, lookupCoupons, ensureSession, signIn, signOut, findParticipantByPhone, createParticipant, createCoupons, loadDashboard, loadCoupons, requireSupabase};
+window.BTSApp={setMessage, firstName, $, $$, cleanPhone, moneyCoupons, safeString, normalizeCoupons, safeCouponTotal, lookupCoupons, ensureSession, signIn, signOut, findParticipantByPhone, createParticipant, createCoupons, loadDashboard, loadCoupons, requireSupabase};

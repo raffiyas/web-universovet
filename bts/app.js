@@ -15,6 +15,10 @@ function normalizeCoupons(coupons, limit = 100){
     return { code: safeString(rawCode).trim(), status: safeString(coupon?.status, 'valid') || 'valid' };
   }).filter((coupon) => coupon.code);
 }
+function safeCouponTotal(total, fallback){
+  const parsed = Number(total);
+  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
+}
 function setMessage(el, text, type='info'){ if(!el) return; el.textContent = safeString(text, ''); el.className = `message ${type}`; el.hidden = false; }
 async function lookupCoupons(phone){
   const sb = requireSupabase();
@@ -26,7 +30,7 @@ async function lookupCoupons(phone){
   const tutorName = safeString(result.tutor_name, '').trim();
   const petName = safeString(result.pet_name, '').trim();
   return {
-    participant: { full_name: tutorName, coupon_count: Number(result.total_coupons) || coupons.length },
+    participant: { full_name: tutorName, coupon_count: safeCouponTotal(result.total_coupons, coupons.length) },
     coupons,
     pets: petName ? [{ name: petName }] : []
   };
@@ -66,4 +70,4 @@ async function loadCoupons(){
  $('#couponsTable').innerHTML = rows.map(c=>`<tr><td>${c.code}</td><td>${c.participants?.full_name||''}</td><td>${c.participants?.phone||''}</td><td>${c.participants?.pets?.[0]?.name||''}</td><td>${c.source_type}</td><td>${new Date(c.created_at).toLocaleDateString('es-CL')}</td><td><span class="status ${c.status==='void'?'danger':c.status==='winner'?'success':''}">${c.status}</span></td><td>${c.status==='valid'?`<button class="btn btn-secondary" data-void="${c.id}">Anular</button>`:''}</td></tr>`).join('');
  $$('[data-void]').forEach(b=>b.onclick=async()=>{ if(confirm('¿Anular este cupón?')){ await sb.from('coupons').update({status:'void'}).eq('id',b.dataset.void); loadCoupons(); loadDashboard(); }});
 }
-window.BTSApp={setMessage, firstName, $, $$, cleanPhone, moneyCoupons, safeString, normalizeCoupons, lookupCoupons, ensureSession, signIn, signOut, findParticipantByPhone, createParticipant, createCoupons, loadDashboard, loadCoupons, requireSupabase};
+window.BTSApp={setMessage, firstName, $, $$, cleanPhone, moneyCoupons, safeString, normalizeCoupons, safeCouponTotal, lookupCoupons, ensureSession, signIn, signOut, findParticipantByPhone, createParticipant, createCoupons, loadDashboard, loadCoupons, requireSupabase};

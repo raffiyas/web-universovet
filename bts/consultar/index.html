@@ -30,8 +30,9 @@ const renderCoupons = (container, data) => {
   const pets = Array.isArray(data?.pets) ? data.pets : [];
   const tutorName = BTSApp.safeString(participant.full_name).trim();
   const petName = BTSApp.safeString(pets[0]?.name, 'No registrada').trim() || 'No registrada';
+  const totalCoupons = BTSApp.safeCouponTotal(participant.coupon_count, coupons.length);
   const title = document.createElement('h3');
-  title.textContent = `${BTSApp.firstName(tutorName)}, tienes ${coupons.length} cupones válidos para el sorteo.`;
+  title.textContent = `${BTSApp.firstName(tutorName)}, tienes ${totalCoupons} cupones válidos para el sorteo.`;
   const couponList = document.createElement('div');
   couponList.className = 'coupon-list';
   couponList.replaceChildren(...coupons.map((coupon) => {
@@ -43,6 +44,11 @@ const renderCoupons = (container, data) => {
   container.replaceChildren(title);
   appendLabelValue(container, 'Tutor', tutorName || 'No registrado');
   appendLabelValue(container, 'Mascota', petName);
+  if (totalCoupons > coupons.length) {
+    const truncated = document.createElement('p');
+    truncated.textContent = `Mostrando los primeros ${coupons.length} cupones de ${totalCoupons}.`;
+    container.append(truncated);
+  }
   container.append(couponList);
 };
 lookupForm.addEventListener('submit', async (e) => {
@@ -63,7 +69,8 @@ lookupForm.addEventListener('submit', async (e) => {
     setLookupStatus('Consulta realizada.', 'success');
   } catch (err) {
     res.replaceChildren();
-    setLookupStatus(err?.message || 'No pudimos realizar la consulta. Inténtalo nuevamente.', 'danger');
+    console.error('BTS public coupon lookup failed', err);
+    setLookupStatus('No pudimos realizar la consulta. Inténtalo nuevamente o escríbenos por WhatsApp.', 'danger');
   }
 });
 </script></body></html>

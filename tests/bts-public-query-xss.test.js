@@ -156,6 +156,75 @@ function assertNoExecutableElements(root) {
   await submit(invalidTotal.elements);
   assert.ok(invalidTotal.elements.lookupResult.textContent.includes('Rafa, tienes 2 cupones válidos para el sorteo.'), 'invalid totals must fall back to rendered coupon count');
 
+  const nullTotal = makeContext({
+    rpcData: {
+      tutor_name: 'Rafa Universo',
+      pet_name: 'Luna',
+      total_coupons: null,
+      coupon_codes: ['BTS-001', 'BTS-002', 'BTS-003'],
+    },
+  });
+  await submit(nullTotal.elements);
+  assert.ok(nullTotal.elements.lookupResult.textContent.includes('Rafa, tienes 3 cupones válidos para el sorteo.'), 'null total must fall back to coupon count');
+
+  const emptyTotal = makeContext({
+    rpcData: {
+      tutor_name: 'Rafa Universo',
+      pet_name: 'Luna',
+      total_coupons: '   ',
+      coupon_codes: ['BTS-001', 'BTS-002', 'BTS-003'],
+    },
+  });
+  await submit(emptyTotal.elements);
+  assert.ok(emptyTotal.elements.lookupResult.textContent.includes('Rafa, tienes 3 cupones válidos para el sorteo.'), 'blank total must fall back to coupon count');
+
+  const lowerTotal = makeContext({
+    rpcData: {
+      tutor_name: 'Rafa Universo',
+      pet_name: 'Luna',
+      total_coupons: 2,
+      coupon_codes: ['BTS-001', 'BTS-002', 'BTS-003'],
+    },
+  });
+  await submit(lowerTotal.elements);
+  assert.ok(lowerTotal.elements.lookupResult.textContent.includes('Rafa, tienes 3 cupones válidos para el sorteo.'), 'total lower than coupon count must not create a contradictory title');
+
+  const directTotalChecks = makeContext({ rpcData: { total_coupons: 0, coupon_codes: [] } }).BTSApp.safeCouponTotal;
+  assert.equal(directTotalChecks(145, 100), 145, 'safe total keeps a valid larger total');
+  assert.equal(directTotalChecks(2, 3), 3, 'safe total cannot be lower than fallback');
+  assert.equal(directTotalChecks(null, 15), 15, 'safe total rejects null');
+  assert.equal(directTotalChecks('', 15), 15, 'safe total rejects empty strings');
+  assert.equal(directTotalChecks('   ', 15), 15, 'safe total rejects whitespace strings');
+  assert.equal(directTotalChecks('<script>999</script>', 2), 2, 'safe total rejects non-numeric strings');
+  assert.equal(directTotalChecks(-1, 2), 2, 'safe total rejects negatives');
+  assert.equal(directTotalChecks(2.5, 2), 2, 'safe total rejects decimals');
+  assert.equal(directTotalChecks(Number.MAX_SAFE_INTEGER + 1, 2), 2, 'safe total rejects unsafe integers');
+  assert.equal(directTotalChecks(2, '<script>fallback</script>'), 2, 'safe total normalizes invalid fallback to zero');
+
+  const nullParticipant = makeContext({ rpcData: { total_coupons: 0, coupon_codes: [] } });
+  nullParticipant.BTSApp.lookupCoupons = async () => ({ participant: null, pets: [], coupons: [{ code: 'BTS-001' }] });
+  await submit(nullParticipant.elements);
+  assert.ok(nullParticipant.elements.lookupResult.textContent.includes('Hola, tienes 1 cupones válidos para el sorteo.'), 'participant null must render with fallback without throwing');
+  assert.ok(nullParticipant.elements.lookupResult.textContent.includes('Tutor: No registrado'), 'participant null must use visible tutor fallback');
+
+  const arrayParticipant = makeContext({ rpcData: { total_coupons: 0, coupon_codes: [] } });
+  arrayParticipant.BTSApp.lookupCoupons = async () => ({ participant: [], pets: [], coupons: [{ code: 'BTS-001' }] });
+  await submit(arrayParticipant.elements);
+  assert.ok(arrayParticipant.elements.lookupResult.textContent.includes('Hola, tienes 1 cupones válidos para el sorteo.'), 'participant array must render with fallback without throwing');
+  assert.ok(arrayParticipant.elements.lookupResult.textContent.includes('Tutor: No registrado'), 'participant array must use visible tutor fallback');
+
+  const stringParticipant = makeContext({ rpcData: { total_coupons: 0, coupon_codes: [] } });
+  stringParticipant.BTSApp.lookupCoupons = async () => ({ participant: 'Rafa', pets: [], coupons: [{ code: 'BTS-001' }] });
+  await submit(stringParticipant.elements);
+  assert.ok(stringParticipant.elements.lookupResult.textContent.includes('Hola, tienes 1 cupones válidos para el sorteo.'), 'participant string must render with fallback without throwing');
+  assert.ok(stringParticipant.elements.lookupResult.textContent.includes('Tutor: No registrado'), 'participant string must use visible tutor fallback');
+
+  const undefinedParticipant = makeContext({ rpcData: { total_coupons: 0, coupon_codes: [] } });
+  undefinedParticipant.BTSApp.lookupCoupons = async () => ({ pets: [], coupons: [{ code: 'BTS-001' }] });
+  await submit(undefinedParticipant.elements);
+  assert.ok(undefinedParticipant.elements.lookupResult.textContent.includes('Hola, tienes 1 cupones válidos para el sorteo.'), 'participant undefined must render with fallback without throwing');
+  assert.ok(undefinedParticipant.elements.lookupResult.textContent.includes('Tutor: No registrado'), 'participant undefined must use visible tutor fallback');
+
   const empty = makeContext({ rpcData: { tutor_name: 'Rafa', pet_name: 'Luna', total_coupons: 0, coupon_codes: [] } });
   await submit(empty.elements);
   assert.ok(empty.elements.lookupResult.textContent.includes('No encontramos cupones'), 'empty state still works');

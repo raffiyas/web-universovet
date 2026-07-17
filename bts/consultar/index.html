@@ -26,7 +26,12 @@ const renderNoResults = (container) => {
 };
 const renderCoupons = (container, data) => {
   const coupons = BTSApp.normalizeCoupons(data?.coupons);
-  const participant = data && typeof data.participant === 'object' ? data.participant : {};
+  const participant =
+    data?.participant &&
+    typeof data.participant === 'object' &&
+    !Array.isArray(data.participant)
+      ? data.participant
+      : {};
   const pets = Array.isArray(data?.pets) ? data.pets : [];
   const tutorName = BTSApp.safeString(participant.full_name).trim();
   const petName = BTSApp.safeString(pets[0]?.name, 'No registrada').trim() || 'No registrada';

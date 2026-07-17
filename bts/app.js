@@ -16,8 +16,12 @@ function normalizeCoupons(coupons, limit = 100){
   }).filter((coupon) => coupon.code);
 }
 function safeCouponTotal(total, fallback){
+  const safeFallback = Number.isSafeInteger(Number(fallback)) && Number(fallback) >= 0 ? Number(fallback) : 0;
+  if(total === null || total === undefined) return safeFallback;
+  if(typeof total === 'string' && !total.trim()) return safeFallback;
   const parsed = Number(total);
-  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : fallback;
+  if(!Number.isSafeInteger(parsed) || parsed < 0) return safeFallback;
+  return Math.max(parsed, safeFallback);
 }
 function setMessage(el, text, type='info'){ if(!el) return; el.textContent = safeString(text, ''); el.className = `message ${type}`; el.hidden = false; }
 async function lookupCoupons(phone){

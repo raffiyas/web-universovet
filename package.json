@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "node scripts/generate-supabase-config.js"
+    "build": "node scripts/generate-supabase-config.js",
+    "test:bts-public-query-xss": "node tests/bts-public-query-xss.test.js"
   },
   "devDependencies": {}
 }

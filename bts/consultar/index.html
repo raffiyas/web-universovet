@@ -1,30 +1,69 @@
 <!doctype html><html lang="es-CL"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Consultar cupones BTS | UniversoVet</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/bts/styles.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/bts/supabase-config.js"></script></head><body><div class="bts-shell"><header class="container nav"><a class="brand" href="/bts"><span>💜</span><span>Concurso BTS</span></a><a class="pill" href="/bts">Volver</a></header><main class="container section"><div class="grid grid-2"><section class="card"><span class="badge">🎟️ Consulta pública</span><h1>Consulta tus cupones</h1><p class="section-lead">Ingresa tu número de WhatsApp tal como lo registraste en UniversoVet.</p><form id="lookupForm" class="form"><div class="field"><label for="phone">Número de WhatsApp</label><input id="phone" name="phone" autocomplete="tel" placeholder="Ej: 56935677904" required></div><button class="btn btn-primary" type="submit">Consultar mis cupones</button></form><div id="lookupMessage" hidden></div></section><section class="card"><h2>Resultado</h2><div id="lookupResult" class="notice">Aquí aparecerán tus cupones válidos. No se permite editar datos desde esta página.</div></section></div></main></div><script src="/bts/app.js"></script><script>
 const lookupForm = document.getElementById('lookupForm');
+const WHATSAPP_NUMBER = '56935677904';
 const setLookupStatus = (message, type = 'info') => {
   const msg = BTSApp.$('#lookupMessage');
   BTSApp.setMessage(msg, message, type);
+};
+const appendLabelValue = (parent, label, value) => {
+  const paragraph = document.createElement('p');
+  const strong = document.createElement('strong');
+  strong.textContent = `${label}:`;
+  paragraph.append(strong, ` ${BTSApp.safeString(value, 'No registrada') || 'No registrada'}`);
+  parent.append(paragraph);
+};
+const renderLoading = (container) => {
+  container.textContent = 'Buscando cupones válidos...';
+};
+const renderNoResults = (container) => {
+  const message = document.createElement('p');
+  message.textContent = 'No encontramos cupones asociados a este número. Revisa que esté escrito igual al número registrado en la clínica o escríbenos por WhatsApp.';
+  const link = document.createElement('a');
+  link.className = 'btn btn-primary';
+  link.href = `https://wa.me/${BTSApp.cleanPhone(WHATSAPP_NUMBER)}`;
+  link.textContent = 'Consultar por WhatsApp';
+  container.replaceChildren(message, link);
+};
+const renderCoupons = (container, data) => {
+  const coupons = BTSApp.normalizeCoupons(data?.coupons);
+  const participant = data && typeof data.participant === 'object' ? data.participant : {};
+  const pets = Array.isArray(data?.pets) ? data.pets : [];
+  const tutorName = BTSApp.safeString(participant.full_name).trim();
+  const petName = BTSApp.safeString(pets[0]?.name, 'No registrada').trim() || 'No registrada';
+  const title = document.createElement('h3');
+  title.textContent = `${BTSApp.firstName(tutorName)}, tienes ${coupons.length} cupones válidos para el sorteo.`;
+  const couponList = document.createElement('div');
+  couponList.className = 'coupon-list';
+  couponList.replaceChildren(...coupons.map((coupon) => {
+    const code = document.createElement('span');
+    code.className = 'coupon-code';
+    code.textContent = coupon.code;
+    return code;
+  }));
+  container.replaceChildren(title);
+  appendLabelValue(container, 'Tutor', tutorName || 'No registrado');
+  appendLabelValue(container, 'Mascota', petName);
+  container.append(couponList);
 };
 lookupForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const res = BTSApp.$('#lookupResult');
   setLookupStatus('Consultando...');
-  res.innerHTML = 'Buscando cupones válidos...';
+  renderLoading(res);
   try {
     const data = await BTSApp.lookupCoupons(BTSApp.$('#phone').value);
-    if (!data || !data.coupons.length) {
-      res.innerHTML = '<p>No encontramos cupones asociados a este número. Revisa que esté escrito igual al número registrado en la clínica o escríbenos por WhatsApp.</p><a class="btn btn-primary" href="https://wa.me/56935677904">Consultar por WhatsApp</a>';
+    const coupons = BTSApp.normalizeCoupons(data?.coupons);
+    if (!coupons.length) {
+      renderNoResults(res);
       setLookupStatus('Consulta realizada.', 'success');
       return;
     }
 
-    const tutorName = data.participant.full_name;
-    const petName = (data.pets[0] && data.pets[0].name) || 'No registrada';
-    const couponCodes = data.coupons.map((c) => `<span class="coupon-code">${c.code}</span>`).join('');
-    res.innerHTML = `<h3>${BTSApp.firstName(tutorName)}, tienes ${data.coupons.length} cupones válidos para el sorteo.</h3><p><strong>Tutor:</strong> ${tutorName}</p><p><strong>Mascota:</strong> ${petName}</p><div class="coupon-list">${couponCodes}</div>`;
+    renderCoupons(res, { ...data, coupons });
     setLookupStatus('Consulta realizada.', 'success');
   } catch (err) {
-    res.innerHTML = '';
-    setLookupStatus(err.message || 'No pudimos realizar la consulta. Inténtalo nuevamente.', 'danger');
+    res.replaceChildren();
+    setLookupStatus(err?.message || 'No pudimos realizar la consulta. Inténtalo nuevamente.', 'danger');
   }
 });
 </script></body></html>

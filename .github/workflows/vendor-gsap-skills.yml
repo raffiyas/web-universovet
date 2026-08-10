@@ -1,11 +1,12 @@
 name: Vendor GSAP skills
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/add-gsap-skills
-    paths:
-      - .github/workflows/vendor-gsap-skills.yml
+      - main
+    types:
+      - opened
+      - synchronize
   workflow_dispatch:
 
 permissions:
@@ -13,10 +14,10 @@ permissions:
 
 jobs:
   vendor:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch
+      - name: Checkout GSAP branch
         uses: actions/checkout@v4
         with:
           ref: agent/add-gsap-skills

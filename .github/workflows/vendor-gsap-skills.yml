@@ -1,0 +1,66 @@
+name: Vendor GSAP skills
+
+on:
+  push:
+    branches:
+      - agent/add-gsap-skills
+    paths:
+      - .github/workflows/vendor-gsap-skills.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/add-gsap-skills
+          fetch-depth: 0
+
+      - name: Fetch official GSAP skills
+        run: |
+          rm -rf /tmp/gsap-skills
+          git clone --depth 1 https://github.com/greensock/gsap-skills.git /tmp/gsap-skills
+          rm -rf .agents/skills/gsap-core \
+                 .agents/skills/gsap-timeline \
+                 .agents/skills/gsap-scrolltrigger \
+                 .agents/skills/gsap-plugins \
+                 .agents/skills/gsap-utils \
+                 .agents/skills/gsap-react \
+                 .agents/skills/gsap-performance \
+                 .agents/skills/gsap-frameworks
+          cp -R /tmp/gsap-skills/skills/gsap-core .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-timeline .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-scrolltrigger .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-plugins .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-utils .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-react .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-performance .agents/skills/
+          cp -R /tmp/gsap-skills/skills/gsap-frameworks .agents/skills/
+          printf '%s\n' \
+            '# GSAP Skills provenance' \
+            '' \
+            'Vendored from the official GreenSock repository:' \
+            'https://github.com/greensock/gsap-skills' \
+            '' \
+            'Installed for agent guidance only. This does not add the GSAP runtime to the production website.' \
+            '' \
+            'Upstream repository license: MIT.' \
+            > .agents/skills/GSAP-SKILLS.md
+
+      - name: Commit vendored skills
+        run: |
+          if git diff --quiet -- .agents/skills; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .agents/skills
+          git commit -m 'Add official GSAP agent skills'
+          git push origin HEAD:agent/add-gsap-skills

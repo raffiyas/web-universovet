@@ -1,6 +1,6 @@
 const A = BTSApp;
 const ADMIN_DENIED_MESSAGE = 'No tienes permisos para acceder a este panel.';
-const RAFFLE_UNLOCK_DATE = '2026-09-10';
+const RAFFLE_UNLOCK_DATE = '2026-09-30';
 const RAFFLE_OFFICIAL_CONFIRMATION = 'Esta acción realizará el sorteo oficial y no debe usarse durante pruebas.';
 
 async function verifyAdminAccess(session) {
@@ -92,11 +92,11 @@ function getSantiagoDateString(date = new Date()){
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 function isRaffleLocked(){return getSantiagoDateString()<RAFFLE_UNLOCK_DATE;}
-function updateRaffleLock(){const btn=A.$('#drawBtn'),msg=A.$('#raffleLockMsg');if(!btn)return;const locked=isRaffleLocked();btn.disabled=locked;btn.title=locked?'El sorteo oficial se habilitará el 10 de septiembre de 2026.':'';if(msg){msg.hidden=!locked;msg.textContent='El botón “Realizar sorteo” está bloqueado hasta el 10 de septiembre de 2026 para evitar sorteos accidentales durante pruebas.';}}
+function updateRaffleLock(){const btn=A.$('#drawBtn'),msg=A.$('#raffleLockMsg');if(!btn)return;const locked=isRaffleLocked();btn.disabled=locked;btn.title=locked?'El sorteo oficial se habilitará el 30 de septiembre de 2026.':'';if(msg){msg.hidden=!locked;msg.textContent='El botón “Realizar sorteo” está bloqueado hasta el 30 de septiembre de 2026 para evitar sorteos accidentales durante pruebas.';}}
 function confirmOfficialRaffle(){
   if(isRaffleLocked()){
     updateRaffleLock();
-    alert('El sorteo oficial está bloqueado hasta el 10 de septiembre de 2026.');
+    alert('El sorteo oficial está bloqueado hasta el 30 de septiembre de 2026.');
     return false;
   }
   if(!confirm(`${RAFFLE_OFFICIAL_CONFIRMATION} ¿Deseas continuar?`))return false;

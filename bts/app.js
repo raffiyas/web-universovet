@@ -65,7 +65,7 @@ async function loadDashboard(){
  const sb=requireSupabase();
  const [participants,coupons,transactions,bonus] = await Promise.all([
   sb.from('participants').select('id', {count:'exact', head:true}), sb.from('coupons').select('id', {count:'exact', head:true}).eq('status','valid'), sb.from('transactions').select('id',{count:'exact',head:true}), sb.from('bonus').select('id',{count:'exact',head:true})]);
- $('#summaryCards').innerHTML = [['Participantes',participants.count],['Cupones válidos',coupons.count],['Servicios/compras',transactions.count],['Bonus registrados',bonus.count],['Fecha sorteo','10 de septiembre de 2026']].map(([a,b])=>`<div class="card"><p class="small">${a}</p><h3>${b ?? 0}</h3></div>`).join('');
+ $('#summaryCards').innerHTML = [['Participantes',participants.count],['Cupones válidos',coupons.count],['Servicios/compras',transactions.count],['Bonus registrados',bonus.count],['Fecha sorteo','30 de septiembre de 2026']].map(([a,b])=>`<div class="card"><p class="small">${a}</p><h3>${b ?? 0}</h3></div>`).join('');
 }
 async function loadCoupons(){
  const sb=requireSupabase(); const q=$('#couponSearch')?.value?.toLowerCase()||'';

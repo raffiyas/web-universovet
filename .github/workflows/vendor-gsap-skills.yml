@@ -56,7 +56,7 @@ jobs:
 
       - name: Commit vendored skills
         run: |
-          if git diff --quiet -- .agents/skills; then
+          if [ -z "$(git status --porcelain -- .agents/skills)" ]; then
             echo 'No changes to commit.'
             exit 0
           fi

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>UniversoVet Motion Lab</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="./motion-lab.css">
+</head>
+<body class="motion-lab__body">
+    <div class="motion-lab__toolbar" role="region" aria-label="Selector de animaciones del Hero">
+        <div class="motion-lab__toolbar-inner">
+            <a class="motion-lab__back" href="/" aria-label="Volver al sitio UniversoVet">← UniversoVet</a>
+            <div class="motion-lab__controls" role="group" aria-label="Variantes de movimiento">
+                <button type="button" class="motion-lab__variant" data-variant="orbit" aria-pressed="true">Órbita clínica</button>
+                <button type="button" class="motion-lab__variant" data-variant="constellation" aria-pressed="false">Constelación clínica</button>
+                <button type="button" class="motion-lab__variant" data-variant="focus" aria-pressed="false">Focus clínico</button>
+                <button type="button" class="motion-lab__replay" id="motion-replay">↻ Repetir</button>
+            </div>
+        </div>
+        <p class="motion-lab__summary" id="motion-summary" aria-live="polite"></p>
+    </div>
+
+    <main>
+        <section class="hero motion-lab__hero" id="inicio" data-motion-root>
+            <div class="space-dust" aria-hidden="true"></div>
+
+            <span class="motion-spark motion-spark--a" aria-hidden="true"></span>
+            <span class="motion-spark motion-spark--b" aria-hidden="true"></span>
+            <span class="motion-spark motion-spark--c" aria-hidden="true"></span>
+            <span class="motion-spark motion-spark--d" aria-hidden="true"></span>
+
+            <div class="hero__content container">
+                <div class="hero__copy" data-motion-copy>
+                    <span class="hero__badge" data-motion-badge>Veterinaria cercana en Coquimbo</span>
+                    <h1 class="hero__title" data-motion-title>Cuidamos a tu peludito como parte de nuestra familia</h1>
+                    <p class="hero__subtitle" data-motion-subtitle>Medicina veterinaria cercana, moderna y pensada para acompañar a tu mascota en cada etapa de su vida.</p>
+                    <div class="hero__actions" data-motion-actions>
+                        <a href="#" class="btn btn--primary">Agendar por WhatsApp</a>
+                        <a href="#" class="btn btn--secondary">Ver servicios</a>
+                    </div>
+                </div>
+
+                <div class="hero__visual" data-motion-visual aria-label="Fotografía clínica de atención veterinaria en UniversoVet">
+                    <figure class="hero-clinic" data-motion-card>
+                        <svg class="constellation-trace" data-constellation-trace viewBox="0 0 520 420" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+                            <path d="M48 105 L178 54 L315 132 L446 70" pathLength="1"></path>
+                        </svg>
+                        <span class="hero-clinic__orbit" data-motion-orbit aria-hidden="true"></span>
+                        <span class="hero-clinic__star hero-clinic__star--one" data-motion-star aria-hidden="true"></span>
+                        <span class="hero-clinic__star hero-clinic__star--two" data-motion-star aria-hidden="true"></span>
+                        <img
+                            class="hero-clinic__image"
+                            data-motion-image
+                            src="https://cdn.shopify.com/s/files/1/0697/3466/2441/files/69302f424cf32c1355268c62.png?v=1764841128"
+                            alt="Veterinaria atendiendo a un cachorro en una consulta luminosa"
+                            loading="eager"
+                            decoding="async">
+                        <figcaption class="hero-clinic__caption" data-motion-caption>
+                            <strong>Atención cercana con criterio veterinario</strong>
+                            <span>Evaluación · Prevención · Acompañamiento</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="motion-lab__notes" aria-labelledby="motion-lab-notes-title">
+            <div class="container motion-lab__notes-inner">
+                <div>
+                    <span class="motion-lab__eyebrow">Preview interno</span>
+                    <h2 id="motion-lab-notes-title">Compara la sensación, no la cantidad de movimiento</h2>
+                </div>
+                <p>Prueba cada variante varias veces y fíjate en tres cosas: cuál se siente más propia de UniversoVet, cuál dirige mejor la atención hacia el mensaje y cuál sigue sintiéndose agradable después de repetirla.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script src="./motion-lab.js"></script>
+</body>
+</html>

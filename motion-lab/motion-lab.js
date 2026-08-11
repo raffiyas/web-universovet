@@ -16,12 +16,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const sparks = Array.from(document.querySelectorAll('.motion-spark'));
     const trace = document.querySelector('[data-constellation-trace]');
     const tracePath = trace ? trace.querySelector('path') : null;
+    const focusRing = document.querySelector('[data-motion-focus-ring]');
     const badge = document.querySelector('[data-motion-badge]');
     const title = document.querySelector('[data-motion-title]');
     const subtitle = document.querySelector('[data-motion-subtitle]');
     const actions = document.querySelector('[data-motion-actions]');
     const actionButtons = actions ? Array.from(actions.children) : [];
     const variantButtons = Array.from(document.querySelectorAll('[data-variant]'));
+    const speedButtons = Array.from(document.querySelectorAll('[data-speed]'));
     const replayButton = document.getElementById('motion-replay');
     const summary = document.getElementById('motion-summary');
 
@@ -32,21 +34,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const variants = {
         orbit: {
             label: 'Órbita clínica',
-            summary: 'La fotografía llega primero, la órbita se asienta alrededor de ella y el mensaje entra como una sola secuencia. Movimiento con principio y fin.'
+            summary: 'DEMO EXAGERADA · La fotografía entra claramente desde la derecha, la órbita completa un asentamiento visible y después llega el mensaje. La versión final sería más contenida.'
         },
         constellation: {
             label: 'Constelación clínica',
-            summary: 'El Hero permanece estable mientras una constelación breve conecta el universo visual; en escritorio, los elementos cósmicos reaccionan suavemente al puntero.'
+            summary: 'DEMO EXAGERADA · El Hero permanece casi quieto: aparecen nodos, se dibuja una constelación sobre la escena y luego el campo cósmico responde al puntero.'
         },
         focus: {
             label: 'Focus clínico',
-            summary: 'La atención comienza en la fotografía clínica, que pasa de suave desenfoque a nitidez; después se revela el mensaje con una cadencia más sobria.'
+            summary: 'DEMO EXAGERADA · La fotografía parte desenfocada y ampliada, aparece un anillo de enfoque y sólo cuando la imagen queda nítida se revela el mensaje.'
         }
     };
 
     const allowedVariants = Object.keys(variants);
     let activeVariant = 'orbit';
     let activeMedia = null;
+    let playbackSpeed = 1;
 
     const resetTargets = [
         visual,
@@ -54,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         image,
         caption,
         orbit,
+        focusRing,
         badge,
         title,
         subtitle,
@@ -75,6 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
         gsap.set(resetTargets, { clearProps: 'all' });
     }
 
+    function runTimeline(timeline) {
+        timeline.timeScale(playbackSpeed);
+        return timeline;
+    }
+
     function buildOrbitTimeline() {
         const tl = gsap.timeline({
             defaults: {
@@ -83,56 +92,60 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         tl.from(visual, {
-            x: 52,
-            scale: 0.965,
-            rotation: 1.1,
+            x: 190,
+            y: 26,
+            scale: 0.88,
+            rotation: 5,
             autoAlpha: 0,
-            duration: 0.82,
+            duration: 1.08,
             ease: 'expo.out'
         }, 0)
         .from(image, {
-            scale: 1.045,
-            duration: 1.02,
+            scale: 1.12,
+            duration: 1.24,
             ease: 'power2.out'
         }, 0)
         .from(orbit, {
-            rotation: -105,
-            scale: 0.68,
+            rotation: -240,
+            scale: 0.34,
             autoAlpha: 0,
-            duration: 0.98,
+            duration: 1.38,
             ease: 'expo.out'
-        }, 0.08)
+        }, 0.05)
         .from(stars, {
+            x: function (index) { return index === 0 ? 92 : -68; },
+            y: function (index) { return index === 0 ? -58 : 72; },
             scale: 0,
             autoAlpha: 0,
-            duration: 0.38,
-            stagger: 0.08,
-            ease: 'power2.out'
-        }, 0.4)
-        .from(badge, {
-            x: -14,
-            autoAlpha: 0,
-            duration: 0.4
-        }, 0.16)
-        .from(title, {
-            y: 26,
-            autoAlpha: 0,
-            duration: 0.68,
-            ease: 'expo.out'
-        }, 0.24)
-        .from(subtitle, {
-            y: 14,
-            autoAlpha: 0,
-            duration: 0.46
+            duration: 0.72,
+            stagger: 0.12,
+            ease: 'power3.out'
         }, 0.42)
-        .from(actionButtons, {
-            y: 9,
+        .from(badge, {
+            x: -36,
             autoAlpha: 0,
-            duration: 0.36,
-            stagger: 0.07
-        }, 0.54);
+            duration: 0.5
+        }, 0.36)
+        .from(title, {
+            x: -62,
+            y: 18,
+            autoAlpha: 0,
+            duration: 0.78,
+            ease: 'expo.out'
+        }, 0.48)
+        .from(subtitle, {
+            y: 24,
+            autoAlpha: 0,
+            duration: 0.54
+        }, 0.72)
+        .from(actionButtons, {
+            y: 18,
+            autoAlpha: 0,
+            duration: 0.44,
+            stagger: 0.09
+        }, 0.88);
 
-        return tl;
+        return runTimeline(tl);
     }
 
     function buildConstellationTimeline() {
@@ -147,59 +160,59 @@ document.addEventListener('DOMContentLoaded', function () {
             gsap.set(tracePath, { strokeDashoffset: 1 });
         }
 
-        tl.from(visual, {
-            scale: 0.987,
-            autoAlpha: 0.72,
-            duration: 0.55
+        gsap.set([badge, title, subtitle, actionButtons], { autoAlpha: 1 });
+
+        tl.from(card, {
+            autoAlpha: 0.78,
+            duration: 0.35
         }, 0)
-        .from(badge, {
-            x: -8,
-            autoAlpha: 0,
-            duration: 0.34
-        }, 0.08)
-        .from(title, {
-            x: -12,
-            autoAlpha: 0,
-            duration: 0.52,
-            ease: 'expo.out'
-        }, 0.15)
-        .from(subtitle, {
-            autoAlpha: 0,
-            duration: 0.36
-        }, 0.32)
-        .from(actionButtons, {
-            autoAlpha: 0,
-            duration: 0.3,
-            stagger: 0.06
-        }, 0.4)
         .from(sparks, {
+            x: function (index) {
+                return [-90, 42, 110, -55][index] || 0;
+            },
+            y: function (index) {
+                return [70, -72, 46, -84][index] || 0;
+            },
             scale: 0,
             autoAlpha: 0,
-            duration: 0.26,
-            stagger: 0.07,
-            ease: 'power2.out'
-        }, 0.18)
+            duration: 0.58,
+            stagger: 0.11,
+            ease: 'expo.out'
+        }, 0.04)
         .from(stars, {
-            scale: 0.2,
+            scale: 0,
             autoAlpha: 0,
-            duration: 0.3,
-            stagger: 0.08
-        }, 0.24);
+            duration: 0.42,
+            stagger: 0.1
+        }, 0.18);
 
-        if (tracePath) {
+        if (tracePath && trace) {
             tl.to(tracePath, {
                 strokeDashoffset: 0,
-                duration: 0.58,
+                duration: 1.15,
                 ease: 'power2.inOut'
-            }, 0.2)
+            }, 0.28)
             .to(trace, {
-                autoAlpha: 0.2,
-                duration: 0.42,
+                autoAlpha: 0.5,
+                duration: 0.52,
                 ease: 'power2.out'
-            }, 0.72);
+            }, 1.42);
         }
 
-        return tl;
+        tl.to(sparks, {
+            scale: 1.65,
+            duration: 0.24,
+            stagger: 0.05,
+            yoyo: true,
+            repeat: 1,
+            ease: 'power2.inOut'
+        }, 0.74)
+        .from(caption, {
+            autoAlpha: 0.35,
+            duration: 0.44
+        }, 1.02);
+
+        return runTimeline(tl);
     }
 
     function setupConstellationPointer() {
@@ -207,12 +220,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return function () {};
         }
 
-        const orbitX = gsap.quickTo(orbit, 'x', { duration: 0.42, ease: 'power3.out' });
-        const orbitY = gsap.quickTo(orbit, 'y', { duration: 0.42, ease: 'power3.out' });
+        const cardX = gsap.quickTo(card, 'x', { duration: 0.55, ease: 'power3.out' });
+        const cardY = gsap.quickTo(card, 'y', { duration: 0.55, ease: 'power3.out' });
+        const orbitX = gsap.quickTo(orbit, 'x', { duration: 0.48, ease: 'power3.out' });
+        const orbitY = gsap.quickTo(orbit, 'y', { duration: 0.48, ease: 'power3.out' });
         const sparkControllers = sparks.map(function (spark, index) {
             return {
-                x: gsap.quickTo(spark, 'x', { duration: 0.48 + index * 0.04, ease: 'power3.out' }),
-                y: gsap.quickTo(spark, 'y', { duration: 0.48 + index * 0.04, ease: 'power3.out' })
+                x: gsap.quickTo(spark, 'x', { duration: 0.5 + index * 0.04, ease: 'power3.out' }),
+                y: gsap.quickTo(spark, 'y', { duration: 0.5 + index * 0.04, ease: 'power3.out' })
             };
         });
 
@@ -221,17 +236,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const nx = ((event.clientX - bounds.left) / bounds.width) - 0.5;
             const ny = ((event.clientY - bounds.top) / bounds.height) - 0.5;
 
-            orbitX(nx * 8);
-            orbitY(ny * 6);
+            cardX(nx * -16);
+            cardY(ny * -10);
+            orbitX(nx * 22);
+            orbitY(ny * 16);
 
             sparkControllers.forEach(function (controller, index) {
-                const strength = 5 + index * 2.5;
+                const strength = 16 + index * 7;
                 controller.x(nx * strength);
-                controller.y(ny * strength * 0.75);
+                controller.y(ny * strength * 0.8);
             });
         }
 
         function handlePointerLeave() {
+            cardX(0);
+            cardY(0);
             orbitX(0);
             orbitY(0);
             sparkControllers.forEach(function (controller) {
@@ -256,52 +275,96 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        gsap.set([badge, title, subtitle, actionButtons, caption], { autoAlpha: 0 });
+
         tl.from(image, {
-            filter: 'blur(13px) saturate(0.82)',
-            scale: 1.055,
-            autoAlpha: 0.82,
-            duration: 0.88,
+            filter: 'blur(28px) saturate(0.62) brightness(0.82)',
+            scale: 1.16,
+            autoAlpha: 0.7,
+            duration: 1.42,
             ease: 'power2.out'
         }, 0)
         .from(card, {
-            scale: 0.992,
-            duration: 0.72,
+            scale: 1.025,
+            duration: 1.2,
             ease: 'power2.out'
         }, 0)
-        .from(caption, {
-            y: 12,
+        .fromTo(focusRing, {
             autoAlpha: 0,
-            duration: 0.4
-        }, 0.42)
-        .from(badge, {
-            autoAlpha: 0,
-            duration: 0.28
-        }, 0.36)
-        .from(title, {
-            y: 18,
-            autoAlpha: 0,
-            duration: 0.56,
+            scale: 1.65
+        }, {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.54,
             ease: 'expo.out'
-        }, 0.44)
+        }, 0.12)
+        .to(focusRing, {
+            scale: 0.74,
+            duration: 0.48,
+            ease: 'power2.inOut'
+        }, 0.66)
+        .to(focusRing, {
+            autoAlpha: 0,
+            duration: 0.36,
+            ease: 'power2.out'
+        }, 1.08)
+        .to(caption, {
+            autoAlpha: 1,
+            duration: 0.42
+        }, 1.05)
+        .to(badge, {
+            autoAlpha: 1,
+            duration: 0.32
+        }, 1.12)
+        .to(title, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.68,
+            ease: 'expo.out'
+        }, 1.22)
+        .from(title, {
+            y: 34,
+            duration: 0.68,
+            ease: 'expo.out'
+        }, 1.22)
+        .to(subtitle, {
+            autoAlpha: 1,
+            duration: 0.42
+        }, 1.52)
         .from(subtitle, {
-            y: 8,
-            autoAlpha: 0,
-            duration: 0.4
-        }, 0.62)
+            y: 16,
+            duration: 0.42
+        }, 1.52)
+        .to(actionButtons, {
+            autoAlpha: 1,
+            duration: 0.38,
+            stagger: 0.08
+        }, 1.68)
         .from(actionButtons, {
-            y: 7,
-            autoAlpha: 0,
-            duration: 0.32,
-            stagger: 0.06
-        }, 0.72)
+            y: 12,
+            duration: 0.38,
+            stagger: 0.08
+        }, 1.68)
         .from(stars, {
-            scale: 0.5,
+            scale: 0.35,
             autoAlpha: 0,
-            duration: 0.28,
-            stagger: 0.06
-        }, 0.74);
+            duration: 0.36,
+            stagger: 0.08
+        }, 1.74);
 
-        return tl;
+        return runTimeline(tl);
+    }
+
+    function updateControls() {
+        variantButtons.forEach(function (button) {
+            const isActive = button.dataset.variant === activeVariant;
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        speedButtons.forEach(function (button) {
+            const speed = Number(button.dataset.speed);
+            button.setAttribute('aria-pressed', speed === playbackSpeed ? 'true' : 'false');
+        });
     }
 
     function playVariant(name, updateAddress) {
@@ -312,19 +375,16 @@ document.addEventListener('DOMContentLoaded', function () {
         resetScene();
         activeVariant = name;
         document.body.dataset.motionVariant = name;
-
-        variantButtons.forEach(function (button) {
-            const isActive = button.dataset.variant === name;
-            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        });
+        updateControls();
 
         if (summary) {
-            summary.textContent = variants[name].summary;
+            summary.textContent = variants[name].summary + (playbackSpeed === 0.5 ? ' · Reproducción a 0.5×.' : ' · Reproducción normal.');
         }
 
         if (updateAddress !== false) {
             const url = new URL(window.location.href);
             url.searchParams.set('variant', name);
+            url.searchParams.set('speed', String(playbackSpeed));
             window.history.replaceState({}, '', url);
         }
 
@@ -353,6 +413,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    speedButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const requestedSpeed = Number(button.dataset.speed);
+            playbackSpeed = requestedSpeed === 0.5 ? 0.5 : 1;
+            playVariant(activeVariant, true);
+        });
+    });
+
     if (replayButton) {
         replayButton.addEventListener('click', function () {
             playVariant(activeVariant, false);
@@ -365,6 +433,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    const requestedVariant = new URLSearchParams(window.location.search).get('variant');
+    const params = new URLSearchParams(window.location.search);
+    const requestedVariant = params.get('variant');
+    const requestedSpeed = Number(params.get('speed'));
+    playbackSpeed = requestedSpeed === 0.5 ? 0.5 : 1;
     playVariant(allowedVariants.includes(requestedVariant) ? requestedVariant : 'orbit', false);
 });

@@ -1,0 +1,23 @@
+/* Preview-only Focus clinico layer for the real UniversoVet homepage. */
+.hero-clinic__focus-ring {
+    position: absolute;
+    z-index: 7;
+    left: 50%;
+    top: 41%;
+    width: 92px;
+    height: 92px;
+    margin: -46px 0 0 -46px;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(59, 199, 191, 0.08), 0 0 18px rgba(59, 199, 191, 0.12);
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 760px) {
+    .hero-clinic__focus-ring {
+        width: 74px;
+        height: 74px;
+        margin: -37px 0 0 -37px;
+    }
+}

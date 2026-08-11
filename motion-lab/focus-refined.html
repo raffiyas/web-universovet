@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>UniversoVet · Focus clínico refinado</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .focus-lab__body{min-height:100vh}.focus-lab__toolbar{position:sticky;top:0;z-index:100;padding:12px 16px 10px;background:rgba(18,47,57,.96);color:#fff;box-shadow:0 8px 18px rgba(18,47,57,.14)}.focus-lab__toolbar-inner{width:min(1160px,100% - 8px);margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}.focus-lab__back{font-weight:850;color:#fff}.focus-lab__controls{display:flex;align-items:center;gap:8px}.focus-lab__label{color:rgba(255,255,255,.62);font-size:.78rem;font-weight:800}.focus-lab__button{min-height:40px;padding:9px 13px;border:1px solid rgba(255,255,255,.24);border-radius:10px;background:transparent;color:rgba(255,255,255,.84);font:inherit;font-size:.9rem;font-weight:800;cursor:pointer}.focus-lab__button[aria-pressed="true"]{background:#fff;border-color:#fff;color:#18404d}.focus-lab__summary{width:min(1160px,100% - 40px);margin:7px auto 0;color:rgba(255,255,255,.76);font-size:.84rem;line-height:1.35}.focus-lab__hero{min-height:calc(100vh - 92px);padding:88px 0 72px}.focus-lab__hero .hero__content{z-index:2}.focus-lab__hero .hero-clinic,.focus-lab__hero .hero-clinic__image,.focus-lab__hero .hero-clinic__caption,.focus-lab__hero .hero__copy{transform-origin:center center}.focus-lab__ring{position:absolute;z-index:7;left:50%;top:41%;width:104px;height:104px;margin:-52px 0 0 -52px;border:1px solid rgba(255,255,255,.78);border-radius:50%;box-shadow:0 0 0 4px rgba(59,199,191,.1),0 0 0 999px rgba(18,47,57,.055);opacity:0;pointer-events:none}.focus-lab__notes{padding:48px 0 62px;background:#122f39;color:rgba(255,255,255,.82)}.focus-lab__notes-inner{display:grid;grid-template-columns:.8fr 1.2fr;gap:52px}.focus-lab__eyebrow{display:inline-block;margin-bottom:10px;color:#bff2ff;font-weight:850;font-size:.82rem}.focus-lab__notes h2{color:#fff;font-size:clamp(1.8rem,4vw,3rem);line-height:1.08;letter-spacing:-.03em}.focus-lab__notes p{font-size:1.06rem;line-height:1.7}@media(max-width:1040px){.focus-lab__toolbar-inner{align-items:flex-start;flex-direction:column;gap:10px}.focus-lab__controls{width:100%;overflow-x:auto}.focus-lab__hero{min-height:auto;padding-top:64px}}@media(max-width:760px){.focus-lab__toolbar{padding-inline:10px}.focus-lab__button{min-height:38px;padding:8px 11px;font-size:.82rem}.focus-lab__label{display:none}.focus-lab__summary{width:min(1160px,100% - 32px);font-size:.78rem}.focus-lab__hero{padding:50px 0 58px}.focus-lab__notes-inner{grid-template-columns:1fr;gap:24px}.focus-lab__ring{width:82px;height:82px;margin:-41px 0 0 -41px}}
+    </style>
+</head>
+<body class="focus-lab__body">
+    <div class="focus-lab__toolbar" role="region" aria-label="Controles Focus clínico refinado">
+        <div class="focus-lab__toolbar-inner">
+            <a class="focus-lab__back" href="./?variant=focus&speed=1">← Volver al Motion Lab</a>
+            <div class="focus-lab__controls" role="group" aria-label="Velocidad de reproducción">
+                <span class="focus-lab__label">Focus clínico · refinamiento 1</span>
+                <button type="button" class="focus-lab__button" data-speed="1" aria-pressed="true">Normal</button>
+                <button type="button" class="focus-lab__button" data-speed="0.5" aria-pressed="false">0.5×</button>
+                <button type="button" class="focus-lab__button" id="focus-replay">↻ Repetir</button>
+            </div>
+        </div>
+        <p class="focus-lab__summary" id="focus-summary">Versión cercana a producción · el enfoque ocurre una sola vez, conduce la mirada hacia la atención clínica y termina en reposo.</p>
+        <p class="focus-lab__summary" id="focus-diagnostic"></p>
+    </div>
+
+    <main>
+        <section class="hero focus-lab__hero" data-focus-root>
+            <div class="space-dust" aria-hidden="true"></div>
+            <div class="hero__content container">
+                <div class="hero__copy">
+                    <span class="hero__badge" data-focus-badge>Veterinaria cercana en Coquimbo</span>
+                    <h1 class="hero__title" data-focus-title>Cuidamos a tu peludito como parte de nuestra familia</h1>
+                    <p class="hero__subtitle" data-focus-subtitle>Medicina veterinaria cercana, moderna y pensada para acompañar a tu mascota en cada etapa de su vida.</p>
+                    <div class="hero__actions" data-focus-actions>
+                        <a href="#" class="btn btn--primary">Agendar por WhatsApp</a>
+                        <a href="#" class="btn btn--secondary">Ver servicios</a>
+                    </div>
+                </div>
+                <div class="hero__visual" aria-label="Fotografía clínica de atención veterinaria en UniversoVet">
+                    <figure class="hero-clinic" data-focus-card>
+                        <span class="hero-clinic__orbit" aria-hidden="true"></span>
+                        <span class="hero-clinic__star hero-clinic__star--one" data-focus-star aria-hidden="true"></span>
+                        <span class="hero-clinic__star hero-clinic__star--two" data-focus-star aria-hidden="true"></span>
+                        <span class="focus-lab__ring" data-focus-ring aria-hidden="true"></span>
+                        <img class="hero-clinic__image" data-focus-image src="https://cdn.shopify.com/s/files/1/0697/3466/2441/files/69302f424cf32c1355268c62.png?v=1764841128" alt="Veterinaria atendiendo a un cachorro en una consulta luminosa" loading="eager" decoding="async">
+                        <figcaption class="hero-clinic__caption" data-focus-caption>
+                            <strong>Atención cercana con criterio veterinario</strong>
+                            <span>Evaluación · Prevención · Acompañamiento</span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="focus-lab__notes">
+            <div class="container focus-lab__notes-inner">
+                <div><span class="focus-lab__eyebrow">Focus clínico · Refinamiento 1</span><h2>Observar → enfocar → comunicar</h2></div>
+                <p>Esta versión reduce deliberadamente el efecto de la demo anterior: menor desenfoque, menor zoom, anillo más discreto y una entrada de contenido más rápida. El movimiento termina por completo después de la introducción.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            'use strict';
+            if (!window.gsap) return;
+
+            const gsap = window.gsap;
+            const image = document.querySelector('[data-focus-image]');
+            const card = document.querySelector('[data-focus-card]');
+            const ring = document.querySelector('[data-focus-ring]');
+            const caption = document.querySelector('[data-focus-caption]');
+            const badge = document.querySelector('[data-focus-badge]');
+            const title = document.querySelector('[data-focus-title]');
+            const subtitle = document.querySelector('[data-focus-subtitle]');
+            const actions = document.querySelector('[data-focus-actions]');
+            const buttons = Array.from(actions.children);
+            const stars = Array.from(document.querySelectorAll('[data-focus-star]'));
+            const speedButtons = Array.from(document.querySelectorAll('[data-speed]'));
+            const replay = document.getElementById('focus-replay');
+            const diagnostic = document.getElementById('focus-diagnostic');
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let speed = 1;
+            let timeline = null;
+
+            diagnostic.textContent = prefersReduced
+                ? 'Diagnóstico: tu sistema solicita reducir movimiento. En este preview se fuerza la animación únicamente para evaluarla.'
+                : 'Diagnóstico: movimiento habilitado normalmente.';
+
+            function reset() {
+                if (timeline) timeline.kill();
+                gsap.killTweensOf([image, card, ring, caption, badge, title, subtitle, buttons, stars]);
+                gsap.set([image, card, ring, caption, badge, title, subtitle, buttons, stars], { clearProps: 'all' });
+            }
+
+            function play() {
+                reset();
+                gsap.set([badge, title, subtitle, buttons, caption], { autoAlpha: 0 });
+
+                timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+                timeline
+                    .from(image, {
+                        filter: 'blur(14px) saturate(0.86) brightness(0.92)',
+                        scale: 1.065,
+                        autoAlpha: 0.88,
+                        duration: 0.78,
+                        ease: 'power2.out'
+                    }, 0)
+                    .from(card, {
+                        scale: 1.012,
+                        duration: 0.72,
+                        ease: 'power2.out'
+                    }, 0)
+                    .fromTo(ring, {
+                        autoAlpha: 0,
+                        scale: 1.26
+                    }, {
+                        autoAlpha: 0.86,
+                        scale: 0.92,
+                        duration: 0.38,
+                        ease: 'expo.out'
+                    }, 0.10)
+                    .to(ring, {
+                        autoAlpha: 0,
+                        scale: 0.78,
+                        duration: 0.28,
+                        ease: 'power2.out'
+                    }, 0.48)
+                    .to(caption, { autoAlpha: 1, duration: 0.28 }, 0.46)
+                    .to(badge, { autoAlpha: 1, duration: 0.24 }, 0.50)
+                    .fromTo(title, {
+                        y: 18,
+                        autoAlpha: 0
+                    }, {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.46,
+                        ease: 'expo.out'
+                    }, 0.56)
+                    .fromTo(subtitle, {
+                        y: 10,
+                        autoAlpha: 0
+                    }, {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.34
+                    }, 0.72)
+                    .fromTo(buttons, {
+                        y: 8,
+                        autoAlpha: 0
+                    }, {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.30,
+                        stagger: 0.06
+                    }, 0.84)
+                    .from(stars, {
+                        scale: 0.55,
+                        autoAlpha: 0,
+                        duration: 0.26,
+                        stagger: 0.06
+                    }, 0.88);
+
+                timeline.timeScale(speed);
+            }
+
+            speedButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    speed = Number(button.dataset.speed) === 0.5 ? 0.5 : 1;
+                    speedButtons.forEach(function (item) {
+                        item.setAttribute('aria-pressed', Number(item.dataset.speed) === speed ? 'true' : 'false');
+                    });
+                    play();
+                });
+            });
+
+            replay.addEventListener('click', play);
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function (event) { event.preventDefault(); });
+            });
+
+            play();
+        });
+    </script>
+</body>
+</html>

@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let heroTimeline = null;
     let servicesTimeline = null;
     let servicesObserver = null;
+    let trustTimeline = null;
+    let trustObserver = null;
 
     // ------------------------------------------------------------
     // HERO — FOCUS CLÍNICO (preview aprobado a 0.5x)
@@ -142,8 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return serviceCard.querySelector('.service-card__icon');
         }).filter(Boolean);
 
-        // El landing actual aplica un fade-in genérico a Servicios. En este preview
-        // lo retiramos sólo de esta sección para no sumar dos lenguajes de movimiento.
         [servicesHeader].concat(serviceCards).forEach(function (element) {
             element.classList.remove('fade-in', 'fade-in--visible');
             element.style.transitionDelay = '';
@@ -188,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         const offsets = compactLayout ? mobileOffsets : desktopOffsets;
 
-        // Estado inicial: el espacio se conserva, pero la composición todavía no se arma.
         if (serviceBadge) gsap.set(serviceBadge, { y: 12, autoAlpha: 0 });
         if (serviceTitle) gsap.set(serviceTitle, { y: 20, autoAlpha: 0 });
         if (serviceDescription) gsap.set(serviceDescription, { y: 12, autoAlpha: 0 });
@@ -287,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     ease: 'power2.out'
                 }, 1.02);
 
-            // Algo más pausado que una entrada estándar, pero más ágil que el Hero a 0.5x.
             servicesTimeline.timeScale(0.72);
         }
 
@@ -311,9 +309,142 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // ------------------------------------------------------------
+    // NOSOTROS — CONSTRUCCIÓN DE CONFIANZA
+    // El relato aparece primero y los cuatro compromisos se ensamblan después.
+    // ------------------------------------------------------------
+    const trust = document.querySelector('#nosotros');
+    const trustCopy = trust ? trust.querySelector('.trust__copy') : null;
+    const trustList = trust ? trust.querySelector('.trust__list') : null;
+    const trustItems = trustList ? Array.from(trustList.querySelectorAll('li')) : [];
+
+    if (trust && trustCopy && trustList && trustItems.length) {
+        const trustBadge = trustCopy.querySelector('.section__badge');
+        const trustTitle = trustCopy.querySelector('h2');
+        const trustDescription = trustCopy.querySelector('p');
+
+        [trustCopy].concat(trustItems).forEach(function (element) {
+            element.classList.remove('fade-in', 'fade-in--visible');
+            element.style.transitionDelay = '';
+        });
+
+        const trustStyle = document.createElement('style');
+        trustStyle.setAttribute('data-trust-motion-preview', '');
+        trustStyle.textContent = [
+            '#nosotros.trust-motion-preview .trust__list{position:relative}',
+            '#nosotros.trust-motion-preview .trust__list li{position:relative;z-index:2}',
+            '.trust-motion-line{position:absolute;z-index:1;left:-13px;top:18px;bottom:18px;width:1px;background:linear-gradient(180deg,rgba(59,199,191,.48),rgba(107,53,216,.32));box-shadow:0 0 12px rgba(59,199,191,.12);transform-origin:top center;pointer-events:none}',
+            '@media(max-width:760px){.trust-motion-line{left:8px;top:-12px;bottom:-12px;opacity:.45}}'
+        ].join('');
+        document.head.appendChild(trustStyle);
+
+        trust.classList.add('trust-motion-preview');
+
+        const trustLine = document.createElement('span');
+        trustLine.className = 'trust-motion-line';
+        trustLine.setAttribute('aria-hidden', 'true');
+        trustList.prepend(trustLine);
+
+        if (trustBadge) gsap.set(trustBadge, { x: -8, y: 8, autoAlpha: 0 });
+        if (trustTitle) gsap.set(trustTitle, { x: -14, y: 8, autoAlpha: 0 });
+        if (trustDescription) gsap.set(trustDescription, { x: -8, y: 6, autoAlpha: 0 });
+        gsap.set(trustLine, { scaleY: 0, autoAlpha: 0 });
+        gsap.set(trustItems, { x: 22, y: 4, scale: 0.992, autoAlpha: 0 });
+
+        function restoreTrustFinalState() {
+            [trustBadge, trustTitle, trustDescription].concat(trustItems).filter(Boolean).forEach(function (element) {
+                gsap.set(element, { clearProps: 'transform,opacity,visibility' });
+            });
+            gsap.set(trustLine, { scaleY: 1, autoAlpha: 0.26 });
+        }
+
+        function playTrustMotion() {
+            if (trustTimeline) return;
+
+            trustTimeline = gsap.timeline({
+                defaults: { ease: 'power3.out' },
+                onComplete: function () {
+                    restoreTrustFinalState();
+                    trustTimeline = null;
+                }
+            });
+
+            if (trustBadge) {
+                trustTimeline.to(trustBadge, {
+                    x: 0,
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.36
+                }, 0);
+            }
+            if (trustTitle) {
+                trustTimeline.to(trustTitle, {
+                    x: 0,
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.62,
+                    ease: 'expo.out'
+                }, 0.08);
+            }
+            if (trustDescription) {
+                trustTimeline.to(trustDescription, {
+                    x: 0,
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.46
+                }, 0.24);
+            }
+
+            trustTimeline
+                .to(trustLine, {
+                    scaleY: 1,
+                    autoAlpha: 0.52,
+                    duration: 0.86,
+                    ease: 'power2.inOut'
+                }, 0.20)
+                .to(trustItems, {
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    autoAlpha: 1,
+                    duration: 0.58,
+                    stagger: 0.14,
+                    ease: 'power3.out'
+                }, 0.32)
+                .to(trustLine, {
+                    autoAlpha: 0.26,
+                    duration: 0.38,
+                    ease: 'power2.out'
+                }, 1.08);
+
+            trustTimeline.timeScale(0.78);
+        }
+
+        if ('IntersectionObserver' in window) {
+            trustObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        playTrustMotion();
+                        trustObserver.disconnect();
+                        trustObserver = null;
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px 0px -14% 0px',
+                threshold: 0.2
+            });
+            trustObserver.observe(trust);
+        } else {
+            playTrustMotion();
+        }
+    }
+
     window.addEventListener('pagehide', function () {
         if (heroTimeline) heroTimeline.kill();
         if (servicesTimeline) servicesTimeline.kill();
         if (servicesObserver) servicesObserver.disconnect();
+        if (trustTimeline) trustTimeline.kill();
+        if (trustObserver) trustObserver.disconnect();
     }, { once: true });
 });

@@ -47,9 +47,9 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .services .service-card,
-    .services .service-card__icon {
-        transition: none;
-    }
-}
+/*
+ * Motion-evaluation preview only:
+ * do not disable these hover transitions when the OS requests reduced motion,
+ * otherwise Rafa cannot evaluate the intended easing. Production must restore
+ * an accessibility-specific reduced-motion treatment.
+ */

@@ -1,0 +1,11 @@
+@media (prefers-reduced-motion: reduce) {
+    .services .service-card,
+    .services .service-card__icon {
+        transition: none !important;
+    }
+
+    .services .service-card:hover,
+    .services .service-card:hover .service-card__icon {
+        transform: none !important;
+    }
+}

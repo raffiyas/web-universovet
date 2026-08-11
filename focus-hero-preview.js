@@ -4,6 +4,47 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!window.gsap) return;
 
     const gsap = window.gsap;
+
+    let heroTimeline = null;
+    let servicesTimeline = null;
+    let servicesObserver = null;
+    let trustTimeline = null;
+    let trustObserver = null;
+    let locationTimeline = null;
+    let locationObserver = null;
+    let ctaTimeline = null;
+    let ctaObserver = null;
+
+    function removeLegacyFade(elements) {
+        elements.filter(Boolean).forEach(function (element) {
+            element.classList.remove('fade-in', 'fade-in--visible');
+            element.style.transitionDelay = '';
+        });
+    }
+
+    function observeOnce(element, callback, options) {
+        if (!element) return null;
+        if (!('IntersectionObserver' in window)) {
+            callback();
+            return null;
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    callback();
+                    observer.disconnect();
+                }
+            });
+        }, options);
+
+        observer.observe(element);
+        return observer;
+    }
+
+    // ------------------------------------------------------------
+    // HERO — FOCUS CLÍNICO (preview aprobado a 0.5x)
+    // ------------------------------------------------------------
     const hero = document.querySelector('.hero');
     const image = document.querySelector('.hero .hero-clinic__image');
     const card = document.querySelector('.hero .hero-clinic');
@@ -14,15 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const actions = document.querySelector('.hero .hero__actions');
     const stars = Array.from(document.querySelectorAll('.hero .hero-clinic__star'));
 
-    let heroTimeline = null;
-    let servicesTimeline = null;
-    let servicesObserver = null;
-    let trustTimeline = null;
-    let trustObserver = null;
-
-    // ------------------------------------------------------------
-    // HERO — FOCUS CLÍNICO (preview aprobado a 0.5x)
-    // ------------------------------------------------------------
     if (hero && image && card && caption && badge && title && subtitle && actions) {
         const buttons = Array.from(actions.children);
         const ring = document.createElement('span');
@@ -65,9 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 duration: 0.62,
                 ease: 'power2.out'
             }, 0)
-            .fromTo(card, {
-                scale: 1.008
-            }, {
+            .fromTo(card, { scale: 1.008 }, {
                 scale: 1,
                 duration: 0.56,
                 ease: 'power2.out'
@@ -89,36 +119,24 @@ document.addEventListener('DOMContentLoaded', function () {
             }, 0.34)
             .to(caption, { autoAlpha: 1, duration: 0.24 }, 0.34)
             .to(badge, { autoAlpha: 1, duration: 0.22 }, 0.30)
-            .fromTo(title, {
-                y: 14,
-                autoAlpha: 0
-            }, {
+            .fromTo(title, { y: 14, autoAlpha: 0 }, {
                 y: 0,
                 autoAlpha: 1,
                 duration: 0.42,
                 ease: 'expo.out'
             }, 0.36)
-            .fromTo(subtitle, {
-                y: 8,
-                autoAlpha: 0
-            }, {
+            .fromTo(subtitle, { y: 8, autoAlpha: 0 }, {
                 y: 0,
                 autoAlpha: 1,
                 duration: 0.30
             }, 0.52)
-            .fromTo(buttons, {
-                y: 6,
-                autoAlpha: 0
-            }, {
+            .fromTo(buttons, { y: 6, autoAlpha: 0 }, {
                 y: 0,
                 autoAlpha: 1,
                 duration: 0.28,
                 stagger: 0.05
             }, 0.64)
-            .fromTo(stars, {
-                scale: 0.72,
-                autoAlpha: 0
-            }, {
+            .fromTo(stars, { scale: 0.72, autoAlpha: 0 }, {
                 scale: 1,
                 autoAlpha: 1,
                 duration: 0.22,
@@ -130,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ------------------------------------------------------------
     // SERVICIOS — SISTEMA EN ÓRBITA
-    // Preview: una sola coreografía al entrar al viewport.
     // ------------------------------------------------------------
     const services = document.querySelector('#servicios');
     const servicesHeader = services ? services.querySelector('.section__header') : null;
@@ -144,10 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return serviceCard.querySelector('.service-card__icon');
         }).filter(Boolean);
 
-        [servicesHeader].concat(serviceCards).forEach(function (element) {
-            element.classList.remove('fade-in', 'fade-in--visible');
-            element.style.transitionDelay = '';
-        });
+        removeLegacyFade([servicesHeader].concat(serviceCards));
 
         const style = document.createElement('style');
         style.setAttribute('data-services-orbit-preview', '');
@@ -230,28 +244,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            if (serviceBadge) {
-                servicesTimeline.to(serviceBadge, {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.38
-                }, 0);
-            }
-            if (serviceTitle) {
-                servicesTimeline.to(serviceTitle, {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.58,
-                    ease: 'expo.out'
-                }, 0.08);
-            }
-            if (serviceDescription) {
-                servicesTimeline.to(serviceDescription, {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.42
-                }, 0.22);
-            }
+            if (serviceBadge) servicesTimeline.to(serviceBadge, { y: 0, autoAlpha: 1, duration: 0.38 }, 0);
+            if (serviceTitle) servicesTimeline.to(serviceTitle, { y: 0, autoAlpha: 1, duration: 0.58, ease: 'expo.out' }, 0.08);
+            if (serviceDescription) servicesTimeline.to(serviceDescription, { y: 0, autoAlpha: 1, duration: 0.42 }, 0.22);
 
             servicesTimeline
                 .to(orbitTrace, {
@@ -289,29 +284,15 @@ document.addEventListener('DOMContentLoaded', function () {
             servicesTimeline.timeScale(0.72);
         }
 
-        if ('IntersectionObserver' in window) {
-            servicesObserver = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        playServicesOrbit();
-                        servicesObserver.disconnect();
-                        servicesObserver = null;
-                    }
-                });
-            }, {
-                root: null,
-                rootMargin: '0px 0px -12% 0px',
-                threshold: 0.18
-            });
-            servicesObserver.observe(services);
-        } else {
-            playServicesOrbit();
-        }
+        servicesObserver = observeOnce(services, playServicesOrbit, {
+            root: null,
+            rootMargin: '0px 0px -12% 0px',
+            threshold: 0.18
+        });
     }
 
     // ------------------------------------------------------------
     // NOSOTROS — CONSTRUCCIÓN DE CONFIANZA
-    // El relato aparece primero y los cuatro compromisos se ensamblan después.
     // ------------------------------------------------------------
     const trust = document.querySelector('#nosotros');
     const trustCopy = trust ? trust.querySelector('.trust__copy') : null;
@@ -323,10 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const trustTitle = trustCopy.querySelector('h2');
         const trustDescription = trustCopy.querySelector('p');
 
-        [trustCopy].concat(trustItems).forEach(function (element) {
-            element.classList.remove('fade-in', 'fade-in--visible');
-            element.style.transitionDelay = '';
-        });
+        removeLegacyFade([trustCopy].concat(trustItems));
 
         const trustStyle = document.createElement('style');
         trustStyle.setAttribute('data-trust-motion-preview', '');
@@ -369,31 +347,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            if (trustBadge) {
-                trustTimeline.to(trustBadge, {
-                    x: 0,
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.36
-                }, 0);
-            }
-            if (trustTitle) {
-                trustTimeline.to(trustTitle, {
-                    x: 0,
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.62,
-                    ease: 'expo.out'
-                }, 0.08);
-            }
-            if (trustDescription) {
-                trustTimeline.to(trustDescription, {
-                    x: 0,
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.46
-                }, 0.24);
-            }
+            if (trustBadge) trustTimeline.to(trustBadge, { x: 0, y: 0, autoAlpha: 1, duration: 0.36 }, 0);
+            if (trustTitle) trustTimeline.to(trustTitle, { x: 0, y: 0, autoAlpha: 1, duration: 0.62, ease: 'expo.out' }, 0.08);
+            if (trustDescription) trustTimeline.to(trustDescription, { x: 0, y: 0, autoAlpha: 1, duration: 0.46 }, 0.24);
 
             trustTimeline
                 .to(trustLine, {
@@ -420,24 +376,198 @@ document.addEventListener('DOMContentLoaded', function () {
             trustTimeline.timeScale(0.78);
         }
 
-        if ('IntersectionObserver' in window) {
-            trustObserver = new IntersectionObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    if (entry.isIntersecting) {
-                        playTrustMotion();
-                        trustObserver.disconnect();
-                        trustObserver = null;
-                    }
-                });
-            }, {
-                root: null,
-                rootMargin: '0px 0px -14% 0px',
-                threshold: 0.2
+        trustObserver = observeOnce(trust, playTrustMotion, {
+            root: null,
+            rootMargin: '0px 0px -14% 0px',
+            threshold: 0.2
+        });
+    }
+
+    // ------------------------------------------------------------
+    // UBICACIÓN — LLEGADA
+    // Texto y datos se acercan desde la izquierda; el mapa se descubre desde la derecha.
+    // ------------------------------------------------------------
+    const location = document.querySelector('#ubicacion');
+    const locationGrid = location ? location.querySelector('.location__grid') : null;
+    const locationCopy = locationGrid ? locationGrid.firstElementChild : null;
+    const locationMap = location ? location.querySelector('.location__map') : null;
+    const locationBlocks = location ? Array.from(location.querySelectorAll('.location__block')) : [];
+
+    if (location && locationCopy && locationMap) {
+        const locationBadge = locationCopy.querySelector('.section__badge');
+        const locationTitle = locationCopy.querySelector('.section__title');
+        const locationDescription = locationCopy.querySelector('.section__description');
+
+        removeLegacyFade(locationBlocks);
+
+        const locationStyle = document.createElement('style');
+        locationStyle.setAttribute('data-location-motion-preview', '');
+        locationStyle.textContent = [
+            '#ubicacion.location-motion-preview .location__map{position:relative;isolation:isolate}',
+            '.location-arrival-pulse{position:absolute;z-index:4;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid rgba(59,199,191,.55);border-radius:50%;box-shadow:0 0 0 5px rgba(59,199,191,.06);pointer-events:none;opacity:0}',
+            '@media(max-width:760px){.location-arrival-pulse{width:28px;height:28px;margin:-14px 0 0 -14px}}'
+        ].join('');
+        document.head.appendChild(locationStyle);
+        location.classList.add('location-motion-preview');
+
+        const arrivalPulse = document.createElement('span');
+        arrivalPulse.className = 'location-arrival-pulse';
+        arrivalPulse.setAttribute('aria-hidden', 'true');
+        locationMap.appendChild(arrivalPulse);
+
+        if (locationBadge) gsap.set(locationBadge, { x: -10, y: 6, autoAlpha: 0 });
+        if (locationTitle) gsap.set(locationTitle, { x: -18, y: 8, autoAlpha: 0 });
+        if (locationDescription) gsap.set(locationDescription, { x: -12, y: 6, autoAlpha: 0 });
+        gsap.set(locationBlocks, { x: -20, y: 6, autoAlpha: 0 });
+        gsap.set(locationMap, {
+            x: 28,
+            scale: 0.992,
+            autoAlpha: 0.42,
+            clipPath: 'inset(0 16% 0 0 round 30px)'
+        });
+        gsap.set(arrivalPulse, { scale: 0.65, autoAlpha: 0 });
+
+        function restoreLocationFinalState() {
+            [locationBadge, locationTitle, locationDescription].concat(locationBlocks).filter(Boolean).forEach(function (element) {
+                gsap.set(element, { clearProps: 'transform,opacity,visibility' });
             });
-            trustObserver.observe(trust);
-        } else {
-            playTrustMotion();
+            gsap.set(locationMap, { clearProps: 'transform,opacity,visibility,clipPath' });
+            gsap.set(arrivalPulse, { autoAlpha: 0, clearProps: 'transform,visibility' });
         }
+
+        function playLocationMotion() {
+            if (locationTimeline) return;
+
+            locationTimeline = gsap.timeline({
+                defaults: { ease: 'power3.out' },
+                onComplete: function () {
+                    restoreLocationFinalState();
+                    locationTimeline = null;
+                }
+            });
+
+            if (locationBadge) locationTimeline.to(locationBadge, { x: 0, y: 0, autoAlpha: 1, duration: 0.36 }, 0);
+            if (locationTitle) locationTimeline.to(locationTitle, { x: 0, y: 0, autoAlpha: 1, duration: 0.60, ease: 'expo.out' }, 0.08);
+            if (locationDescription) locationTimeline.to(locationDescription, { x: 0, y: 0, autoAlpha: 1, duration: 0.44 }, 0.22);
+
+            locationTimeline
+                .to(locationMap, {
+                    x: 0,
+                    scale: 1,
+                    autoAlpha: 1,
+                    clipPath: 'inset(0 0% 0 0 round 30px)',
+                    duration: 0.92,
+                    ease: 'power3.inOut'
+                }, 0.12)
+                .to(locationBlocks, {
+                    x: 0,
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.54,
+                    stagger: 0.13,
+                    ease: 'power3.out'
+                }, 0.38)
+                .fromTo(arrivalPulse, {
+                    scale: 0.65,
+                    autoAlpha: 0.34
+                }, {
+                    scale: 1.7,
+                    autoAlpha: 0,
+                    duration: 0.70,
+                    ease: 'power2.out'
+                }, 0.82);
+
+            locationTimeline.timeScale(0.78);
+        }
+
+        locationObserver = observeOnce(location, playLocationMotion, {
+            root: null,
+            rootMargin: '0px 0px -12% 0px',
+            threshold: 0.18
+        });
+    }
+
+    // ------------------------------------------------------------
+    // CTA FINAL — SEÑAL
+    // Un único gesto de llamada a la acción y luego reposo completo.
+    // ------------------------------------------------------------
+    const cta = document.querySelector('#contacto');
+    const ctaContent = cta ? cta.querySelector('.cta__content') : null;
+
+    if (cta && ctaContent) {
+        const ctaSpark = ctaContent.querySelector('.cta__spark');
+        const ctaTitle = ctaContent.querySelector('h2');
+        const ctaDescription = ctaContent.querySelector('p');
+        const ctaButton = ctaContent.querySelector('.btn');
+
+        removeLegacyFade([ctaContent]);
+
+        const ctaStyle = document.createElement('style');
+        ctaStyle.setAttribute('data-cta-signal-preview', '');
+        ctaStyle.textContent = [
+            '#contacto.cta-signal-preview .cta__content{position:relative}',
+            '#contacto.cta-signal-preview .btn--primary{position:relative;isolation:isolate}',
+            '.cta-signal-ring{position:absolute;z-index:2;inset:-7px;border:1px solid rgba(59,199,191,.48);border-radius:999px;pointer-events:none;opacity:0}'
+        ].join('');
+        document.head.appendChild(ctaStyle);
+        cta.classList.add('cta-signal-preview');
+
+        let signalRing = null;
+        if (ctaButton) {
+            signalRing = document.createElement('span');
+            signalRing.className = 'cta-signal-ring';
+            signalRing.setAttribute('aria-hidden', 'true');
+            ctaButton.appendChild(signalRing);
+        }
+
+        if (ctaSpark) gsap.set(ctaSpark, { scale: 0.72, autoAlpha: 0 });
+        if (ctaTitle) gsap.set(ctaTitle, { y: 14, autoAlpha: 0 });
+        if (ctaDescription) gsap.set(ctaDescription, { y: 9, autoAlpha: 0 });
+        if (ctaButton) gsap.set(ctaButton, { y: 8, scale: 0.99, autoAlpha: 0 });
+        if (signalRing) gsap.set(signalRing, { scale: 0.88, autoAlpha: 0 });
+
+        function restoreCtaFinalState() {
+            [ctaSpark, ctaTitle, ctaDescription, ctaButton].filter(Boolean).forEach(function (element) {
+                gsap.set(element, { clearProps: 'transform,opacity,visibility' });
+            });
+            if (signalRing) gsap.set(signalRing, { autoAlpha: 0, clearProps: 'transform,visibility' });
+        }
+
+        function playCtaMotion() {
+            if (ctaTimeline) return;
+
+            ctaTimeline = gsap.timeline({
+                defaults: { ease: 'power3.out' },
+                onComplete: function () {
+                    restoreCtaFinalState();
+                    ctaTimeline = null;
+                }
+            });
+
+            if (ctaSpark) ctaTimeline.to(ctaSpark, { scale: 1, autoAlpha: 1, duration: 0.40 }, 0);
+            if (ctaTitle) ctaTimeline.to(ctaTitle, { y: 0, autoAlpha: 1, duration: 0.62, ease: 'expo.out' }, 0.08);
+            if (ctaDescription) ctaTimeline.to(ctaDescription, { y: 0, autoAlpha: 1, duration: 0.42 }, 0.26);
+            if (ctaButton) ctaTimeline.to(ctaButton, { y: 0, scale: 1, autoAlpha: 1, duration: 0.46 }, 0.42);
+            if (signalRing) {
+                ctaTimeline.fromTo(signalRing, {
+                    scale: 0.88,
+                    autoAlpha: 0.42
+                }, {
+                    scale: 1.42,
+                    autoAlpha: 0,
+                    duration: 0.78,
+                    ease: 'power2.out'
+                }, 0.70);
+            }
+
+            ctaTimeline.timeScale(0.82);
+        }
+
+        ctaObserver = observeOnce(cta, playCtaMotion, {
+            root: null,
+            rootMargin: '0px 0px -10% 0px',
+            threshold: 0.24
+        });
     }
 
     window.addEventListener('pagehide', function () {
@@ -446,5 +576,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (servicesObserver) servicesObserver.disconnect();
         if (trustTimeline) trustTimeline.kill();
         if (trustObserver) trustObserver.disconnect();
+        if (locationTimeline) locationTimeline.kill();
+        if (locationObserver) locationObserver.disconnect();
+        if (ctaTimeline) ctaTimeline.kill();
+        if (ctaObserver) ctaObserver.disconnect();
     }, { once: true });
 });

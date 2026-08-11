@@ -17,25 +17,25 @@
 /* Preview-only: smoother, less mechanical service-card hover. */
 .services .service-card {
     transition:
-        transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 360ms ease,
-        border-color 300ms ease;
+        transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 480ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 420ms ease;
 }
 
 .services .service-card__icon {
-    transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
     transform-origin: center center;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .services .service-card:hover {
-        transform: translateY(-3px) scale(1.006);
-        box-shadow: 0 20px 42px rgba(38, 65, 74, 0.095);
-        border-color: rgba(107, 53, 216, 0.16);
+        transform: translateY(-2px) scale(1.003);
+        box-shadow: 0 18px 38px rgba(38, 65, 74, 0.085);
+        border-color: rgba(107, 53, 216, 0.14);
     }
 
     .services .service-card:hover .service-card__icon {
-        transform: translateY(-2px) scale(1.035);
+        transform: translateY(-1px) scale(1.02);
     }
 }
 

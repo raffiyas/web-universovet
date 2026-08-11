@@ -17,6 +17,10 @@
                 <button type="button" class="motion-lab__variant" data-variant="orbit" aria-pressed="true">Órbita clínica</button>
                 <button type="button" class="motion-lab__variant" data-variant="constellation" aria-pressed="false">Constelación clínica</button>
                 <button type="button" class="motion-lab__variant" data-variant="focus" aria-pressed="false">Focus clínico</button>
+                <span class="motion-lab__divider" aria-hidden="true"></span>
+                <span class="motion-lab__control-label">Velocidad</span>
+                <button type="button" class="motion-lab__speed" data-speed="1" aria-pressed="true">Normal</button>
+                <button type="button" class="motion-lab__speed" data-speed="0.5" aria-pressed="false">0.5×</button>
                 <button type="button" class="motion-lab__replay" id="motion-replay">↻ Repetir</button>
             </div>
         </div>
@@ -46,11 +50,12 @@
                 <div class="hero__visual" data-motion-visual aria-label="Fotografía clínica de atención veterinaria en UniversoVet">
                     <figure class="hero-clinic" data-motion-card>
                         <svg class="constellation-trace" data-constellation-trace viewBox="0 0 520 420" aria-hidden="true" focusable="false" preserveAspectRatio="none">
-                            <path d="M48 105 L178 54 L315 132 L446 70" pathLength="1"></path>
+                            <path d="M38 295 L118 112 L248 182 L366 74 L470 226 L404 350 L248 182 L118 112" pathLength="1"></path>
                         </svg>
                         <span class="hero-clinic__orbit" data-motion-orbit aria-hidden="true"></span>
                         <span class="hero-clinic__star hero-clinic__star--one" data-motion-star aria-hidden="true"></span>
                         <span class="hero-clinic__star hero-clinic__star--two" data-motion-star aria-hidden="true"></span>
+                        <span class="motion-focus-ring" data-motion-focus-ring aria-hidden="true"></span>
                         <img
                             class="hero-clinic__image"
                             data-motion-image
@@ -70,10 +75,10 @@
         <section class="motion-lab__notes" aria-labelledby="motion-lab-notes-title">
             <div class="container motion-lab__notes-inner">
                 <div>
-                    <span class="motion-lab__eyebrow">Preview interno</span>
-                    <h2 id="motion-lab-notes-title">Compara la sensación, no la cantidad de movimiento</h2>
+                    <span class="motion-lab__eyebrow">Preview interno · Iteración 2</span>
+                    <h2 id="motion-lab-notes-title">Ahora las diferencias están exageradas a propósito</h2>
                 </div>
-                <p>Prueba cada variante varias veces y fíjate en tres cosas: cuál se siente más propia de UniversoVet, cuál dirige mejor la atención hacia el mensaje y cuál sigue sintiéndose agradable después de repetirla.</p>
+                <p>Esta versión no representa todavía la intensidad final. Primero queremos identificar qué lenguaje de movimiento pertenece a UniversoVet. Cuando elijamos uno, reduciremos amplitud, duración y efectos hasta encontrar el punto elegante.</p>
             </div>
         </section>
     </main>

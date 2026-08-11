@@ -87,31 +87,61 @@
             let speed = 1;
             let timeline = null;
 
+            const allTargets = [image, card, ring, caption, badge, title, subtitle].concat(buttons, stars);
+
             diagnostic.textContent = prefersReduced
                 ? 'Diagnóstico: tu sistema solicita reducir movimiento. En este preview se fuerza la animación únicamente para evaluarla.'
                 : 'Diagnóstico: movimiento habilitado normalmente.';
 
+            function restoreFinalState() {
+                gsap.set(image, {
+                    filter: 'none',
+                    scale: 1,
+                    autoAlpha: 1,
+                    clearProps: 'filter,transform,opacity,visibility'
+                });
+                gsap.set(card, { clearProps: 'transform' });
+                gsap.set(ring, { autoAlpha: 0, clearProps: 'transform,visibility' });
+            }
+
             function reset() {
-                if (timeline) timeline.kill();
-                gsap.killTweensOf([image, card, ring, caption, badge, title, subtitle, buttons, stars]);
-                gsap.set([image, card, ring, caption, badge, title, subtitle, buttons, stars], { clearProps: 'all' });
+                if (timeline) {
+                    timeline.kill();
+                    timeline = null;
+                }
+                gsap.killTweensOf(allTargets);
+                gsap.set(allTargets, { clearProps: 'all' });
+                restoreFinalState();
             }
 
             function play() {
                 reset();
                 gsap.set([badge, title, subtitle, buttons, caption], { autoAlpha: 0 });
 
-                timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+                timeline = gsap.timeline({
+                    defaults: { ease: 'power3.out' },
+                    onComplete: function () {
+                        restoreFinalState();
+                        timeline = null;
+                    }
+                });
+
                 timeline
-                    .from(image, {
+                    .fromTo(image, {
                         filter: 'blur(14px) saturate(0.86) brightness(0.92)',
                         scale: 1.065,
-                        autoAlpha: 0.88,
+                        autoAlpha: 0.88
+                    }, {
+                        filter: 'none',
+                        scale: 1,
+                        autoAlpha: 1,
                         duration: 0.78,
                         ease: 'power2.out'
                     }, 0)
-                    .from(card, {
-                        scale: 1.012,
+                    .fromTo(card, {
+                        scale: 1.012
+                    }, {
+                        scale: 1,
                         duration: 0.72,
                         ease: 'power2.out'
                     }, 0)
@@ -158,9 +188,12 @@
                         duration: 0.30,
                         stagger: 0.06
                     }, 0.84)
-                    .from(stars, {
+                    .fromTo(stars, {
                         scale: 0.55,
-                        autoAlpha: 0,
+                        autoAlpha: 0
+                    }, {
+                        scale: 1,
+                        autoAlpha: 1,
                         duration: 0.26,
                         stagger: 0.06
                     }, 0.88);
@@ -183,6 +216,7 @@
                 button.addEventListener('click', function (event) { event.preventDefault(); });
             });
 
+            window.addEventListener('pagehide', reset);
             play();
         });
     </script>

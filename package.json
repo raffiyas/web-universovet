@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "node scripts/generate-supabase-config.js",
-    "test:bts-public-query-xss": "node tests/bts-public-query-xss.test.js"
+    "test:bts-public-query-xss": "node tests/bts-public-query-xss.test.js",
+    "test:clinical": "node tests/vaccineCalculator.test.mjs"
   },
   "devDependencies": {}
 }

@@ -1,0 +1,40 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { calculateVaccines } from '../herramientas/calculadora-vacunas/vaccines/vaccineCalculator.mjs';
+import { knownAntigens } from '../herramientas/calculadora-vacunas/vaccines/vaccineRules.mjs';
+const now = new Date('2026-09-29T12:00:00Z');
+const dateAt = weeks => new Date(now.getTime() - weeks * 7 * 86400000).toISOString().slice(0, 10);
+const coreDog = ['CDV', 'CAV', 'CPV'];
+const coreCat = ['FPV', 'FHV1', 'FCV'];
+const base = (species, weeks, changes = {}) => ({ species, birthDate: dateAt(weeks), ill: 'no', reaction: 'no', history: 'never', doses: [], risks: [], felv: 'unknown', ...changes });
+const dose = (label, weeksAgo, antigens = []) => ({ label, date: dateAt(weeksAgo), antigens });
+const get = (input, id) => calculateVaccines(input, now).recommendations.find(r => r.id === id);
+
+test('perro 6 semanas sin vacunas: inicio próximo', () => assert.equal(get(base('dog', 6), 'core').status, 'soon'));
+test('perro 8 semanas sin vacunas: serie pendiente', () => assert.equal(get(base('dog', 8), 'core').status, 'pending'));
+test('perro 10 semanas con una dosis: sigue serie', () => assert.equal(get(base('dog', 10, { history: 'card', doses: [dose('puppy', 2, coreDog)] }), 'core').status, 'soon'));
+test('perro 16 semanas con serie incompleta: revisar dosis >=16 semanas', () => assert.equal(get(base('dog', 16, { history: 'card', doses: [dose('puppy', 8, coreDog)] }), 'core').status, 'pending'));
+test('perro 7 meses sin historial: evaluación', () => assert.equal(get(base('dog', 30, { history: 'unknown' }), 'core').status, 'pending'));
+test('adulto sin historial: no asumir protección', () => assert.equal(get(base('dog', 260, { history: 'unknown' }), 'core').status, 'pending'));
+test('adulto core actualizado y leptospira vencida', () => {
+  const input = base('dog', 156, { history: 'card', doses: [dose('polyvalent', 128, coreDog), dose('leptospira', 60, ['Leptospira']), dose('leptospira', 57, ['Leptospira'])] });
+  assert.equal(get(input, 'core').status, 'current'); assert.equal(get(input, 'leptospira').status, 'overdue');
+});
+test('adulto en hotel: Bordetella basada en riesgo', () => assert.equal(get(base('dog', 156, { risks: ['boarding'] }), 'respiratory').status, 'risk'));
+test('adulto rural con roedores: leptospira relevante', () => assert.match(get(base('dog', 156, { risks: ['rural', 'rodents'] }), 'leptospira').reason, /roedores/));
+test('gato 8 semanas sin vacunas', () => assert.equal(get(base('cat', 8), 'core').status, 'pending'));
+test('gato 12 semanas con una dosis', () => assert.equal(get(base('cat', 12, { history: 'card', doses: [dose('feline3', 4, coreCat)] }), 'core').status, 'soon'));
+test('gato 16 semanas con dos dosis previas', () => assert.equal(get(base('cat', 16, { history: 'card', doses: [dose('feline3', 8, coreCat), dose('feline3', 4, coreCat)] }), 'core').status, 'pending'));
+test('gato 6 meses sin vacunas', () => assert.equal(get(base('cat', 26), 'core').status, 'overdue'));
+test('gato 6 meses FeLV negativo exterior', () => assert.equal(get(base('cat', 26, { felv: 'negative', risks: ['outdoor'] }), 'felv').status, 'risk'));
+test('adulto indoor: FeLV no indicado por exposición', () => assert.equal(get(base('cat', 156, { felv: 'negative', risks: ['indoor'] }), 'felv').status, 'not-indicated'));
+test('adulto outdoor: FeLV basado en riesgo', () => assert.equal(get(base('cat', 156, { felv: 'negative', risks: ['outdoor'] }), 'felv').status, 'risk'));
+test('FeLV positivo: no recomendar vacunación', () => assert.equal(get(base('cat', 156, { felv: 'positive', risks: ['outdoor'] }), 'felv').status, 'not-indicated'));
+test('FeLV desconocido: prueba antes de vacunar', () => assert.match(get(base('cat', 26), 'felv').next, /Conocer el estado/));
+test('animal enfermo y antecedente de reacción: ambas alertas', () => assert.equal(calculateVaccines(base('dog', 20, { ill: 'yes', reaction: 'yes' }), now).alerts.length, 3));
+test('historial desconocido y nacimiento desconocido: incertidumbre explícita', () => {
+  const result = calculateVaccines(base('dog', 20, { birthDate: undefined, approximate: { value: 5, unit: 'months' }, history: 'unknown' }), now);
+  assert.equal(result.alerts.length, 2); assert.ok(result.ageDays > 140);
+});
+test('etiqueta séxtuple sin antígenos no confirma composición', () => assert.deepEqual(knownAntigens(dose('sextuple', 2)), []));
+test('rabia en Chile: primera dosis y producto a verificar', () => assert.match(get(base('cat', 10), 'rabies').next, /producto autorizado/));

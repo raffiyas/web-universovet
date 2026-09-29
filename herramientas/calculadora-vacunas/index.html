@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JEDGQPSB9F"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JEDGQPSB9F');</script>
+    <title>Calculadora de Vacunas para Perros y Gatos | UniversoVet</title>
+    <meta name="description" content="Descubre qué vacunas puede necesitar tu perro o gato según edad, historial y estilo de vida. Orientación basada en recomendaciones veterinarias actuales.">
+    <link rel="canonical" href="https://www.universovet.cl/herramientas/calculadora-vacunas">
+    <meta property="og:title" content="Calculadora de Vacunas para Perros y Gatos | UniversoVet">
+    <meta property="og:description" content="Orientación según edad, historial y estilo de vida de tu mascota.">
+    <meta property="og:url" content="https://www.universovet.cl/herramientas/calculadora-vacunas">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/motion-accessibility.css">
+    <link rel="stylesheet" href="/herramientas/calculadora-vacunas/styles.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="container topbar__content">
+            <a href="tel:+56935677904" class="topbar__link">☎️ <span>+56 9 3567 7904</span></a>
+            <a href="https://www.instagram.com/universovetspa/" class="topbar__link topbar__link--social" target="_blank" rel="noopener noreferrer">✨ <span>@universovetspa</span></a>
+        </div>
+    </div>
+
+    <header class="header" id="header">
+        <nav class="nav container" aria-label="Navegación principal">
+            <a href="/#inicio"
+               class="nav__logo"
+               aria-label="UniversoVet inicio">
+                <svg
+                    class="nav__logo-image"
+                    viewBox="105 220 534 114"
+                    width="534"
+                    height="114"
+                    aria-hidden="true"
+                    focusable="false"
+                    preserveAspectRatio="xMidYMid meet">
+                    <image
+                        href="/logo-horizontal-sin-fondo.png"
+                        x="0"
+                        y="0"
+                        width="792"
+                        height="612"
+                        preserveAspectRatio="none">
+                    </image>
+                </svg>
+            </a>
+            <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menú"><span class="hamburger"></span></button>
+            <ul class="nav__menu" id="nav-menu">
+                <li><a href="/#inicio" class="nav__link">Inicio</a></li>
+                <li><a href="/#servicios" class="nav__link">Servicios</a></li>
+                <li><a href="/#nosotros" class="nav__link">Nosotros</a></li>
+                <li><a href="/planes" class="nav__link">Universo Preventivo</a></li>
+                <li><a href="/bts" class="nav__link nav__link--bts">💜 Concurso BTS</a></li>
+                <li><a href="https://wa.me/56935677904" class="nav__link nav__link--cta js-whatsapp-cta" target="_blank" rel="noopener noreferrer">Agendar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+<main class="vaccine-page">
+<section class="section vaccine-hero"><div class="container"><span class="eyebrow">Herramienta gratuita · UniversoVet</span><h1>Calculadora de vacunas para perros y gatos</h1><p>Revisa un plan orientativo según edad, historial y estilo de vida. Lleva el carnet a una consulta para definir el esquema definitivo.</p><small>Criterios clínicos actualizados según WSAVA 2024.</small></div></section>
+<section class="section"><div class="container"><div id="calculator" class="vaccine-wizard">
+<ol class="vaccine-progress" aria-label="Progreso"><li class="is-active" aria-current="step">1. Tu mascota</li><li>2. Vacunas anteriores</li><li>3. Estilo de vida</li><li>4. Resultado</li></ol>
+<noscript>Activa JavaScript para usar la calculadora o consulta directamente por WhatsApp.</noscript>
+<form class="vaccine-panel" autocomplete="off">
+<section data-step="0"><h2 tabindex="-1">Tu mascota</h2>
+<label class="field">¿Cómo se llama? (opcional)<input name="pet-name" maxlength="60" placeholder="Ej: Luna"></label>
+<fieldset><legend>Especie</legend><div class="vaccine-choice"><label><input type="radio" name="species" value="dog" checked> Perro</label><label><input type="radio" name="species" value="cat"> Gato</label></div></fieldset>
+<label class="vaccine-check"><input id="unknown-date" name="unknown-date" type="checkbox"> No conozco la fecha exacta</label>
+<label class="field" id="exact-age">Fecha de nacimiento<input id="birth" name="birth" type="date"></label>
+<div class="vaccine-row" id="estimated-age" hidden><label class="field">Edad aproximada<input id="age" name="age" type="number" min="1" max="2000"></label><label class="field">Unidad<select id="age-unit" name="age-unit"><option value="weeks">Semanas</option><option value="months">Meses</option><option value="years">Años</option></select></label></div>
+<label class="vaccine-check"><input name="sterilized" type="checkbox"> Está esterilizada (no modifica este cálculo)</label>
+<label class="field">¿Está actualmente enferma o bajo tratamiento?<select name="ill" id="ill"><option value="no">No</option><option value="yes">Sí</option><option value="unsure">No estoy seguro</option></select></label>
+<p id="health-warning" class="vaccine-alert" hidden>Si está enferma o recibe tratamiento, un médico veterinario debe evaluarla antes de vacunar.</p>
+<label class="field">¿Ha tenido una reacción importante después de una vacuna?<select name="reaction"><option value="no">No</option><option value="yes">Sí</option><option value="unsure">No sé</option></select></label>
+</section>
+<section data-step="1" hidden><h2 tabindex="-1">Vacunas anteriores</h2>
+<label class="field">¿Conoces su historial?<select name="history" id="history"><option value="card">Sí, tengo su carnet</option><option value="some">Recibió algunas, pero no sé cuáles</option><option value="never">Nunca ha sido vacunada</option><option value="unknown" selected>No lo sé</option></select></label>
+<div class="vaccine-dose-form" id="dose-form" hidden><h3>Agregar dosis del carnet</h3><p>Marca componentes solo si aparecen en el carnet o ficha del producto. “Séxtuple”, “óctuple” o “cuádruple” por sí solas no confirman la composición. Si no los conoces, puedes dejarlos sin marcar.</p>
+<div class="vaccine-row"><label class="field">Vacuna registrada<select id="dose-label"></select></label><label class="field">Fecha aproximada<input id="dose-date" type="date"></label></div>
+<label class="field">Producto (opcional)<input id="product" maxlength="100" placeholder="Como aparece en el carnet"></label>
+<fieldset><legend>Componentes confirmados (opcional)</legend><div id="antigens" class="vaccine-options"></div></fieldset>
+<button class="btn btn--secondary" type="button" id="add-dose">Agregar dosis</button><ul id="doses" class="vaccine-doses"></ul></div>
+</section>
+<section data-step="2" hidden><h2 tabindex="-1">Estilo de vida</h2><p>Marca las situaciones que correspondan.</p><div id="risks" class="vaccine-options"></div>
+<label class="field" id="felv-field" hidden>¿Conoces su estado de leucemia felina (FeLV)?<select name="felv"><option value="negative">Negativo</option><option value="positive">Positivo</option><option value="untested">Nunca se realizó el examen</option><option value="unknown" selected>No sé</option></select></label>
+</section>
+<section data-step="3" hidden><span class="eyebrow">Plan orientativo</span><h2 tabindex="-1" id="result-heading">Resultado</h2><p id="result-age"></p><div id="alerts"></div><div class="vaccine-results" id="recommendations"></div>
+<div class="vaccine-cta"><h3>¿Quieres revisar el esquema de vacunación de tu mascota?</h3><p>Podemos revisar su carnet, edad, antecedentes y estilo de vida para definir un esquema personalizado.</p><div class="hero__actions"><a id="booking" href="/#contacto" class="btn btn--primary">Agendar consulta en UniversoVet</a><a href="/#contacto" class="btn btn--secondary js-whatsapp-cta" data-whatsapp-message="Hola, quiero revisar el esquema de vacunación de mi mascota en UniversoVet." target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a></div></div>
+<div class="vaccine-share"><button id="share" class="btn btn--secondary" type="button">Compartir resultado</button><button id="copy" class="btn btn--secondary" type="button">Copiar resumen</button><span id="share-status" role="status"></span></div>
+<p class="vaccine-disclaimer">Esta calculadora entrega orientación general basada en recomendaciones veterinarias actuales. El esquema definitivo debe ser definido por un médico veterinario considerando el estado de salud, antecedentes, vacunas utilizadas y riesgo individual de cada mascota.</p>
+</section>
+<p id="error" class="vaccine-alert" role="alert" hidden></p><div class="vaccine-controls"><button id="back" type="button" class="btn btn--secondary" hidden>Volver</button><button id="next" type="button" class="btn btn--primary">Continuar</button><button id="restart" type="button" class="btn btn--secondary" hidden>Empezar de nuevo</button></div>
+<p class="vaccine-disclaimer">Tus respuestas se procesan en este navegador y no se guardan. Compartir el resultado es una acción opcional.</p>
+</form></div></div></section>
+<section class="section vaccine-education"><div class="container"><h2>Vacunación con criterio individual</h2><div class="vaccine-education-grid">
+<article><h3>¿Por qué es importante vacunar?</h3><p>Ayuda a reducir enfermedades infecciosas graves. El examen clínico y el carnet permiten elegir el momento y producto adecuados.</p></article>
+<article><h3>Vacunas esenciales y según riesgo</h3><p>Las esenciales, también llamadas core, deben evaluarse en todos los perros y gatos. Otras dependen de contactos, viajes y exposición local.</p></article>
+<article><h3>Vacunas para cachorros</h3><p>La serie viral suele empezar a las 6–8 semanas, continuar cada 2–4 semanas e incluir una dosis a las 16 semanas o más. Se revisa un refuerzo a las 26 semanas o más.</p></article>
+<article><h3>Vacunas para gatitos</h3><p>Los componentes esenciales son panleucopenia, herpesvirus y calicivirus. FeLV se considera especialmente en jóvenes y gatos expuestos, después de conocer su estado.</p></article>
+<article><h3>Vacuna antirrábica en Chile</h3><p>Perros y gatos deben mantener vigente esta vacuna. La primera dosis corresponde después de cumplir dos meses y el primer refuerzo al año de edad. La ficha del producto puede exigir una edad mínima mayor.</p></article></div>
+<h2>Preguntas frecuentes</h2><details><summary>¿Las vacunas esenciales son anuales?</summary><p>No necesariamente. Tras una serie adecuada, algunas vacunas virales esenciales pueden tener intervalos de al menos tres años, según producto y criterio veterinario.</p></details><details><summary>¿Puede vacunarse un gato FeLV positivo contra FeLV?</summary><p>Los gatos FeLV positivos no obtienen beneficio de esa vacuna preventiva. Deben recibir evaluación y seguimiento veterinario.</p></details>
+<details class="vaccine-sources"><summary>Fuentes y referencias</summary><ul><li><a href="https://wsava.org/wp-content/uploads/2024/04/WSAVA-Vaccination-guidelines-2024.pdf" target="_blank" rel="noreferrer">WSAVA Guidelines 2024</a></li><li><a href="https://www.bcn.cl/leychile/navegar?idNorma=1058839" target="_blank" rel="noreferrer">MINSAL: Decreto 1/2014, artículo 4</a></li><li><a href="https://www.sag.gob.cl/ambitos-de-accion/medicamentos-autorizados" target="_blank" rel="noreferrer">SAG: medicamentos autorizados y fichas técnicas</a></li><li><a href="https://catvets.com/resource/aaha-aafp-feline-vaccination-guidelines/" target="_blank" rel="noreferrer">AAHA/AAFP 2020 · FelineVMA</a></li></ul><p>Verificar la ficha oficial del producto antes de definir edad, vía y pauta. WSAVA no recomienda específicamente la vacunación contra coronavirus entérico canino.</p></details>
+</div></section></main>
+    <footer class="footer">
+        <div class="container footer__grid">
+            <div class="footer__brand"><a href="/#inicio"
+                   class="footer__logo-link"
+                   aria-label="UniversoVet inicio">
+                    <svg
+                        class="footer__logo-image"
+                        viewBox="105 220 534 114"
+                        width="534"
+                        height="114"
+                        aria-hidden="true"
+                        focusable="false"
+                        preserveAspectRatio="xMidYMid meet">
+                        <image
+                            href="/logo-horizontal-sin-fondo.png"
+                            x="0"
+                            y="0"
+                            width="792"
+                            height="612"
+                            preserveAspectRatio="none">
+                        </image>
+                    </svg>
+                </a><p>Clínica veterinaria en Coquimbo. Ciencia, cariño y compromiso para cada peludito.</p></div>
+            <div><h3>Contacto</h3><a href="https://wa.me/56935677904" class="footer__link js-whatsapp-cta" target="_blank" rel="noopener noreferrer">WhatsApp: +56 9 3567 7904</a><a href="https://www.instagram.com/universovetspa/" class="footer__link" target="_blank" rel="noopener noreferrer">Instagram: @universovetspa</a></div>
+            <div><h3>Enlaces</h3><a href="/#servicios" class="footer__link">Servicios</a><a href="/planes" class="footer__link">Universo Preventivo</a><a href="/bts" class="footer__link">Concurso BTS</a><a href="/bts/consultar" class="footer__link">Consultar cupones</a></div>
+        </div>
+        <div class="container footer__bottom">© <span id="current-year"></span> UniversoVet – Medicina Veterinaria. Todos los derechos reservados.</div>
+    </footer>
+
+    <button class="scroll-top" id="scroll-top" aria-label="Volver arriba">↑</button>
+    <a href="https://wa.me/56935677904" class="whatsapp-fab js-whatsapp-cta" id="whatsapp-fab" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">💬<span class="whatsapp-fab__tooltip">Agenda por WhatsApp</span></a>
+<script src="/script.js"></script><script type="module" src="/herramientas/calculadora-vacunas/app.mjs"></script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Las vacunas esenciales son anuales?", "acceptedAnswer": {"@type": "Answer", "text": "No necesariamente. Tras una serie adecuada, algunas vacunas virales esenciales pueden tener intervalos de al menos tres años, según producto y criterio veterinario."}}, {"@type": "Question", "name": "¿Puede vacunarse un gato FeLV positivo contra FeLV?", "acceptedAnswer": {"@type": "Answer", "text": "Los gatos FeLV positivos no obtienen beneficio de esa vacuna preventiva. Deben recibir evaluación y seguimiento veterinario."}}]}</script></body></html>

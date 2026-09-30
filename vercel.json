@@ -5,5 +5,27 @@
       "source": "/herramientas/calculadora-vacunas",
       "destination": "/herramientas/calculadora-vacunas/index.html"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/bts",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/bts/:path*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-bts",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/admin-bts/:path*",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }

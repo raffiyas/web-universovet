@@ -34,7 +34,7 @@ Guidelines:
 
 ## Layout
 
-The public site uses fixed top contact/navigation bars, full-width marketing sections, a `min(1160px, 100% - 32px)` container, and responsive section grids. The homepage rhythm is: hero, campaign banner, services, trust, location, final CTA, footer. Preventive-plan pages extend the same language with editorial cards, path selectors, program cards, timelines, comparisons, FAQ, and final CTA sections.
+The public site uses fixed top contact/navigation bars, full-width marketing sections, a `min(1160px, 100% - 32px)` container, and responsive section grids. The homepage rhythm is: hero, services, trust, location, final CTA, footer. Preventive-plan pages extend the same language with editorial cards, path selectors, program cards, timelines, comparisons, FAQ, and final CTA sections.
 
 Prefer simple, scannable groupings over nested card stacks. Cards are acceptable for service lists, programs, FAQs, and location details because users are comparing discrete items.
 
@@ -47,7 +47,6 @@ Prefer simple, scannable groupings over nested card stacks. Cards are acceptable
 - Buttons: pill-shaped buttons should be used selectively for primary CTAs, with aqua primary, white secondary, light, and glass variants; do not repeat the pill shape mechanically across every control.
 - Section badges: compact rounded labels for section context; avoid repeating them mechanically on every future section.
 - Service cards: icon, heading, and concise service promise.
-- Campaign banner: purple high-energy block for BTS promotion.
 - Location blocks: address, hours, map, and direction link.
 - WhatsApp FAB: floating appointment shortcut with page-specific behavior on preventive pages.
 - Footer: brand summary, contact links, and route links.

@@ -60,3 +60,12 @@
 }
 
 .vaccine-panel h2{scroll-margin-top:130px;}
+.vaccine-practical { padding: 22px; border: 1px solid #b9cdd2; border-radius: 20px; background: var(--soft); }
+.vaccine-dose-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 18px 0; }
+.vaccine-dose-item { padding: 16px; border-radius: 14px; background: white; border: 1px solid #d8e6eb; }
+.vaccine-dose-count { display: block; color: var(--primary); font-size: 1.3rem; }
+.vaccine-dose-item h4 { color: var(--primary); font-size: 1rem; margin: 8px 0; }
+.vaccine-dose-item p { font-size: .95rem; }
+.vaccine-calendar li, #follow-ups li { padding: 10px 0; border-bottom: 1px solid #d8e6eb; }
+.vaccine-calendar p, #follow-ups p { margin: 4px 0; }
+@media (max-width: 680px) { .vaccine-dose-summary { grid-template-columns: 1fr; } .vaccine-practical { padding: 16px; } }

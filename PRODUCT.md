@@ -18,7 +18,7 @@ The site presents UniversoVet as a warm, professional veterinary clinic in Coqui
 
 ## Scope
 
-This context is oriented primarily to public brand and conversion surfaces for pet guardians. `admin-bts` is an internal management surface and should not automatically follow the same public landing-page context.
+This context is oriented primarily to public brand and conversion surfaces for pet guardians.
 
 ## Positioning
 
@@ -27,10 +27,10 @@ UniversoVet is the approachable, prevention-minded veterinary clinic that treats
 ## Conversion & proof
 
 - Primary CTA: book or ask for an appointment through WhatsApp.
-- Secondary CTA: browse services, preventive plans, campaigns, location, hours, and coupon lookup flows before contacting the clinic.
+- Secondary CTA: browse services, preventive plans, campaigns, location, hours before contacting the clinic.
 - The line a visitor remembers after 10 seconds: thoughtful veterinary care for every stage of a pet's life, close to home in Coquimbo.
 - Belief ladder: UniversoVet is local and reachable; the clinic offers the service my pet needs; the tone feels caring rather than intimidating; preventive care is practical and worthwhile; WhatsApp is the easiest next step.
-- Proof on hand: public contact details, Instagram presence, physical address in Av. José Joaquín Pérez #3505, Coquimbo, service list, hours, map embed, preventive-plan content, and campaign/coupon flows already present in the site.
+- Proof on hand: public contact details, Instagram presence, physical address in Av. José Joaquín Pérez #3505, Coquimbo, service list, hours, map embed, preventive-plan content.
 
 ## Brand Personality
 

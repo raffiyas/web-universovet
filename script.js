@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupScrollAnimations() {
         // Elementos a animar
         const animatedElements = document.querySelectorAll(
-            '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .bts-banner__card, .preventive-editorial-card, .path-card, .featured-program-card, .program-card, .process-timeline li, .difference-card, .clinical-trust__grid article, .faq-list details, .final-preventive-cta__card'
+            '.service-card, .section__header, .trust__copy, .trust__list li, .location__block, .cta__content, .preventive-editorial-card, .path-card, .featured-program-card, .program-card, .process-timeline li, .difference-card, .clinical-trust__grid article, .faq-list details, .final-preventive-cta__card'
         );
         
         function showElementsImmediately() {

@@ -28,3 +28,5 @@ El catálogo felino está pendiente; no se asignan cantidades de triple o FeLV s
 ## Verificación
 
 `npm run test:clinical` ejecuta las pruebas de orientación general y del plan práctico. Las fechas de referencia usan America/Santiago y los aniversarios se calculan por meses de calendario, incluidos años bisiestos.
+
+La explicación pública agrupa Leptospira en la tarjeta de polivalente, también al copiar o compartir. La evaluación interna por antígenos permanece independiente; un refuerzo vencido de Leptospira se comunica dentro de esa tarjeta.

@@ -159,3 +159,23 @@ test('serie esencial antigua no permanece marcada al día indefinidamente', () =
   const i = input(312, { history: 'card', doses: [dose('vanguard-5-l4', '2022-09-01')] });
   assert.equal(calculateVaccines(i, now).recommendations.find(r => r.id === 'core').status, 'pending');
 });
+
+ test('explicación pública integra Leptospira en polivalente conservando evaluación interna', () => {
+  const result = calculateVaccines(input(156, { risks: ['rodents'] }), now);
+  assert.ok(result.recommendations.some(r => r.id === 'leptospira'));
+  assert.equal(result.publicRecommendations.some(r => r.id === 'leptospira'), false);
+  const combined = result.publicRecommendations.find(r => r.id === 'core');
+  assert.match(combined.title, /Polivalente/);
+  assert.match(combined.reason, /no suma una aplicación adicional/);
+  assert.match(combined.why, /roedores/);
+});
+test('Leptospira vencida se mantiene visible dentro de polivalente', () => {
+  const result = calculateVaccines(input(156, { history: 'card', doses: [dose('vanguard-5-l4', '2025-02-08'), dose('vanguard-5-l4', '2025-03-01')] }), now);
+  const combined = result.publicRecommendations.find(r => r.id === 'core');
+  assert.equal(combined.status, 'overdue');
+  assert.match(combined.next, /refuerzo anual pendiente/);
+});
+test('explicación felina conserva sus recomendaciones sin polivalente canina', () => {
+  const result = calculateVaccines(input(20, { species: 'cat' }), now);
+  assert.deepEqual(result.publicRecommendations, result.recommendations);
+});

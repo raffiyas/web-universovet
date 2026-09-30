@@ -1,4 +1,10 @@
+import { getProduct } from './vaccineProducts.mjs';
 const MS_DAY = 86400000;
+export function clinicDay(now) {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now);
+    const part = type => parts.find(p => p.type === type).value;
+    return `${part('year')}-${part('month')}-${part('day')}`;
+}
 export function parseDay(value) {
     if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value))
         return null;
@@ -13,23 +19,26 @@ export function ageAt(date, birthDate) {
 export function ageDays(input, now) {
     const birth = parseDay(input.birthDate);
     if (birth !== null)
-        return Math.max(0, Math.floor((now.getTime() - birth) / MS_DAY));
+        return Math.max(0, Math.floor((parseDay(clinicDay(now)) - birth) / MS_DAY));
     const estimate = input.approximate;
     if (!estimate || !Number.isFinite(estimate.value) || estimate.value < 0)
         return 0;
     return Math.round(estimate.value * ({ weeks: 7, months: 30.4375, years: 365.25 }[estimate.unit]));
 }
 export function knownAntigens(dose) {
+    const product = getProduct(dose.productId);
+    if (product) return product.antigens;
     // Los nombres comerciales coloquiales no acreditan composición. Solo rabia y antígenos
     // explícitamente confirmados en el carnet/producto se usan como antecedente clínico.
     if (dose.label === "rabies")
         return ["Rabies"];
-    return dose.antigens;
+    return dose.antigens || [];
 }
 export function dosesFor(input, antigens, now) {
     return input.history === "card" ? input.doses.filter(d => {
         const day = parseDay(d.date);
-        return day !== null && day <= now.getTime() && antigens.every(a => knownAntigens(d).includes(a));
+        const product = getProduct(d.productId);
+        return day !== null && day <= parseDay(clinicDay(now)) && (!input.birthDate || ageAt(d.date, input.birthDate) !== null) && (!product || product.species.includes(input.species)) && antigens.every(a => knownAntigens(d).includes(a));
     }).sort((a, b) => a.date.localeCompare(b.date)) : [];
 }
 export function coreRule(input, days, now) {
@@ -68,6 +77,10 @@ export function coreRule(input, days, now) {
     else {
         status = "current";
         next = "Control veterinario periódico; para vacunas virales esenciales de larga duración, revacunación no más frecuente que cada 3 años según producto y criterio clínico.";
+        if (now.getTime() - parseDay(last.date) >= 3 * 365.25 * MS_DAY) {
+            status = "pending";
+            next = "Han transcurrido al menos 3 años desde la última dosis esencial registrada. Revisar producto, vigencia y necesidad de refuerzo; no confirmar que está al día solo por haber completado la serie.";
+        }
     }
     if (input.history !== "card" && input.history !== "never" && days >= 112) {
         status = "pending";

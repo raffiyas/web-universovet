@@ -1,5 +1,7 @@
 import { calculateVaccines } from './vaccines/vaccineCalculator.mjs';
 import { vaccineLabels, statusLabels } from './vaccines/vaccineContent.mjs';
+import { vaccineProducts, getProduct } from './vaccines/vaccineProducts.mjs';
+import { clinicDay } from './vaccines/vaccinePlan.mjs';
 const root = document.querySelector('#calculator');
 const form = root.querySelector('form');
 const steps = [...root.querySelectorAll('[data-step]')];
@@ -15,7 +17,7 @@ const antigenLabels = {
 };
 const el = (tag, text, className) => { const n = document.createElement(tag); if (text) n.textContent = text; if (className) n.className = className; return n; };
 const track = name => { if (typeof window.gtag === 'function') window.gtag('event', name); };
-const localToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const localToday = () => clinicDay(new Date());
 root.querySelectorAll('[type=date]').forEach(n => n.max = localToday());
 function checkOptions(container, entries, name) {
  container.replaceChildren();
@@ -25,6 +27,10 @@ function speciesFields() {
  const labels = root.querySelector('#dose-label'); labels.replaceChildren();
  vaccineLabels[input.species].forEach(x => { const opt = el('option', x.text); opt.value=x.value; labels.append(opt); });
  checkOptions(root.querySelector('#antigens'), antigenLabels[input.species], 'antigen');
+ const products = root.querySelector('#product'); products.replaceChildren();
+ const unknown = el('option','Otro / no lo sé'); unknown.value=''; products.append(unknown);
+ vaccineProducts.filter(p=>p.species.includes(input.species)).forEach(p=>{const option=el('option',p.name);option.value=p.id;products.append(option);});
+ selectProduct();
  checkOptions(root.querySelector('#risks'), riskLabels[input.species], 'risk');
  root.querySelector('#felv-field').hidden = input.species !== 'cat';
  renderDoses();
@@ -59,8 +65,28 @@ function validate() {
 }
 function renderDoses(){
  const list=root.querySelector('#doses'); list.replaceChildren();
- input.doses.forEach((d,i)=>{ const row=el('li',`${d.date} · ${vaccineLabels[input.species].find(x=>x.value===d.label)?.text} · ${d.antigens.length?d.antigens.join(', '):'composición sin verificar'} `);
+ input.doses.forEach((d,i)=>{ const row=el('li',`${d.date} · ${getProduct(d.productId)?.name||vaccineLabels[input.species].find(x=>x.value===d.label)?.text} · ${d.antigens.length?d.antigens.join(', '):'composición sin verificar'} `);
  const remove=el('button','Quitar');remove.type='button';remove.setAttribute('aria-label',`Quitar dosis ${i+1}`);remove.addEventListener('click',()=>{input.doses.splice(i,1);renderDoses();});row.append(remove);list.append(row); });
+}
+function selectProduct(){
+ const product=getProduct(root.querySelector('#product').value);
+ root.querySelector('#dose-label').disabled=!!product;
+ if(product){const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[product.group];const labels=vaccineLabels[input.species];root.querySelector('#dose-label').value=labels.some(x=>x.value===group)?group:labels[0].value;}
+ root.querySelectorAll('[name=antigen]').forEach(n=>{n.disabled=!!product;n.checked=product?product.antigens.includes(n.value):root.querySelector('#dose-label').value==='rabies'&&n.value==='Rabies';});
+ root.querySelector('#product-help').textContent=product?`${product.name}: ${product.antigens.join(', ')}. Componentes reconocidos desde la ficha oficial; verifica que sea exactamente este producto.`:'Selecciona solo si coincide con el producto del carnet. Para otra marca o composición desconocida, utiliza “Otro / no lo sé”.';
+}
+const formatDate = value => new Intl.DateTimeFormat('es-CL',{timeZone:'UTC',day:'numeric',month:'long',year:'numeric'}).format(new Date(`${value}T12:00:00Z`));
+const quantityText = r => r.quantity===null?'Por definir':r.optional?`${r.quantity} dosis · opción en consulta`:`${r.quantity} dosis ${r.quantity===1?'estimada':'estimadas'}`;
+function renderPracticalPlan(){
+ const plan=result.practicalPlan, summary=root.querySelector('#dose-summary');summary.replaceChildren();
+ plan.rows.forEach(r=>{const item=el('article','','vaccine-dose-item');item.append(el('strong',quantityText(r),'vaccine-dose-count'),el('h4',r.title),el('p',r.reason));summary.append(item);});
+ root.querySelector('#plan-notes').replaceChildren(...plan.notes.map(n=>el('p',n,'vaccine-disclaimer')));
+ const calendar=root.querySelector('#dose-calendar');calendar.replaceChildren();
+ const entries=plan.rows.flatMap(r=>r.dates.map((date,i)=>({date,text:`${r.title} · ${r.dates.length>1?`dosis pendiente ${i+1} de ${r.dates.length}`:'1 dosis'}`}))).sort((a,b)=>a.date.localeCompare(b.date));
+ entries.forEach(entry=>{const item=el('li');item.append(el('strong',formatDate(entry.date)),el('p',entry.text));calendar.append(item);});
+ root.querySelector('#calendar-empty').hidden=!!entries.length;
+ const follow=root.querySelector('#follow-ups');follow.replaceChildren();
+ if(plan.followUps.length){follow.append(el('h3','Controles y refuerzos posteriores'));const list=el('ul');plan.followUps.forEach(f=>{const item=el('li');item.append(el('strong',formatDate(f.date)),el('p',f.text));list.append(item);});follow.append(list);}
 }
 function renderResult(){
  result=calculateVaccines(input);
@@ -68,11 +94,12 @@ function renderResult(){
  const age=result.ageDays<56?`${Math.floor(result.ageWeeks)} semanas`:result.ageDays<365?`${Math.floor(result.ageMonths)} meses`:`${result.ageYears.toFixed(1)} años`;
  root.querySelector('#result-age').textContent=`${input.species==='dog'?'Perro':'Gato'} · ${age}`;
  const alerts=root.querySelector('#alerts'); alerts.replaceChildren(...result.alerts.map(x=>el('p',x,'vaccine-alert')));
+ renderPracticalPlan();
  const cards=root.querySelector('#recommendations'); cards.replaceChildren();
  result.recommendations.forEach(r=>{ const card=el('article','','vaccine-result');card.append(el('span',statusLabels[r.status],`vaccine-status vaccine-status--${r.status}`),el('h3',r.title),el('p',r.reason),el('strong','Próximo paso'),el('p',r.next));const detail=el('details');detail.append(el('summary','¿Por qué?'),el('p',r.why));card.append(detail);cards.append(card); });
  track('vaccine_calculator_completed');track(input.species==='dog'?'vaccine_calculator_dog':'vaccine_calculator_cat');
 }
-function summary(){return `Plan orientativo de vacunación de ${input.name||'mi mascota'}.\n${result.recommendations.map(r=>`${r.title}: ${statusLabels[r.status]}. ${r.next}`).join('\n')}\nOrientación general; confirmar con un médico veterinario. ${document.querySelector('[rel=canonical]').href}`;}
+function summary(){const plan=result.practicalPlan;return `Plan orientativo de vacunación de ${input.name||'mi mascota'}.\n${plan.rows.map(r=>`${r.title}: ${quantityText(r)}. ${r.reason}${r.dates.length?` Fechas orientativas: ${r.dates.map(formatDate).join('; ')}.`:''}`).join('\n')}\n${plan.followUps.map(f=>`${formatDate(f.date)}: ${f.text}`).join('\n')}\n${plan.notes.join('\n')}\n${result.recommendations.map(r=>`${r.title}: ${statusLabels[r.status]}. ${r.next}`).join('\n')}\nOrientación general; confirmar con un médico veterinario. ${document.querySelector('[rel=canonical]').href}`;}
 async function copy(){try{await navigator.clipboard.writeText(summary());root.querySelector('#share-status').textContent='Resumen copiado.';}catch{root.querySelector('#share-status').textContent='No se pudo copiar. Puedes seleccionar el texto del resultado.';}}
 form.addEventListener('submit',e=>e.preventDefault());
 root.querySelector('#next').addEventListener('click',()=>{collect();if(!validate())return;if(step===0)track('vaccine_calculator_started');step++;if(step===3)renderResult();showStep();});
@@ -83,9 +110,12 @@ root.querySelector('#unknown-date').addEventListener('change',e=>{root.querySele
 root.querySelector('#ill').addEventListener('change',e=>root.querySelector('#health-warning').hidden=e.target.value!=='yes');
 root.querySelector('#history').addEventListener('change',e=>root.querySelector('#dose-form').hidden=e.target.value!=='card');
 root.querySelector('#dose-label').addEventListener('change',e=>{root.querySelectorAll('[name=antigen]').forEach(n=>n.checked=e.target.value==='rabies'&&n.value==='Rabies');});
-root.querySelector('#add-dose').addEventListener('click',()=>{const date=root.querySelector('#dose-date').value;const birth=root.querySelector('#birth').value;if(!date||date>localToday()||(!root.querySelector('#unknown-date').checked&&birth&&date<birth)){error('Ingresa una fecha de aplicación válida, posterior al nacimiento y hasta hoy.');return;}input.doses.push({label:root.querySelector('#dose-label').value,date,antigens:[...root.querySelectorAll('[name=antigen]:checked')].map(n=>n.value),product:root.querySelector('#product').value});renderDoses();error();});
+root.querySelector('#product').addEventListener('change',selectProduct);
+root.querySelector('#add-dose').addEventListener('click',()=>{const date=root.querySelector('#dose-date').value;const birth=root.querySelector('#birth').value;if(!date||date>localToday()||(!root.querySelector('#unknown-date').checked&&birth&&date<birth)){error('Ingresa una fecha de aplicación válida, posterior al nacimiento y hasta hoy.');return;}const product=getProduct(root.querySelector('#product').value);input.doses.push({label:root.querySelector('#dose-label').value,date,antigens:product?[...product.antigens]:[...root.querySelectorAll('[name=antigen]:checked')].map(n=>n.value),productId:product?.id});renderDoses();error();});
 root.querySelector('#risks').addEventListener('change',e=>{if(e.target.value==='indoor'&&e.target.checked)root.querySelector('[value=outdoor]').checked=false;if(e.target.value==='outdoor'&&e.target.checked)root.querySelector('[value=indoor]').checked=false;});
 root.querySelector('#copy').addEventListener('click',copy);
 root.querySelector('#share').addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'Plan orientativo UniversoVet',text:summary()});}catch(e){if(e.name!=='AbortError')root.querySelector('#share-status').textContent='No se pudo compartir.';}}else await copy();});
 root.querySelector('#booking').addEventListener('click',()=>track('vaccine_calculator_booking_clicked'));
+const productSources=root.querySelector('#product-sources');
+vaccineProducts.forEach(p=>{const item=el('li'),link=el('a',p.name);link.href=p.source;link.target='_blank';link.rel='noreferrer';item.append(link);productSources.append(item);});
 speciesFields();

@@ -1,20 +1,14 @@
-/**
- * Catálogo independiente del motor; incorporar solo fichas oficiales verificadas.
- * @typedef {Object} VaccineProduct
- * @property {string} id
- * @property {string} name
- * @property {string} manufacturer
- * @property {string} species
- * @property {string[]} antigens
- * @property {number} minimumAgeWeeks
- * @property {'subcutaneous'|'intramuscular'|'intranasal'|'oral'} route
- * @property {string} primarySeries
- * @property {string} interval
- * @property {string} booster
- * @property {string} sagRegistration
- * @property {string} source
- * @property {string} verifiedAt
- * @property {boolean} active
- */
-/** @type {VaccineProduct[]} */
-export const vaccineProducts = [];
+// Catálogo clínico independiente. Reconocer IDs seleccionados, nunca texto libre.
+// Rabisin se reconoce como antecedente de rabia; su pauta requiere ficha chilena.
+const verifiedAt = '2026-09-29';
+export const vaccineProducts = [
+  { id: 'puppy-dp-plus', name: 'Nobivac Puppy DP Plus', manufacturer: 'MSD', species: ['dog'], group: 'puppy', antigens: ['CDV', 'CPV'], minimumAgeWeeks: 4, route: 'subcutaneous', primaryDoses: 1, intervalDays: null, boosterYears: null, source: 'https://www.msd-salud-animal.cl/wp-content/uploads/sites/45/2024/09/FT-Nobivac-Puppy-DP-Plus-V2-JUL.2023.pdf', verifiedAt },
+  { id: 'vanguard-5-l4', name: 'Vanguard Plus 5 L4', manufacturer: 'Zoetis', species: ['dog'], group: 'polyvalent', antigens: ['CDV', 'CAV', 'CPV', 'CPiV', 'Leptospira'], leptospira: ['canicola', 'grippotyphosa', 'icterohaemorrhagiae', 'pomona'], minimumAgeWeeks: 6, route: 'subcutaneous-or-intramuscular', primaryDoses: 2, earlyPrimaryDoses: 3, earlyAgeWeeks: 9, intervalDays: 21, boosterYears: 1, source: 'https://www.zoetis.cl/productos-y-servicios/dogs/vanguard-plus-5-l4.aspx', verifiedAt },
+  { id: 'nobivac-dappvl2', name: 'Nobivac DAPPvL2', manufacturer: 'MSD', species: ['dog'], group: 'polyvalent', antigens: ['CDV', 'CAV', 'CPV', 'CPiV', 'Leptospira'], leptospira: ['canicola', 'icterohaemorrhagiae'], minimumAgeWeeks: 6, route: 'subcutaneous-or-intramuscular', primaryDoses: 2, intervalDays: null, boosterYears: 1, source: 'https://www.msd-salud-animal.cl/productos/nobivac-dappvl2-vacuna-hepatitis/', verifiedAt },
+  { id: 'vanguard-b-oral', name: 'Vanguard B Oral', manufacturer: 'Zoetis', species: ['dog'], group: 'bordetella', antigens: ['Bordetella'], minimumAgeWeeks: 8, route: 'oral', primaryDoses: 1, intervalDays: null, boosterYears: 1, source: 'https://www.zoetis.cl/_locale-assets/pdf/descargas-ctl/portafolio_mundo_caninos_zoetis_cl_mm_20421_compressedok_n65jcg.pdf', verifiedAt },
+  { id: 'nobivac-rabia', name: 'Nobivac Rabia', manufacturer: 'MSD', species: ['dog', 'cat'], group: 'rabies', antigens: ['Rabies'], minimumAgeMonths: 3, route: 'subcutaneous-or-intramuscular', primaryDoses: 1, intervalDays: null, boosterYears: 3, source: 'https://www.msd-salud-animal.cl/productos/nobivac-vacuna-rabia/', verifiedAt },
+  { id: 'rabguard', name: 'Rabguard', manufacturer: 'Zoetis', species: ['dog', 'cat'], group: 'rabies', antigens: ['Rabies'], minimumAgeMonths: 3, route: 'species-dependent-injection', primaryDoses: 1, intervalDays: null, boosterYears: 1, source: 'https://www.zoetis.cl/productos-y-servicios/dogs/rabguard.aspx', verifiedAt },
+  { id: 'rabisin', name: 'Rabisin', manufacturer: 'Boehringer Ingelheim', species: ['dog', 'cat'], group: 'rabies', antigens: ['Rabies'], minimumAgeMonths: null, route: 'injection', primaryDoses: null, intervalDays: null, boosterYears: null, source: 'https://www.sag.gob.cl/sites/default/files/S%C3%B3lo%20a%20m%C3%A9dicos%20veterinarios%2020022025_0.pdf', verifiedAt }
+];
+export const getProduct = id => vaccineProducts.find(p => p.id === id);
+export const clinicProducts = { polyvalent: 'vanguard-5-l4', bordetella: 'vanguard-b-oral' };

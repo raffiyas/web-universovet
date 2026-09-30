@@ -1,4 +1,5 @@
 import { ageDays, chlamydiaRule, coreRule, felvRule, leptospiraRule, rabiesRule, respiratoryRule } from "./vaccineRules.mjs";
+import { calculatePracticalPlan } from './vaccinePlan.mjs';
 export function calculateVaccines(input, now = new Date()) {
     const days = ageDays(input, now);
     const recommendations = [coreRule(input, days, now), rabiesRule(input, days, now)];
@@ -15,5 +16,5 @@ export function calculateVaccines(input, now = new Date()) {
         alerts.push("Sin carnet verificable no podemos confirmar antígenos administrados ni vigencia de vacunas.");
     if (!input.birthDate)
         alerts.push("La edad aproximada no permite comprobar la edad exacta a la que se aplicaron dosis anteriores.");
-    return { ageDays: days, ageWeeks: days / 7, ageMonths: days / 30.4375, ageYears: days / 365.25, recommendations, alerts };
+    return { ageDays: days, ageWeeks: days / 7, ageMonths: days / 30.4375, ageYears: days / 365.25, recommendations, alerts, practicalPlan: calculatePracticalPlan(input, now) };
 }

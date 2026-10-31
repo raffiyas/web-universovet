@@ -7,7 +7,7 @@ import { setupCardReader } from './cardReader.mjs';
 const root = document.querySelector('#calculator');
 const form = root.querySelector('form');
 const steps = [...root.querySelectorAll('[data-step]')];
-const initial = () => ({ species: 'dog', ill: 'no', reaction: 'no', history: 'unknown', doses: [], memories: [], risks: [], felv: 'unknown' });
+const initial = () => ({ species: 'dog', ill: 'no', reaction: 'no', history: 'unknown', doses: [], memories: [], pendingCards: [], risks: [], felv: 'unknown' });
 let input = initial(), step = 0, result = null;
 const riskLabels = {
  dog: [['parks','Sale regularmente a parques'],['dogs','Tiene contacto frecuente con otros perros'],['grooming','Va a peluquería canina'],['boarding','Va a guardería u hotel'],['multiDog','Vive con varios perros'],['rodents','Accede a patios, parcelas o lugares con roedores'],['water','Tiene contacto con charcos, canales o agua estancada'],['travel','Viaja frecuentemente'],['rural','Vive o visita zonas rurales']],
@@ -54,7 +54,7 @@ function renderRiskGroups(){
  });
 }
 function speciesFields() {
- input.memories=[];
+ input.memories=[];input.pendingCards=[];
  root.querySelector('#memory-vaccine').replaceChildren(...vaccineLabels[input.species].map(x=>{const option=el('option',x.text);option.value=x.text;return option;}));
  renderMemories();
  root.querySelector('#memory-form').hidden=root.querySelector('#history').value!=='some';
@@ -146,18 +146,21 @@ function renderResult(){
  root.querySelector('#next-step-preparation').textContent=experience.preparation;
  const remembered=root.querySelector('#remembered-vaccines');
  remembered.replaceChildren();
- remembered.hidden=!(input.history==='some'&&input.memories.length);
+ remembered.hidden=!((input.history==='some'&&input.memories.length)||input.pendingCards.length);
  if(!remembered.hidden){
-  remembered.append(el('h4','Lo que recuerdas'));
+  remembered.append(el('h4',input.pendingCards.length?'Vacunas para revisar':'Lo que recuerdas'));
+  input.pendingCards.forEach(v=>{const item=el('p',v.name+(v.date?' · '+formatDate(v.date):' · Fecha por confirmar')+' (producto pendiente de verificar)');remembered.append(item);});
   const list=el('ul');
   input.memories.forEach(m=>list.append(el('li',m.vaccine+' · '+m.time.toLowerCase())));
-  remembered.append(list,el('small','Estos recuerdos no confirman que las vacunas estén vigentes.'));
+  if(input.memories.length)remembered.append(list);
+  remembered.append(el('small','Los registros pendientes no se consideran dosis confirmadas para calcular el esquema.'));
  }
  root.querySelector('.vaccine-next-step').classList.toggle('needs-health-review',experience.healthReview);
  const message=[
   `${input.name||'Mi mascota'} · ${input.species==='dog'?'perro':'gato'} · ${age}${input.approximate?' aprox.':''}`,
   `Vacunas: ${experience.historyText}`,
   ...(input.history==='some'?input.memories.map(m=>`Recuerdo sin carnet: ${m.vaccine} · ${m.time}.`):[]),
+  ...input.pendingCards.map(v=>`Lectura pendiente de confirmar: ${v.name}${v.date?' · '+v.date:''}.`),
   `Enfermedad o tratamiento: ${input.ill==='no'?'no informado':input.ill==='yes'?'sí':'no sé'}.`,
   `Reacción previa a vacunas: ${input.reaction==='no'?'no':input.reaction==='yes'?'sí':'no sé'}.`
  ].join('\n');
@@ -218,7 +221,15 @@ root.querySelector('#another-memory').addEventListener('click',()=>{root.querySe
 root.querySelector('#another-dose').addEventListener('click',()=>{root.querySelector('#dose-fields').hidden=false;root.querySelector('#another-dose').hidden=true;root.querySelector('#dose-date').value='';root.querySelector('#product').value='';root.querySelector('#dose-label').value='other';selectProduct();root.querySelector('#dose-label').focus();});
 // Runs after the existing add handler; invalid entries leave the editor visible.
 root.querySelector('#add-dose').addEventListener('click',()=>{if(!root.querySelector('#error').hidden)return;root.querySelector('#dose-fields').hidden=true;root.querySelector('#another-dose').hidden=false;root.querySelector('#dose-status').textContent='Vacuna agregada. Puedes agregar otra vacuna o continuar con el siguiente paso.';root.querySelector('#another-dose').focus();});
-const cardReader=setupCardReader({root,getSpecies:()=>input.species,today:localToday,addDose:(dose,species)=>{
+const cardReader=setupCardReader({root,getSpecies:()=>input.species,today:localToday,addPending:(entry,species)=>{
+ if(species!==input.species)return 'La especie cambió. Vuelve a leer el carné.';
+ if(input.pendingCards.some(v=>v.name===entry.name&&v.date===entry.date))return 'Este antecedente ya está registrado.';
+ input.pendingCards.push(entry);
+ root.querySelector('#history').value='card';input.history='card';
+ root.querySelector('[name="history-choice"][value="card"]').checked=true;
+ updateHistoryChoice();
+ return '';
+},addDose:(dose,species)=>{
  if(species!==input.species)return 'La especie cambió. Vuelve a leer el carnet.';
  const birth=root.querySelector('#unknown-date').checked?'':root.querySelector('#birth').value;
  if(!dose.date||dose.date>localToday()||(birth&&dose.date<birth))return 'Revisa la fecha: debe ser posterior al nacimiento y no estar en el futuro.';

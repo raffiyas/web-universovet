@@ -146,3 +146,10 @@
 .ocr-confirmed-status{display:flex;align-items:center;min-height:46px;padding:12px 14px;border-radius:12px;font-weight:750;font-size:1rem;line-height:1.45;margin:12px 0 0}
 .ocr-confirmed-status--verified{color:#145a42;background:#e4f5ed;border:1px solid #acd9c3}
 .ocr-confirmed-status--pending{color:#6d4b1d;background:#fff6e7;border:1px solid #e6c99c}
+
+
+/* Optional historical entry, hidden until requested */
+.card-reader-host .vaccine-manual-entry{margin-top:18px;padding:14px;background:#fff;border:1px solid #b8d8d6;border-radius:14px;color:#1a3a4a}
+.card-reader-host .vaccine-manual-entry summary{font-weight:750;cursor:pointer}
+.card-reader-host .vaccine-manual-entry select,.card-reader-host .vaccine-manual-entry input[type=date]{width:100%;background:white;color:#1a3a4a;border:1px solid #a2c3c5;border-radius:9px;padding:12px;margin:8px 0;min-height:46px;font-size:1rem}
+.card-reader-host .vaccine-manual-entry button{margin:8px 0}

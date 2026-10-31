@@ -4,6 +4,7 @@ import { vaccineProducts, getProduct } from './vaccines/vaccineProducts.mjs';
 import { clinicDay } from './vaccines/vaccinePlan.mjs';
 import { resultExperience } from './resultExperience.mjs';
 import { setupCardReader } from './cardReader.mjs';
+import { cardHistoryEntries, cardHistoryLines } from './vaccines/cardHistory.mjs';
 const root = document.querySelector('#calculator');
 const form = root.querySelector('form');
 const steps = [...root.querySelectorAll('[data-step]')];
@@ -145,22 +146,33 @@ function renderResult(){
  root.querySelector('#next-step-description').textContent=experience.description;
  root.querySelector('#next-step-preparation').textContent=experience.preparation;
  const remembered=root.querySelector('#remembered-vaccines');
+ const cardEntries=cardHistoryEntries(input);
  remembered.replaceChildren();
- remembered.hidden=!((input.history==='some'&&input.memories.length)||input.pendingCards.length);
+ remembered.hidden=!(cardEntries.length||(input.history==='some'&&input.memories.length));
  if(!remembered.hidden){
-  remembered.append(el('h4',input.pendingCards.length?'Vacunas para revisar':'Lo que recuerdas'));
-  input.pendingCards.forEach(v=>{const item=el('p',v.name+(v.date?' · '+formatDate(v.date):' · Fecha por confirmar')+' (producto pendiente de verificar)');remembered.append(item);});
-  const list=el('ul');
-  input.memories.forEach(m=>list.append(el('li',m.vaccine+' · '+m.time.toLowerCase())));
-  if(input.memories.length)remembered.append(list);
-  remembered.append(el('small','Los registros pendientes no se consideran dosis confirmadas para calcular el esquema.'));
+  if(cardEntries.length){
+   remembered.append(el('h4','Vacunas registradas en el carné'));
+   const records=el('ul');
+   cardEntries.forEach(v=>{
+    const label=v.status==='identified'?'Producto identificado, vigencia por confirmar':v.reason;
+    records.append(el('li',v.name+' · '+(v.date?formatDate(v.date):'fecha por verificar')+' ('+label+')'));
+   });
+   remembered.append(records);
+  }
+  if(input.memories.length){
+   remembered.append(el('h4','Lo que recuerdas'));
+   const list=el('ul');
+   input.memories.forEach(m=>list.append(el('li',m.vaccine+' · '+m.time.toLowerCase())));
+   remembered.append(list);
+  }
+  remembered.append(el('small','Los registros pendientes no se utilizan como dosis confirmadas. La vigencia debe comprobarse en consulta.'));
  }
  root.querySelector('.vaccine-next-step').classList.toggle('needs-health-review',experience.healthReview);
  const message=[
   `${input.name||'Mi mascota'} · ${input.species==='dog'?'perro':'gato'} · ${age}${input.approximate?' aprox.':''}`,
   `Vacunas: ${experience.historyText}`,
   ...(input.history==='some'?input.memories.map(m=>`Recuerdo sin carnet: ${m.vaccine} · ${m.time}.`):[]),
-  ...input.pendingCards.map(v=>`Lectura pendiente de confirmar: ${v.name}${v.date?' · '+v.date:''}.`),
+  ...cardHistoryLines(input),
   `Enfermedad o tratamiento: ${input.ill==='no'?'no informado':input.ill==='yes'?'sí':'no sé'}.`,
   `Reacción previa a vacunas: ${input.reaction==='no'?'no':input.reaction==='yes'?'sí':'no sé'}.`
  ].join('\n');
@@ -175,7 +187,10 @@ function renderResult(){
  track('vaccine_calculator_completed');track(input.species==='dog'?'vaccine_calculator_dog':'vaccine_calculator_cat');
 }
 function summary(){const plan=result.practicalPlan;return `Plan orientativo de vacunación de ${input.name||'mi mascota'}.\n${plan.rows.map(r=>`${r.title}: ${quantityText(r)}. ${r.reason}${r.dates.length?` Fechas orientativas: ${r.dates.map(formatDate).join('; ')}.`:''}`).join('\n')}\n${plan.followUps.map(f=>`${formatDate(f.date)}: ${f.text}`).join('\n')}\n${plan.notes.join('\n')}\n${result.publicRecommendations.map(r=>`${r.title}: ${statusLabels[r.status]}. ${r.next}`).join('\n')}\nOrientación general; confirmar con un médico veterinario. ${document.querySelector('[rel=canonical]').href}`;}
-function shareSummary(){return summary()+(input.history==='some'&&input.memories.length?'\nRecuerdos sin carnet, pendientes de confirmar:\n'+input.memories.map(m=>`${m.vaccine}: ${m.time}`).join('\n'):'');}
+function shareSummary(){
+ const ocr=cardHistoryLines(input);
+ return summary()+(ocr.length?'\nAntecedentes leídos del carné:\n'+ocr.join('\n'):'')+(input.history==='some'&&input.memories.length?'\nRecuerdos sin carné, pendientes de confirmar:\n'+input.memories.map(m=>`${m.vaccine}: ${m.time}`).join('\n'):'');
+}
 async function copy(){try{await navigator.clipboard.writeText(shareSummary());root.querySelector('#share-status').textContent='Resumen copiado.';}catch{root.querySelector('#share-status').textContent='No se pudo copiar. Puedes seleccionar el texto del resultado.';}}
 form.addEventListener('submit',e=>e.preventDefault());
 root.querySelector('#next').addEventListener('click',()=>{collect();if(!validate())return;if(step===0)track('vaccine_calculator_started');step++;if(step===3)renderResult();showStep();});

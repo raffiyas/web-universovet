@@ -77,14 +77,17 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
      if(hasVerifiedProduct&&hasUsableDate){
       const issue=addDose({label:chosenLabel,date:date.value,productId},species);
       if(issue){message.textContent=issue;edit.hidden=false;return;}
-      message.textContent='Vacuna registrada con producto identificado.';
+      message.textContent='✓ Antecedente registrado';
+      message.className='ocr-confirmed-status ocr-confirmed-status--verified';
      }else{
       const issue=addPending({name:row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,reason:hasVerifiedProduct?'Fecha pendiente de confirmar':'Producto pendiente de identificar'},species);
       if(issue){message.textContent=issue;return;}
-      message.textContent='Antecedente guardado para revisar en consulta. No se considera una dosis confirmada.';
+      message.textContent='✓ Guardado para revisión veterinaria. No se considera una dosis confirmada.';
+      message.className='ocr-confirmed-status ocr-confirmed-status--pending';
      }
      finalized=true;
-     confirm.disabled=true;correction.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;edit.hidden=true;
+     confirm.disabled=true;correction.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;edit.hidden=true;actions.hidden=true;
+     card.classList.add('ocr-simple-card--saved');
     }
     confirm.addEventListener('click',save);
     select.addEventListener('change',()=>{if(select.value!==resolved.label)product.value='';});

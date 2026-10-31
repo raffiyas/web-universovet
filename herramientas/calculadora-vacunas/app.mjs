@@ -25,6 +25,34 @@ function checkOptions(container, entries, name) {
  container.replaceChildren();
  entries.forEach(([value, text]) => { const label = el('label', '', 'vaccine-check'), control = el('input'); control.type='checkbox'; control.name=name; control.value=value; label.append(control, document.createTextNode(text)); container.append(label); });
 }
+function renderRiskGroups(){
+ const host=root.querySelector('#risks');
+ checkOptions(host,riskLabels[input.species],'risk');
+ const controls=new Map([...host.querySelectorAll('input[name="risk"]')].map(c=>[c.value,c.closest('label')]));
+ host.replaceChildren();
+ const groups=input.species==='dog'
+ ?[
+  ['¿Tiene contacto con otros perros?',['dogs','multiDog']],
+  ['¿Visita alguno de estos lugares?',['parks','grooming','boarding']],
+  ['¿Tiene contacto con agua estancada o lugares con roedores?',['water','rodents']],
+  ['¿Viaja o visita zonas rurales?',['travel','rural']]
+ ]:[
+  ['¿Sale de casa o permanece en el interior?',['indoor','outdoor']],
+  ['¿Tiene contacto con otros gatos?',['otherCats','multiCat','newCats']],
+  ['¿Visita refugios, hoteles o criaderos?',['shelter']]
+ ];
+ groups.forEach(([question,values],i)=>{
+  const group=el('fieldset','','risk-group');
+  group.append(el('legend',question));
+  const choices=el('div','','risk-subchoices');
+  values.forEach(value=>{if(controls.has(value))choices.append(controls.get(value));});
+  if(values.length>1&&!(input.species==='cat'&&i===0)){
+   const explanation=el('p',i===1&&input.species==='dog'?'Puedes marcar más de una opción.':'Marca las situaciones que correspondan.','risk-hint');
+   group.append(explanation);
+  }
+  group.append(choices);host.append(group);
+ });
+}
 function speciesFields() {
  input.memories=[];
  root.querySelector('#memory-vaccine').replaceChildren(...vaccineLabels[input.species].map(x=>{const option=el('option',x.text);option.value=x.text;return option;}));
@@ -41,7 +69,7 @@ function speciesFields() {
  const unknown = el('option','Otro / no lo sé'); unknown.value=''; products.append(unknown);
  vaccineProducts.filter(p=>p.species.includes(input.species)).forEach(p=>{const option=el('option',p.name);option.value=p.id;products.append(option);});
  selectProduct();
- checkOptions(root.querySelector('#risks'), riskLabels[input.species], 'risk');
+ renderRiskGroups();
  root.querySelector('#felv-field').hidden = input.species !== 'cat';
  renderDoses();
 }
@@ -115,7 +143,16 @@ function renderResult(){
  const experience=resultExperience(input,result);
  root.querySelector('#next-step-title').textContent=experience.title;
  root.querySelector('#next-step-description').textContent=experience.description;
- root.querySelector('#next-step-preparation').textContent=experience.preparation+(input.history==='some'&&input.memories.length?` Recuerdos para revisar: ${input.memories.map(m=>`${m.vaccine} (${m.time.toLowerCase()})`).join('; ')}. Estos datos no confirman vigencia ni dosis.`:'');
+ root.querySelector('#next-step-preparation').textContent=experience.preparation;
+ const remembered=root.querySelector('#remembered-vaccines');
+ remembered.replaceChildren();
+ remembered.hidden=!(input.history==='some'&&input.memories.length);
+ if(!remembered.hidden){
+  remembered.append(el('h4','Lo que recuerdas'));
+  const list=el('ul');
+  input.memories.forEach(m=>list.append(el('li',m.vaccine+' · '+m.time.toLowerCase())));
+  remembered.append(list,el('small','Estos recuerdos no confirman que las vacunas estén vigentes.'));
+ }
  root.querySelector('.vaccine-next-step').classList.toggle('needs-health-review',experience.healthReview);
  const message=[
   `${input.name||'Mi mascota'} · ${input.species==='dog'?'perro':'gato'} · ${age}${input.approximate?' aprox.':''}`,

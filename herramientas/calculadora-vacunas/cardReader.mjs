@@ -101,7 +101,7 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
     if(resolved.productId)product.value=resolved.productId;
     if(resolved.recognizedHistorical){
      const historical=historicalById(resolved.historicalId);
-     card.insertBefore(node('p','Vacuna histórica reconocida: '+historical.name+'. Puedes guardar este antecedente para orientar el control, aunque no tengas un certificado.'),edit);
+     card.append(node('p','Vacuna histórica reconocida: '+historical.name+'. Puedes guardar este antecedente para orientar el control, aunque no tengas un certificado.'));
     }
     let finalized=false;
     if(ambiguousDate){edit.hidden=false;correction.textContent='Ocultar corrección';}

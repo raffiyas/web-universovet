@@ -1,6 +1,7 @@
 import { vaccineLabels } from './vaccines/vaccineContent.mjs';
 import { vaccineProducts } from './vaccines/vaccineProducts.mjs';
-export function setupCardReader({root,getSpecies,today,addDose}){
+import { resolveCardProduct } from './vaccines/cardProductResolver.mjs';
+export function setupCardReader({root,getSpecies,today,addDose,addPending}){
  const host=document.createElement('div');host.className='vaccine-dose-form card-reader-host';host.hidden=true;
  host.innerHTML='<h3>Muéstranos su carné</h3><p>Toma una foto donde se vean las vacunas y sus fechas.</p><label class="field">Foto de una página del carnet<input type="file" accept="image/jpeg,image/png,image/webp"></label><p class="vaccine-disclaimer">JPG, PNG o WebP, hasta 2,8 MB. Recorta los datos personales y procura que las fechas se vean nítidas. Al pulsar «Leer foto», la imagen se envía a OpenAI para analizarla. Esta aplicación no guarda la foto.</p><img hidden alt="Foto del carnet seleccionada" style="max-width:100%;max-height:280px;object-fit:contain"><div class="vaccine-controls"><button type="button" class="btn btn--primary">Leer foto</button><button type="button" class="btn btn--secondary">Quitar foto</button></div><p role="status" aria-live="polite"></p><div class="ocr-review"></div>';
  root.querySelector('[data-step="1"] h2').after(host);
@@ -39,7 +40,7 @@ export function setupCardReader({root,getSpecies,today,addDose}){
   if(!image)return;const current=++version;const species=getSpecies();controller=new AbortController();read.disabled=true;file.disabled=true;review.replaceChildren();status.textContent='Leyendo la foto… esto puede tardar hasta un minuto.';
   try{
    const response=await fetch('/api/read-vaccine-card',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image}),signal:controller.signal});const data=await response.json();if(current!==version)return;if(!response.ok)throw new Error(data.error||'No pudimos leer la foto.');
-   status.textContent=data.vaccines.length?'Revisa cada vacuna y confirma solo los datos que reconozcas.':'No encontramos vacunas legibles. Prueba otra foto o utiliza el ingreso manual.';
+   status.textContent=data.vaccines.length?'Revisa lo que se leyó del carné. Si un producto no está identificado, quedará pendiente sin afectar el cálculo.':'No encontramos vacunas legibles. Prueba otra foto o utiliza el ingreso manual.';
    if(data.warning)review.append(node('p',data.warning));
    for(const row of data.vaccines){
     const card=node('article','');card.className='vaccine-result ocr-simple-card';
@@ -59,24 +60,35 @@ export function setupCardReader({root,getSpecies,today,addDose}){
     const dateLabel=node('label','Fecha de aplicación');dateLabel.className='field';const date=document.createElement('input');date.type='date';date.max=today();if(validDate)date.value=row.date;dateLabel.append(date);
     const message=node('p','');message.setAttribute('role','status');
     const actions=document.createElement('div');actions.className='vaccine-controls';
-    const confirm=node('button','Está correcto');confirm.type='button';confirm.className='btn btn--primary';
+    const confirm=node('button','Confirmar lo que se ve');confirm.type='button';confirm.className='btn btn--primary';
     const correction=node('button','Corregir');correction.type='button';correction.className='btn btn--secondary';
     correction.addEventListener('click',()=>{edit.hidden=!edit.hidden;correction.textContent=edit.hidden?'Corregir':'Ocultar corrección';});
+    const resolved=resolveCardProduct(row.name,species);
+    select.value=resolved.label;
+    if(resolved.productId)product.value=resolved.productId;
+    let finalized=false;
     function save(){
-     if(!date.value||date.value>today()){message.textContent='Revisa la fecha de aplicación antes de continuar.';edit.hidden=false;return;}
-     if(select.value==='other'&&!product.value){message.textContent='No pudimos identificar con seguridad el tipo de vacuna. Puedes corregirlo o continuar y revisarlo en consulta.';edit.hidden=false;return;}
-     const issue=addDose({label:select.value,date:date.value,productId:product.value||undefined},species);
-     if(issue){message.textContent=issue;edit.hidden=false;return;}
-     confirm.disabled=true;correction.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;edit.hidden=true;message.textContent='Vacuna añadida a los antecedentes.';
+     if(finalized)return;
+     const productId=product.value||undefined;
+     const chosenLabel=select.value;
+     const hasVerifiedProduct=Boolean(productId);
+     const hasUsableDate=Boolean(date.value&&date.value<=today());
+     // Categories (and names) without verified products are not used to infer antigens.
+     if(hasVerifiedProduct&&hasUsableDate){
+      const issue=addDose({label:chosenLabel,date:date.value,productId},species);
+      if(issue){message.textContent=issue;edit.hidden=false;return;}
+      message.textContent='Vacuna registrada con producto identificado.';
+     }else{
+      const issue=addPending({name:row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,reason:hasVerifiedProduct?'Fecha pendiente de confirmar':'Producto pendiente de identificar'},species);
+      if(issue){message.textContent=issue;return;}
+      message.textContent='Antecedente guardado para revisar en consulta. No se considera una dosis confirmada.';
+     }
+     finalized=true;
+     confirm.disabled=true;correction.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;edit.hidden=true;
     }
     confirm.addEventListener('click',save);
-    select.addEventListener('change',()=>{if(select.value!=='other')product.value='';});
-    product.addEventListener('change',()=>{if(product.value){const p=vaccineProducts.find(v=>v.id===product.value);const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[p?.group];if(group&&[...select.options].some(o=>o.value===group))select.value=group;else if(species==='cat'&&p?.group==='feline-core')select.value='feline3';}});
-    const normalized=String(row.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-    const match=vaccineProducts.find(p=>p.species.includes(species)&&p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()===normalized);
-    if(match){product.value=match.id;product.dispatchEvent(new Event('change'));}
-    else if(/\b(antirrabica|rabia|rabies)\b/i.test(normalized))select.value='rabies';
-    else if(/\b(triple felina|felina triple)\b/i.test(normalized)&&species==='cat')select.value='feline3';
+    select.addEventListener('change',()=>{if(select.value!==resolved.label)product.value='';});
+    product.addEventListener('change',()=>{if(product.value){const chosen=vaccineProducts.find(v=>v.id===product.value);const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[chosen?.group];if(group&&[...select.options].some(o=>o.value===group))select.value=group;else if(species==='cat'&&chosen?.group==='feline-core')select.value='feline3';}});
     if(row.note)edit.append(node('p',row.note));
     edit.append(label,productLabel,dateLabel);
     actions.append(confirm,correction);

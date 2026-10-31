@@ -23,3 +23,12 @@ test('ambiguous OCR dates require verification even when an ISO date was returne
  assert.equal(uncertainOcrDate({date:null,dateUncertain:true,note:''}),true);
  assert.equal(uncertainOcrDate({date:'2019-12-03',dateUncertain:false,note:'Etiqueta legible.'}),false);
 });
+
+test('recognized historical records are kept separate from certified vigencia',()=>{
+ const input={doses:[],pendingCards:[{name:'Nobivac Puppy DP',historicalId:'nobivac-puppy-dp-old',date:'2019-08-02',reason:'Vacuna histórica reconocida'}]};
+ const entries=cardHistoryEntries(input);
+ assert.equal(entries[0].status,'historical');
+ const message=cardHistoryLines(input).join(' ');
+ assert.match(message,/Vacuna histórica reconocida/);
+ assert.match(message,/no certifica vigencia/);
+});

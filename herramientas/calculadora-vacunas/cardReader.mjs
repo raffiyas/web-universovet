@@ -1,6 +1,7 @@
 import { vaccineLabels } from './vaccines/vaccineContent.mjs';
 import { vaccineProducts } from './vaccines/vaccineProducts.mjs';
 import { resolveCardProduct } from './vaccines/cardProductResolver.mjs';
+import { uncertainOcrDate } from './vaccines/cardHistory.mjs';
 export function setupCardReader({root,getSpecies,today,addDose,addPending}){
  const host=document.createElement('div');host.className='vaccine-dose-form card-reader-host';host.hidden=true;
  host.innerHTML='<h3>Muéstranos su carné</h3><p>Toma una foto donde se vean las vacunas y sus fechas.</p><label class="field">Foto de una página del carnet<input type="file" accept="image/jpeg,image/png,image/webp"></label><p class="vaccine-disclaimer">JPG, PNG o WebP, hasta 2,8 MB. Recorta los datos personales y procura que las fechas se vean nítidas. Al pulsar «Leer foto», la imagen se envía a OpenAI para analizarla. Esta aplicación no guarda la foto.</p><img hidden alt="Foto del carnet seleccionada" style="max-width:100%;max-height:280px;object-fit:contain"><div class="vaccine-controls"><button type="button" class="btn btn--primary">Leer foto</button><button type="button" class="btn btn--secondary">Quitar foto</button></div><p role="status" aria-live="polite"></p><div class="ocr-review"></div>';
@@ -45,8 +46,9 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
    for(const row of data.vaccines){
     const card=node('article','');card.className='vaccine-result ocr-simple-card';
     const heading=node('h4',row.name||'Vacuna por identificar');
+    const ambiguousDate=uncertainOcrDate(row);
     const validDate=/^\d{4}-\d{2}-\d{2}$/.test(row.date||'')&&row.date<=today();
-    const summary=node('p',validDate?'Fecha indicada: '+row.date.split('-').reverse().join('/'):'Fecha pendiente de revisión');
+    const summary=node('p',ambiguousDate?'Fecha dudosa: compruébala con el carné':validDate?'Fecha indicada: '+row.date.split('-').reverse().join('/'):'Fecha pendiente de revisión');
     card.append(heading,summary);
     const edit=document.createElement('div');edit.className='ocr-edit';edit.hidden=true;
     const label=node('label','Tipo de vacuna');label.className='field';
@@ -58,6 +60,11 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
     for(const p of vaccineProducts.filter(p=>p.species.includes(species))){const option=node('option',p.name);option.value=p.id;product.append(option);}
     productLabel.append(product);
     const dateLabel=node('label','Fecha de aplicación');dateLabel.className='field';const date=document.createElement('input');date.type='date';date.max=today();if(validDate)date.value=row.date;dateLabel.append(date);
+    const dateCheck=node('label','');dateCheck.className='ocr-date-confirm';
+    const dateCheckInput=document.createElement('input');dateCheckInput.type='checkbox';
+    dateCheck.append(dateCheckInput,document.createTextNode(' Verifiqué esta fecha directamente en el carné'));
+    if(ambiguousDate)edit.append(node('p','La fecha no se distingue con seguridad. Corrígela o guarda el registro para revisión.'));
+    if(ambiguousDate)edit.append(dateCheck);
     const message=node('p','');message.setAttribute('role','status');
     const actions=document.createElement('div');actions.className='vaccine-controls';
     const confirm=node('button','Confirmar lo que se ve');confirm.type='button';confirm.className='btn btn--primary';
@@ -67,12 +74,13 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
     select.value=resolved.label;
     if(resolved.productId)product.value=resolved.productId;
     let finalized=false;
+    if(ambiguousDate){edit.hidden=false;correction.textContent='Ocultar corrección';}
     function save(){
      if(finalized)return;
      const productId=product.value||undefined;
      const chosenLabel=select.value;
      const hasVerifiedProduct=Boolean(productId);
-     const hasUsableDate=Boolean(date.value&&date.value<=today());
+     const hasUsableDate=Boolean(date.value&&date.value<=today()&&(!ambiguousDate||dateCheckInput.checked));
      // Categories (and names) without verified products are not used to infer antigens.
      if(hasVerifiedProduct&&hasUsableDate){
       const issue=addDose({label:chosenLabel,date:date.value,productId},species);
@@ -80,7 +88,7 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
       message.textContent='✓ Antecedente registrado';
       message.className='ocr-confirmed-status ocr-confirmed-status--verified';
      }else{
-      const issue=addPending({name:row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,reason:hasVerifiedProduct?'Fecha pendiente de confirmar':'Producto pendiente de identificar'},species);
+      const issue=addPending({name:row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,reason:!hasUsableDate?'Fecha pendiente de confirmar':'Producto pendiente de identificar'},species);
       if(issue){message.textContent=issue;return;}
       message.textContent='✓ Guardado para revisión veterinaria. No se considera una dosis confirmada.';
       message.className='ocr-confirmed-status ocr-confirmed-status--pending';

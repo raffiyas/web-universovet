@@ -138,3 +138,11 @@
 .vaccine-extra-actions .vaccine-share{margin:12px 0 0}
 .vaccine-extra-actions .btn{font-size:.96rem}
 @media(max-width:680px){.risk-groups{grid-template-columns:1fr}.vaccine-panel .risk-group{padding:15px}.vaccine-next-step .hero__actions{display:grid;gap:10px}}
+
+
+/* Clear completion state after reviewing an OCR vaccine card */
+.ocr-simple-card .vaccine-controls[hidden]{display:none!important}
+.ocr-simple-card--saved{border-color:#a7d5c9;background:#fbfffd}
+.ocr-confirmed-status{display:flex;align-items:center;min-height:46px;padding:12px 14px;border-radius:12px;font-weight:750;font-size:1rem;line-height:1.45;margin:12px 0 0}
+.ocr-confirmed-status--verified{color:#145a42;background:#e4f5ed;border:1px solid #acd9c3}
+.ocr-confirmed-status--pending{color:#6d4b1d;background:#fff6e7;border:1px solid #e6c99c}

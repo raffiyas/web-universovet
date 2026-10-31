@@ -140,11 +140,24 @@ async function copy(){try{await navigator.clipboard.writeText(shareSummary());ro
 form.addEventListener('submit',e=>e.preventDefault());
 root.querySelector('#next').addEventListener('click',()=>{collect();if(!validate())return;if(step===0)track('vaccine_calculator_started');step++;if(step===3)renderResult();showStep();});
 root.querySelector('#back').addEventListener('click',()=>{step--;showStep();});
-root.querySelector('#restart').addEventListener('click',()=>{input=initial();form.reset();step=0;root.querySelector('#exact-age').hidden=false;root.querySelector('#estimated-age').hidden=true;root.querySelector('#dose-form').hidden=true;root.querySelector('#health-warning').hidden=true;speciesFields();showStep();});
+root.querySelector('#restart').addEventListener('click',()=>{input=initial();form.reset();step=0;root.querySelector('#exact-age').hidden=false;root.querySelector('#estimated-age').hidden=true;root.querySelector('#manual-entry').open=false;root.querySelector('#health-warning').hidden=true;speciesFields();updateHistoryChoice();showStep();});
 root.querySelectorAll('[name=species]').forEach(n=>n.addEventListener('change',()=>{input.species=n.value;input.doses=[];input.risks=[];speciesFields();}));
 root.querySelector('#unknown-date').addEventListener('change',e=>{root.querySelector('#exact-age').hidden=e.target.checked;root.querySelector('#estimated-age').hidden=!e.target.checked;});
 root.querySelector('#ill').addEventListener('change',e=>root.querySelector('#health-warning').hidden=e.target.value!=='yes');
-root.querySelector('#history').addEventListener('change',e=>{root.querySelector('#dose-form').hidden=e.target.value!=='card';root.querySelector('#memory-form').hidden=e.target.value!=='some';});
+function updateHistoryChoice(){
+ const value=root.querySelector('[name="history-choice"]:checked')?.value||'unknown';
+ const never=root.querySelector('#never-confirm').checked;
+ const history=value==='unknown'&&never?'never':value;
+ root.querySelector('#history').value=history;
+ input.history=history;
+ root.querySelector('#memory-form').hidden=history!=='some';
+ root.querySelector('#manual-entry').hidden=history!=='card';
+ if(history!=='card')root.querySelector('#manual-entry').open=false;
+ root.querySelector('#never-choice').hidden=value!=='unknown';
+}
+root.querySelectorAll('[name="history-choice"]').forEach(n=>n.addEventListener('change',updateHistoryChoice));
+root.querySelector('#never-confirm').addEventListener('change',updateHistoryChoice);
+updateHistoryChoice();
 root.querySelector('#dose-label').addEventListener('change',e=>{root.querySelectorAll('[name=antigen]').forEach(n=>n.checked=e.target.value==='rabies'&&n.value==='Rabies');});
 root.querySelector('#product').addEventListener('change',selectProduct);
 root.querySelector('#add-dose').addEventListener('click',()=>{const date=root.querySelector('#dose-date').value;const birth=root.querySelector('#birth').value;if(!date||date>localToday()||(!root.querySelector('#unknown-date').checked&&birth&&date<birth)){error('Ingresa una fecha de aplicación válida, posterior al nacimiento y hasta hoy.');return;}const product=getProduct(root.querySelector('#product').value);input.doses.push({label:root.querySelector('#dose-label').value,date,antigens:product?[...product.antigens]:[...root.querySelectorAll('[name=antigen]:checked')].map(n=>n.value),productId:product?.id});renderDoses();error();});
@@ -174,7 +187,7 @@ const cardReader=setupCardReader({root,getSpecies:()=>input.species,today:localT
  if(input.doses.some(d=>d.date===dose.date&&d.label===dose.label&&d.productId===dose.productId))return 'Esta vacuna ya está agregada.';
  const product=getProduct(dose.productId);
  input.doses.push({...dose,antigens:product?[...product.antigens]:dose.label==='rabies'?['Rabies']:[],source:'photo-reviewed'});
- root.querySelector('#history').value='card';input.history='card';root.querySelector('#dose-form').hidden=false;root.querySelector('#memory-form').hidden=true;renderDoses();return '';
+ root.querySelector('#history').value='card';input.history='card';root.querySelector('[name="history-choice"][value="card"]').checked=true;updateHistoryChoice();renderDoses();return '';
 }});
 root.querySelector('#restart').addEventListener('click',()=>cardReader.reset());
 root.querySelectorAll('[name=species]').forEach(n=>n.addEventListener('change',()=>cardReader.reset()));

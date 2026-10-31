@@ -9,7 +9,7 @@ for (const species of ['dog','cat']) {
     const input = {...base,species,history};
     const view = resultExperience(input,calculateVaccines(input,now));
     assert.equal(view.hasEstimate,false,'Missing records must not imply a dose estimate');
-    assert.match(view.description,/no significa que no tenga vacunas/);
+    assert.match(view.description,/todavía no podemos confirmar cuáles están al día/);
     assert.ok(view.historyText);
   }
 }
@@ -22,5 +22,5 @@ for (const health of [{ill:'yes'}, {ill:'unsure'}, {reaction:'yes'}, {reaction:'
 }
 const never = {...base,history:'never'};
 assert.equal(resultExperience(never,calculateVaccines(never,now)).hasEstimate,true);
-assert.match(resultExperience({...base,history:'card'},calculateVaccines({...base,history:'card'},now)).preparation,/foto/);
+assert.match(resultExperience({...base,history:'card'},calculateVaccines({...base,history:'card'},now)).preparation,/carné/);
 console.log('Vaccine experience: history, species, health priority and estimates passed.');

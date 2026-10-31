@@ -91,3 +91,65 @@
 .vaccine-calendar li, #follow-ups li { padding: 10px 0; border-bottom: 1px solid #d8e6eb; }
 .vaccine-calendar p, #follow-ups p { margin: 4px 0; }
 @media (max-width: 680px) { .vaccine-dose-summary { grid-template-columns: 1fr; } .vaccine-practical { padding: 16px; } }
+
+
+/* Simplified carnet history step: accessible, high-contrast choices */
+.history-choices legend{font-size:1.3rem;color:#1a3a4a;font-weight:800;line-height:1.3}
+.history-choices>p{color:#36545c;margin:12px 0 18px}
+.history-choice-grid{display:grid;gap:12px}
+.vaccine-page .history-choice{display:flex;align-items:center;gap:16px;padding:18px;border:2px solid #adcad0;border-radius:16px;background:#fff;cursor:pointer;min-height:76px;color:#1a3a4a}
+.history-choice:has(input:checked){border-color:#147d75;background:#eaf7f5;box-shadow:inset 0 0 0 1px #147d75}
+.history-choice input{width:21px;height:21px;accent-color:#147d75;flex:none}
+.history-choice-icon{font-size:1.7rem;line-height:1}
+.history-choice strong{display:block;font-size:1.04rem;line-height:1.35}
+.history-choice small{display:block;color:#385660;font-size:.91rem;line-height:1.45;margin-top:4px}
+.history-never{display:flex;align-items:center;gap:10px;padding:14px;border-radius:12px;background:#f1f6f7;color:#1a3a4a;font-weight:650}
+.history-never input{width:20px;height:20px;accent-color:#147d75}
+.vaccine-page .card-reader-host{background:#edf7f6;border-radius:18px;padding:20px;margin-top:8px}
+.card-reader-host>h3{font-size:1.3rem}
+.card-reader-host .vaccine-controls{margin-top:12px}
+.ocr-simple-card{background:#fff;border:2px solid #c5dfe0;border-radius:16px;padding:18px;margin-top:16px;color:#1a3a4a}
+.ocr-simple-card h4{font-size:1.08rem;margin:0 0 9px;color:#1a3a4a}
+.ocr-simple-card>p{color:#355660}
+.ocr-simple-card .ocr-edit{padding:14px;background:#f4f9f9;border-radius:12px;margin-top:12px}
+.ocr-simple-card .ocr-edit[hidden]{display:none}
+.vaccine-manual-entry{margin-top:18px}
+.vaccine-page .vaccine-manual-entry>summary{font-size:1rem;color:#145e58}
+.vaccine-page .btn--primary{background:#147d75;color:#fff}
+.vaccine-page .btn--secondary{color:#164f4b;background:#fff;border:2px solid #91bdb9}
+@media(max-width:600px){.history-choice{padding:14px!important;gap:10px!important}.vaccine-page .card-reader-host{padding:16px}.card-reader-host .vaccine-controls .btn,.ocr-simple-card .vaccine-controls .btn{width:100%}}
+
+
+/* Vaccine UX 1.2: grouped exposures and concise results */
+.risk-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.vaccine-panel .risk-group{border:1px solid #c5d9dc;border-radius:16px;padding:18px;background:#fff;min-width:0}
+.risk-group legend{font-size:1.05rem;line-height:1.4;font-weight:800;color:#1a3a4a;padding:0 4px;max-width:100%}
+.risk-hint{font-size:.88rem;color:#385660;margin:4px 0 10px}
+.risk-subchoices{display:grid;gap:9px}
+.risk-subchoices .vaccine-check{min-height:48px;width:100%;color:#1a3a4a;font-weight:550;font-size:1rem;line-height:1.35}
+.risk-subchoices .vaccine-check:has(input:checked){background:#eaf7f5;border-color:#147d75}
+.vaccine-next-step #next-step-description,.vaccine-next-step #next-step-preparation{max-width:60ch}
+.remembered-vaccines{background:#fff;border:1px solid #c8dfe2;border-radius:13px;padding:16px;margin:16px 0}
+.remembered-vaccines h4{font-size:1.05rem;color:#1a3a4a;margin:0 0 8px}
+.vaccine-page .remembered-vaccines ul{padding-left:21px;margin:8px 0}
+.remembered-vaccines li{margin:7px 0;color:#234b55}
+.remembered-vaccines small{color:#385660;line-height:1.4}
+.vaccine-extra-actions{margin-top:20px}
+.vaccine-extra-actions .vaccine-share{margin:12px 0 0}
+.vaccine-extra-actions .btn{font-size:.96rem}
+@media(max-width:680px){.risk-groups{grid-template-columns:1fr}.vaccine-panel .risk-group{padding:15px}.vaccine-next-step .hero__actions{display:grid;gap:10px}}
+
+
+/* Clear completion state after reviewing an OCR vaccine card */
+.ocr-simple-card .vaccine-controls[hidden]{display:none!important}
+.ocr-simple-card--saved{border-color:#a7d5c9;background:#fbfffd}
+.ocr-confirmed-status{display:flex;align-items:center;min-height:46px;padding:12px 14px;border-radius:12px;font-weight:750;font-size:1rem;line-height:1.45;margin:12px 0 0}
+.ocr-confirmed-status--verified{color:#145a42;background:#e4f5ed;border:1px solid #acd9c3}
+.ocr-confirmed-status--pending{color:#6d4b1d;background:#fff6e7;border:1px solid #e6c99c}
+
+
+/* Optional historical entry, hidden until requested */
+.card-reader-host .vaccine-manual-entry{margin-top:18px;padding:14px;background:#fff;border:1px solid #b8d8d6;border-radius:14px;color:#1a3a4a}
+.card-reader-host .vaccine-manual-entry summary{font-weight:750;cursor:pointer}
+.card-reader-host .vaccine-manual-entry select,.card-reader-host .vaccine-manual-entry input[type=date]{width:100%;background:white;color:#1a3a4a;border:1px solid #a2c3c5;border-radius:9px;padding:12px;margin:8px 0;min-height:46px;font-size:1rem}
+.card-reader-host .vaccine-manual-entry button{margin:8px 0}

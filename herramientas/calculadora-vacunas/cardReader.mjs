@@ -1,23 +1,50 @@
 import { vaccineLabels } from './vaccines/vaccineContent.mjs';
 import { vaccineProducts } from './vaccines/vaccineProducts.mjs';
-export function setupCardReader({root,getSpecies,today,addDose}){
- const host=document.createElement('div');host.className='vaccine-dose-form';
- host.innerHTML='<h3>¿Tienes una foto de su carnet?</h3><p>La IA puede ayudarte a copiar las vacunas. Revisa cada dato antes de añadirlo.</p><label class="field">Foto de una página del carnet<input type="file" accept="image/jpeg,image/png,image/webp"></label><p class="vaccine-disclaimer">JPG, PNG o WebP, hasta 2,8 MB. Recorta los datos personales y procura que las fechas se vean nítidas. Al pulsar «Leer foto», la imagen se envía a OpenAI para analizarla. Esta aplicación no guarda la foto.</p><img hidden alt="Foto del carnet seleccionada" style="max-width:100%;max-height:280px;object-fit:contain"><div class="vaccine-controls"><button type="button" class="btn btn--primary">Leer foto</button><button type="button" class="btn btn--secondary">Quitar foto</button></div><p role="status" aria-live="polite"></p><div class="ocr-review"></div>';
+import { resolveCardProduct } from './vaccines/cardProductResolver.mjs';
+import { historicalById, historicalVaccines } from './vaccines/historicalVaccines.mjs';
+import { uncertainOcrDate } from './vaccines/cardHistory.mjs';
+export function setupCardReader({root,getSpecies,today,addDose,addPending}){
+ const host=document.createElement('div');host.className='vaccine-dose-form card-reader-host';host.hidden=true;
+ host.innerHTML='<h3>Muéstranos su carné</h3><p>Toma una foto donde se vean las vacunas y sus fechas.</p><label class="field">Foto de una página del carnet<input type="file" accept="image/jpeg,image/png,image/webp"></label><p class="vaccine-disclaimer">JPG, PNG o WebP, hasta 2,8 MB. Recorta los datos personales y procura que las fechas se vean nítidas. Al pulsar «Leer foto», la imagen se envía a OpenAI para analizarla. Esta aplicación no guarda la foto.</p><img hidden alt="Foto del carnet seleccionada" style="max-width:100%;max-height:280px;object-fit:contain"><div class="vaccine-controls"><button type="button" class="btn btn--primary">Leer foto</button><button type="button" class="btn btn--secondary">Quitar foto</button></div><p role="status" aria-live="polite"></p><div class="ocr-review"></div>';
  root.querySelector('[data-step="1"] h2').after(host);
  const file=host.querySelector('input'),[read,clear]=host.querySelectorAll('button'),status=host.querySelector('[role=status]'),review=host.querySelector('.ocr-review'),preview=host.querySelector('img');
+ const extras=document.createElement('details');extras.className='vaccine-manual-entry';extras.hidden=true;
+ const extrasTitle=document.createElement('summary');extrasTitle.textContent='¿Falta alguna vacuna en la foto? Agrégala aquí';
+ const extrasDescription=document.createElement('p');extrasDescription.textContent='Elige una vacuna que puedas reconocer en la etiqueta. No hace falta tener un certificado.';
+ const historicalSelect=document.createElement('select');historicalSelect.setAttribute('aria-label','Vacuna reconocida en el carné');
+ const historicalDate=document.createElement('input');historicalDate.type='date';historicalDate.max=today();historicalDate.setAttribute('aria-label','Fecha de aplicación, si la conoces');
+ const extraButton=document.createElement('button');extraButton.type='button';extraButton.className='btn btn--secondary';extraButton.textContent='Agregar antecedente';
+ const extraMessage=document.createElement('p');extraMessage.setAttribute('role','status');extraMessage.setAttribute('aria-live','polite');
+ function refreshHistoricalOptions(){
+  historicalSelect.replaceChildren();
+  const none=document.createElement('option');none.value='';none.textContent='Selecciona una vacuna';historicalSelect.append(none);
+  historicalVaccines.filter(p=>p.species.includes(getSpecies())).forEach(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;historicalSelect.append(option);});
+ }
+ extraButton.addEventListener('click',()=>{
+  const chosen=historicalById(historicalSelect.value);
+  if(!chosen){extraMessage.textContent='Elige una vacuna de la lista.';return;}
+  if(!chosen.species.includes(getSpecies())){extraMessage.textContent='Esta vacuna no corresponde a la especie seleccionada.';return;}
+  const date=historicalDate.value&&historicalDate.value<=today()?historicalDate.value:null;
+  const issue=addPending({name:chosen.name,historicalId:chosen.id,date,label:chosen.riskHint,reason:date?'Vacuna histórica reconocida; revisar refuerzos':'Fecha pendiente de confirmar'},getSpecies());
+  extraMessage.textContent=issue||'✓ Antecedente agregado para orientar la revisión.';
+ });
+ extras.append(extrasTitle,extrasDescription,historicalSelect,historicalDate,extraButton,extraMessage);
+ review.after(extras);
+ refreshHistoricalOptions();
+
  const camera=document.createElement('input');camera.type='file';camera.accept='image/*';camera.setAttribute('capture','environment');camera.hidden=true;
  const choices=document.createElement('div');choices.className='vaccine-controls';
  const take=document.createElement('button'),choose=document.createElement('button');
  for(const button of [take,choose]){button.type='button';button.className='btn btn--secondary';}
- take.textContent='Tomar foto del carnet';choose.textContent='Elegir foto guardada';
+ take.textContent='Tomar foto';choose.textContent='Elegir foto guardada';
  take.addEventListener('click',()=>camera.click());choose.addEventListener('click',()=>file.click());
  choices.append(take,choose,camera);file.closest('label').hidden=true;file.closest('label').before(choices);
- const hint=document.createElement('p');hint.className='vaccine-disclaimer';hint.textContent='En celulares compatibles, «Tomar foto» abre la cámara trasera. En otros dispositivos puede abrir el selector de archivos.';choices.after(hint);
+ const hint=document.createElement('p');hint.className='vaccine-disclaimer';hint.textContent='Si tu teléfono no abre la cámara, puedes elegir una foto guardada.';choices.after(hint);
  const privacy=[...host.querySelectorAll('.vaccine-disclaimer')].find(p=>p!==hint);
- privacy.textContent='JPG, PNG o WebP, hasta 20 MB. Ajustamos el tamaño antes de enviar. Fotografía una página de cerca, con buena luz y fechas legibles; recorta los datos personales. Al pulsar «Leer foto», la imagen se envía a OpenAI. Esta aplicación no guarda la foto.';
+ privacy.textContent='La foto se envía a OpenAI para leerla y no se guarda en esta página. Evita incluir datos personales. Formatos JPG, PNG o WebP (máximo 20 MB).';
  let image='',version=0,controller;
  const node=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n;};
- function reset(){version++;controller?.abort();image='';file.value='';camera.value='';preview.removeAttribute('src');preview.hidden=true;review.replaceChildren();status.textContent='';read.disabled=true;file.disabled=false;}
+ function reset(){version++;controller?.abort();extras.hidden=true;extras.open=false;extraMessage.textContent='';refreshHistoricalOptions();image='';file.value='';camera.value='';preview.removeAttribute('src');preview.hidden=true;review.replaceChildren();status.textContent='';read.disabled=true;file.disabled=false;}
  clear.addEventListener('click',reset);read.disabled=true;
  async function prepare(source){
   const selected=source.files[0];if(!selected)return;reset();const current=version;
@@ -31,7 +58,7 @@ export function setupCardReader({root,getSpecies,today,addDose}){
    }
    if(current!==version)return;
    if(encoded.length>=3700000)throw new Error('large');
-   image=encoded;preview.src=image;preview.hidden=false;read.disabled=false;status.textContent='Foto lista. Comprueba que las fechas se lean y pulsa «Leer foto».';
+   image=encoded;preview.src=image;preview.hidden=false;read.disabled=false;status.textContent='Foto lista. Pulsa «Leer foto» para revisar las vacunas.';
   }catch{if(current===version)status.textContent='No pudimos preparar esa imagen. Prueba una foto JPG más pequeña o elige otra foto guardada.';}finally{bitmap?.close();}
  }
  file.addEventListener('change',()=>prepare(file));camera.addEventListener('change',()=>prepare(camera));
@@ -39,17 +66,75 @@ export function setupCardReader({root,getSpecies,today,addDose}){
   if(!image)return;const current=++version;const species=getSpecies();controller=new AbortController();read.disabled=true;file.disabled=true;review.replaceChildren();status.textContent='Leyendo la foto… esto puede tardar hasta un minuto.';
   try{
    const response=await fetch('/api/read-vaccine-card',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image}),signal:controller.signal});const data=await response.json();if(current!==version)return;if(!response.ok)throw new Error(data.error||'No pudimos leer la foto.');
-   status.textContent=data.vaccines.length?'Revisa el nombre y la fecha. Selecciona el tipo de vacuna y confirma cada registro.':'No encontramos vacunas legibles. Prueba otra foto o agrégalas manualmente.';
+   status.textContent=data.vaccines.length?'Revisa lo que se leyó del carné. Si un producto no está identificado, quedará pendiente sin afectar el cálculo.':'No encontramos vacunas legibles. Prueba otra foto o utiliza el ingreso manual.';
    if(data.warning)review.append(node('p',data.warning));
+   extras.hidden=false;
    for(const row of data.vaccines){
-    const card=node('article','');card.className='vaccine-result';card.append(node('h4',`Texto leído: ${row.name}`));if(row.note)card.append(node('p',row.note));
-    const label=node('label','Tipo de vacuna que aparece en el carnet');label.className='field';const select=document.createElement('select');for(const v of vaccineLabels[species]){const option=node('option',v.text);option.value=v.value;select.append(option);}select.value='other';label.append(select);
-    const productLabel=node('label','Marca exacta, solo si puedes confirmarla');productLabel.className='field';const product=document.createElement('select');const unknown=node('option','Otro / no lo sé');unknown.value='';product.append(unknown);for(const p of vaccineProducts.filter(p=>p.species.includes(species))){const option=node('option',p.name);option.value=p.id;product.append(option);}productLabel.append(product);
-    const dateLabel=node('label','Fecha de aplicación (revisa que no sea la próxima dosis)');dateLabel.className='field';const date=document.createElement('input');date.type='date';date.max=today();if(/^\d{4}-\d{2}-\d{2}$/.test(row.date||''))date.value=row.date;dateLabel.append(date);
-    const confirmLabel=node('label','');confirmLabel.className='vaccine-check';const confirm=document.createElement('input');confirm.type='checkbox';confirmLabel.append(confirm,document.createTextNode('Revisé estos datos comparándolos con la foto'));
-    const button=node('button','Añadir vacuna revisada');button.type='button';button.className='btn btn--primary';const message=node('p','');message.setAttribute('role','status');
-    button.addEventListener('click',()=>{if(!confirm.checked){message.textContent='Confirma que revisaste los datos de la foto.';return;}const error=addDose({label:select.value,date:date.value,productId:product.value||undefined},species);if(error){message.textContent=error;return;}button.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;confirm.disabled=true;message.textContent='Vacuna agregada. Puedes revisar otra fila o continuar.';});
-    card.append(label,productLabel,dateLabel,confirmLabel,button,message);review.append(card);
+    const card=node('article','');card.className='vaccine-result ocr-simple-card';
+    const heading=node('h4',row.name||'Vacuna por identificar');
+    const ambiguousDate=uncertainOcrDate(row);
+    const validDate=/^\d{4}-\d{2}-\d{2}$/.test(row.date||'')&&row.date<=today();
+    const summary=node('p',ambiguousDate?'Fecha dudosa: compruébala con el carné':validDate?'Fecha indicada: '+row.date.split('-').reverse().join('/'):'Fecha pendiente de revisión');
+    card.append(heading,summary);
+    const edit=document.createElement('div');edit.className='ocr-edit';edit.hidden=true;
+    const label=node('label','Tipo de vacuna');label.className='field';
+    const select=document.createElement('select');
+    for(const v of vaccineLabels[species]){const option=node('option',v.text);option.value=v.value;select.append(option);}
+    select.value='other';label.append(select);
+    const productLabel=node('label','Producto exacto (solo si figura en el carné)');productLabel.className='field';
+    const product=document.createElement('select');const unknown=node('option','No lo sé');unknown.value='';product.append(unknown);
+    for(const p of vaccineProducts.filter(p=>p.species.includes(species))){const option=node('option',p.name);option.value=p.id;product.append(option);}
+    productLabel.append(product);
+    const dateLabel=node('label','Fecha de aplicación');dateLabel.className='field';const date=document.createElement('input');date.type='date';date.max=today();if(validDate)date.value=row.date;dateLabel.append(date);
+    const dateCheck=node('label','');dateCheck.className='ocr-date-confirm';
+    const dateCheckInput=document.createElement('input');dateCheckInput.type='checkbox';
+    dateCheck.append(dateCheckInput,document.createTextNode(' Verifiqué esta fecha directamente en el carné'));
+    if(ambiguousDate)edit.append(node('p','La fecha no se distingue con seguridad. Corrígela o guarda el registro para revisión.'));
+    if(ambiguousDate)edit.append(dateCheck);
+    const message=node('p','');message.setAttribute('role','status');
+    const actions=document.createElement('div');actions.className='vaccine-controls';
+    const confirm=node('button','Confirmar lo que se ve');confirm.type='button';confirm.className='btn btn--primary';
+    const correction=node('button','Corregir');correction.type='button';correction.className='btn btn--secondary';
+    correction.addEventListener('click',()=>{edit.hidden=!edit.hidden;correction.textContent=edit.hidden?'Corregir':'Ocultar corrección';});
+    const resolved=resolveCardProduct(row.name,species);
+    select.value=resolved.label;
+    if(resolved.productId)product.value=resolved.productId;
+    if(resolved.recognizedHistorical){
+     const historical=historicalById(resolved.historicalId);
+     card.append(node('p','Vacuna histórica reconocida: '+historical.name+'. Puedes guardar este antecedente para orientar el control, aunque no tengas un certificado.'));
+    }
+    let finalized=false;
+    if(ambiguousDate){edit.hidden=false;correction.textContent='Ocultar corrección';}
+    function save(){
+     if(finalized)return;
+     const productId=product.value||undefined;
+     const chosenLabel=select.value;
+     const hasVerifiedProduct=Boolean(productId);
+     const hasUsableDate=Boolean(date.value&&date.value<=today()&&(!ambiguousDate||dateCheckInput.checked));
+     // Categories (and names) without verified products are not used to infer antigens.
+     if(hasVerifiedProduct&&hasUsableDate){
+      const issue=addDose({label:chosenLabel,date:date.value,productId},species);
+      if(issue){message.textContent=issue;edit.hidden=false;return;}
+      message.textContent='✓ Antecedente registrado';
+      message.className='ocr-confirmed-status ocr-confirmed-status--verified';
+     }else{
+      const historical=resolved.recognizedHistorical && !productId && chosenLabel===resolved.label ? historicalById(resolved.historicalId) : null;
+      const issue=addPending({name:historical?.name||row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,historicalId:historical?.id||null,reason:!hasUsableDate?'Fecha pendiente de confirmar':historical?'Vacuna histórica reconocida; esquema por actualizar':'Producto pendiente de identificar'},species);
+      if(issue){message.textContent=issue;return;}
+      message.textContent=historical?'✓ Vacuna histórica reconocida. La fecha y los refuerzos se revisan en consulta.':'✓ Guardado para revisión veterinaria. No se considera una dosis confirmada.';
+      message.className='ocr-confirmed-status ocr-confirmed-status--pending';
+     }
+     finalized=true;
+     confirm.disabled=true;correction.disabled=true;select.disabled=true;product.disabled=true;date.disabled=true;edit.hidden=true;actions.hidden=true;
+     card.classList.add('ocr-simple-card--saved');
+    }
+    confirm.addEventListener('click',save);
+    select.addEventListener('change',()=>{if(select.value!==resolved.label)product.value='';});
+    product.addEventListener('change',()=>{if(product.value){const chosen=vaccineProducts.find(v=>v.id===product.value);const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[chosen?.group];if(group&&[...select.options].some(o=>o.value===group))select.value=group;else if(species==='cat'&&chosen?.group==='feline-core')select.value='feline3';}});
+    if(row.note)edit.append(node('p',row.note));
+    edit.append(label,productLabel,dateLabel);
+    actions.append(confirm,correction);
+    card.append(edit,actions,message);review.append(card);
    }
   }catch(e){if(current===version&&e.name!=='AbortError')status.textContent=e.message||'Error al leer la foto.';}
   finally{if(current===version){read.disabled=false;file.disabled=false;}}

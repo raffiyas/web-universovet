@@ -25,4 +25,6 @@ jobs:
       - run: npm run test:clinical
       - run: npm run test:experience
       - run: node tests/vaccineCardResolver.test.mjs
+      - run: node tests/vaccineCardHistory.test.mjs
+      - run: node --check api/read-vaccine-card.mjs
       - run: node --check herramientas/calculadora-vacunas/cardReader.mjs

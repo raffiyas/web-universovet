@@ -1,4 +1,5 @@
 import { vaccineProducts } from './vaccineProducts.mjs';
+import { historicalVaccines } from './historicalVaccines.mjs';
 
 // This resolver never assigns a verified product based on a partial commercial name.
 // Category hints are presentation-only; unverified entries must not supply antigens.
@@ -10,6 +11,8 @@ export function resolveCardProduct(rawName, species) {
  if (!name || !['dog','cat'].includes(species)) return { productId: null, label: 'other', verified: false };
  const exact = vaccineProducts.find(p=>p.species.includes(species)&&normalizeCardName(p.name)===name);
  if (exact) return { productId: exact.id, label: labelOf(exact, species), verified: true };
+ const historical = historicalVaccines.find(p=>p.species.includes(species)&&p.aliases.includes(name));
+ if (historical) return {productId:null,historicalId:historical.id,label:historical.riskHint,verified:false,recognizedHistorical:true};
  // Explicitly identified commercial class, not a claim about antigenic composition.
  // Puppy DP is NOT Puppy DP Plus; Vanguard 5/L is NOT necessarily 5 L4.
  if (species==='dog' && /\bnobivac puppy dp\b/.test(name)) return {productId:null,label:'puppy',verified:false};

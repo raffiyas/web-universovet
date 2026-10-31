@@ -136,7 +136,7 @@ function renderPracticalPlan(){
  if(plan.followUps.length){follow.append(el('h3','Controles y refuerzos posteriores'));const list=el('ul');plan.followUps.forEach(f=>{const item=el('li');item.append(el('strong',formatDate(f.date)),el('p',f.text));list.append(item);});follow.append(list);}
 }
 function renderResult(){
- result=calculateVaccines(input);
+ result=calculateVaccines(input.pendingCards.length?{...input,history:'some'}:input);
  root.querySelector('#result-heading').textContent=`El próximo paso de ${input.name||'tu mascota'}`;
  const age=result.ageDays<56?`${Math.floor(result.ageWeeks)} semanas`:result.ageDays<365?`${Math.floor(result.ageMonths)} meses`:`${Number(result.ageYears.toFixed(1)).toLocaleString('es-CL')} años`;
  root.querySelector('#result-age').textContent=`${input.species==='dog'?'Perro':'Gato'} · ${age}${input.approximate?' aproximadamente':''}`;

@@ -154,7 +154,7 @@ function renderResult(){
    remembered.append(el('h4','Vacunas registradas en el carné'));
    const records=el('ul');
    cardEntries.forEach(v=>{
-    const label=v.status==='identified'?'Producto identificado, vigencia por confirmar':v.reason;
+    const label=v.status==='identified'?'Producto identificado, vigencia por confirmar':v.status==='historical'?'Vacuna histórica reconocida; revisar refuerzos':v.reason;
     records.append(el('li',v.name+' · '+(v.date?formatDate(v.date):'fecha por verificar')+' ('+label+')'));
    });
    remembered.append(records);
@@ -165,7 +165,7 @@ function renderResult(){
    input.memories.forEach(m=>list.append(el('li',m.vaccine+' · '+m.time.toLowerCase())));
    remembered.append(list);
   }
-  remembered.append(el('small','Los registros pendientes no se utilizan como dosis confirmadas. La vigencia debe comprobarse en consulta.'));
+  remembered.append(el('small','Estos antecedentes orientan sobre vacunas anteriores; no certifican su vigencia ni determinan dosis por sí solos.'));
  }
  root.querySelector('.vaccine-next-step').classList.toggle('needs-health-review',experience.healthReview);
  const message=[

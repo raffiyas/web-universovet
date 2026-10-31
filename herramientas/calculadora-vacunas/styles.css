@@ -118,3 +118,23 @@
 .vaccine-page .btn--primary{background:#147d75;color:#fff}
 .vaccine-page .btn--secondary{color:#164f4b;background:#fff;border:2px solid #91bdb9}
 @media(max-width:600px){.history-choice{padding:14px!important;gap:10px!important}.vaccine-page .card-reader-host{padding:16px}.card-reader-host .vaccine-controls .btn,.ocr-simple-card .vaccine-controls .btn{width:100%}}
+
+
+/* Vaccine UX 1.2: grouped exposures and concise results */
+.risk-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.vaccine-panel .risk-group{border:1px solid #c5d9dc;border-radius:16px;padding:18px;background:#fff;min-width:0}
+.risk-group legend{font-size:1.05rem;line-height:1.4;font-weight:800;color:#1a3a4a;padding:0 4px;max-width:100%}
+.risk-hint{font-size:.88rem;color:#385660;margin:4px 0 10px}
+.risk-subchoices{display:grid;gap:9px}
+.risk-subchoices .vaccine-check{min-height:48px;width:100%;color:#1a3a4a;font-weight:550;font-size:1rem;line-height:1.35}
+.risk-subchoices .vaccine-check:has(input:checked){background:#eaf7f5;border-color:#147d75}
+.vaccine-next-step #next-step-description,.vaccine-next-step #next-step-preparation{max-width:60ch}
+.remembered-vaccines{background:#fff;border:1px solid #c8dfe2;border-radius:13px;padding:16px;margin:16px 0}
+.remembered-vaccines h4{font-size:1.05rem;color:#1a3a4a;margin:0 0 8px}
+.vaccine-page .remembered-vaccines ul{padding-left:21px;margin:8px 0}
+.remembered-vaccines li{margin:7px 0;color:#234b55}
+.remembered-vaccines small{color:#385660;line-height:1.4}
+.vaccine-extra-actions{margin-top:20px}
+.vaccine-extra-actions .vaccine-share{margin:12px 0 0}
+.vaccine-extra-actions .btn{font-size:.96rem}
+@media(max-width:680px){.risk-groups{grid-template-columns:1fr}.vaccine-panel .risk-group{padding:15px}.vaccine-next-step .hero__actions{display:grid;gap:10px}}

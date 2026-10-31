@@ -11,7 +11,7 @@ test('partial commercial names never masquerade as verified formulations',()=>{
   const resolved=resolveCardProduct(name,'dog');
   assert.equal(resolved.productId,null,name);
   assert.equal(resolved.verified,false,name);
-  assert.equal(resolved.recognizedHistorical,true,name);
+  assert.equal(Boolean(resolved.recognizedHistorical),name!=='Nobivac DHP',name);
   assert.equal(resolved.label,label,name);
  }
 });

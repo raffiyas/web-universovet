@@ -1,6 +1,7 @@
 import { vaccineLabels } from './vaccines/vaccineContent.mjs';
 import { vaccineProducts } from './vaccines/vaccineProducts.mjs';
 import { resolveCardProduct } from './vaccines/cardProductResolver.mjs';
+import { historicalById } from './vaccines/historicalVaccines.mjs';
 import { uncertainOcrDate } from './vaccines/cardHistory.mjs';
 export function setupCardReader({root,getSpecies,today,addDose,addPending}){
  const host=document.createElement('div');host.className='vaccine-dose-form card-reader-host';host.hidden=true;
@@ -73,6 +74,10 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
     const resolved=resolveCardProduct(row.name,species);
     select.value=resolved.label;
     if(resolved.productId)product.value=resolved.productId;
+    if(resolved.recognizedHistorical){
+     const historical=historicalById(resolved.historicalId);
+     card.insertBefore(node('p','Vacuna histórica reconocida: '+historical.name+'. Puedes guardar este antecedente para orientar el control, aunque no tengas un certificado.'),edit);
+    }
     let finalized=false;
     if(ambiguousDate){edit.hidden=false;correction.textContent='Ocultar corrección';}
     function save(){
@@ -88,9 +93,10 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
       message.textContent='✓ Antecedente registrado';
       message.className='ocr-confirmed-status ocr-confirmed-status--verified';
      }else{
-      const issue=addPending({name:row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,reason:!hasUsableDate?'Fecha pendiente de confirmar':'Producto pendiente de identificar'},species);
+      const historical=resolved.recognizedHistorical && !productId && chosenLabel===resolved.label ? historicalById(resolved.historicalId) : null;
+      const issue=addPending({name:historical?.name||row.name||'Vacuna sin identificar',date:hasUsableDate?date.value:null,label:chosenLabel,historicalId:historical?.id||null,reason:!hasUsableDate?'Fecha pendiente de confirmar':historical?'Vacuna histórica reconocida; esquema por actualizar':'Producto pendiente de identificar'},species);
       if(issue){message.textContent=issue;return;}
-      message.textContent='✓ Guardado para revisión veterinaria. No se considera una dosis confirmada.';
+      message.textContent=historical?'✓ Vacuna histórica reconocida. La fecha y los refuerzos se revisan en consulta.':'✓ Guardado para revisión veterinaria. No se considera una dosis confirmada.';
       message.className='ocr-confirmed-status ocr-confirmed-status--pending';
      }
      finalized=true;

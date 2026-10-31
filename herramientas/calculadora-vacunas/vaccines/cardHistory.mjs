@@ -1,11 +1,12 @@
 import { getProduct } from './vaccineProducts.mjs';
+import { historicalById } from './historicalVaccines.mjs';
 
 export function cardHistoryEntries(input) {
  const verified=(input.doses||[]).filter(d=>d.source==='photo-reviewed').map(d=>({
   status:'identified',name:getProduct(d.productId)?.name||'Vacuna identificada',date:d.date||null
  }));
  const pending=(input.pendingCards||[]).map(v=>({
-  status:'pending',name:v.name||'Vacuna por identificar',date:v.date||null,
+  status:v.historicalId&&historicalById(v.historicalId)?'historical':'pending',name:v.name||'Vacuna por identificar',date:v.date||null,
   reason:v.reason||'Pendiente de revisión'
  }));
  return [...verified,...pending];
@@ -15,6 +16,8 @@ export function cardHistoryLines(input) {
   const date=v.date||'fecha por verificar';
   return v.status==='identified'
    ?`Vacuna identificada en carné (antecedente, no certifica vigencia): ${v.name} · ${date}.`
+   :v.status==='historical'
+   ?`Vacuna histórica reconocida (revisar refuerzos, no certifica vigencia): ${v.name} · ${date}.`
    :`Lectura pendiente de revisión: ${v.name} · ${date} (${v.reason}).`;
  });
 }

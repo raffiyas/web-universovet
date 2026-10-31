@@ -1,13 +1,37 @@
 import { vaccineLabels } from './vaccines/vaccineContent.mjs';
 import { vaccineProducts } from './vaccines/vaccineProducts.mjs';
 import { resolveCardProduct } from './vaccines/cardProductResolver.mjs';
-import { historicalById } from './vaccines/historicalVaccines.mjs';
+import { historicalById, historicalVaccines } from './vaccines/historicalVaccines.mjs';
 import { uncertainOcrDate } from './vaccines/cardHistory.mjs';
 export function setupCardReader({root,getSpecies,today,addDose,addPending}){
  const host=document.createElement('div');host.className='vaccine-dose-form card-reader-host';host.hidden=true;
  host.innerHTML='<h3>Muéstranos su carné</h3><p>Toma una foto donde se vean las vacunas y sus fechas.</p><label class="field">Foto de una página del carnet<input type="file" accept="image/jpeg,image/png,image/webp"></label><p class="vaccine-disclaimer">JPG, PNG o WebP, hasta 2,8 MB. Recorta los datos personales y procura que las fechas se vean nítidas. Al pulsar «Leer foto», la imagen se envía a OpenAI para analizarla. Esta aplicación no guarda la foto.</p><img hidden alt="Foto del carnet seleccionada" style="max-width:100%;max-height:280px;object-fit:contain"><div class="vaccine-controls"><button type="button" class="btn btn--primary">Leer foto</button><button type="button" class="btn btn--secondary">Quitar foto</button></div><p role="status" aria-live="polite"></p><div class="ocr-review"></div>';
  root.querySelector('[data-step="1"] h2').after(host);
  const file=host.querySelector('input'),[read,clear]=host.querySelectorAll('button'),status=host.querySelector('[role=status]'),review=host.querySelector('.ocr-review'),preview=host.querySelector('img');
+ const extras=document.createElement('details');extras.className='vaccine-manual-entry';extras.hidden=true;
+ const extrasTitle=document.createElement('summary');extrasTitle.textContent='¿Falta alguna vacuna en la foto? Agrégala aquí';
+ const extrasDescription=document.createElement('p');extrasDescription.textContent='Elige una vacuna que puedas reconocer en la etiqueta. No hace falta tener un certificado.';
+ const historicalSelect=document.createElement('select');historicalSelect.setAttribute('aria-label','Vacuna reconocida en el carné');
+ const historicalDate=document.createElement('input');historicalDate.type='date';historicalDate.max=today();historicalDate.setAttribute('aria-label','Fecha de aplicación, si la conoces');
+ const extraButton=document.createElement('button');extraButton.type='button';extraButton.className='btn btn--secondary';extraButton.textContent='Agregar antecedente';
+ const extraMessage=document.createElement('p');extraMessage.setAttribute('role','status');extraMessage.setAttribute('aria-live','polite');
+ function refreshHistoricalOptions(){
+  historicalSelect.replaceChildren();
+  const none=document.createElement('option');none.value='';none.textContent='Selecciona una vacuna';historicalSelect.append(none);
+  historicalVaccines.filter(p=>p.species.includes(getSpecies())).forEach(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;historicalSelect.append(option);});
+ }
+ extraButton.addEventListener('click',()=>{
+  const chosen=historicalById(historicalSelect.value);
+  if(!chosen){extraMessage.textContent='Elige una vacuna de la lista.';return;}
+  if(!chosen.species.includes(getSpecies())){extraMessage.textContent='Esta vacuna no corresponde a la especie seleccionada.';return;}
+  const date=historicalDate.value&&historicalDate.value<=today()?historicalDate.value:null;
+  const issue=addPending({name:chosen.name,historicalId:chosen.id,date,label:chosen.riskHint,reason:date?'Vacuna histórica reconocida; revisar refuerzos':'Fecha pendiente de confirmar'},getSpecies());
+  extraMessage.textContent=issue||'✓ Antecedente agregado para orientar la revisión.';
+ });
+ extras.append(extrasTitle,extrasDescription,historicalSelect,historicalDate,extraButton,extraMessage);
+ review.after(extras);
+ refreshHistoricalOptions();
+
  const camera=document.createElement('input');camera.type='file';camera.accept='image/*';camera.setAttribute('capture','environment');camera.hidden=true;
  const choices=document.createElement('div');choices.className='vaccine-controls';
  const take=document.createElement('button'),choose=document.createElement('button');
@@ -20,7 +44,7 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
  privacy.textContent='La foto se envía a OpenAI para leerla y no se guarda en esta página. Evita incluir datos personales. Formatos JPG, PNG o WebP (máximo 20 MB).';
  let image='',version=0,controller;
  const node=(tag,text)=>{const n=document.createElement(tag);n.textContent=text;return n;};
- function reset(){version++;controller?.abort();image='';file.value='';camera.value='';preview.removeAttribute('src');preview.hidden=true;review.replaceChildren();status.textContent='';read.disabled=true;file.disabled=false;}
+ function reset(){version++;controller?.abort();extras.hidden=true;extras.open=false;extraMessage.textContent='';refreshHistoricalOptions();image='';file.value='';camera.value='';preview.removeAttribute('src');preview.hidden=true;review.replaceChildren();status.textContent='';read.disabled=true;file.disabled=false;}
  clear.addEventListener('click',reset);read.disabled=true;
  async function prepare(source){
   const selected=source.files[0];if(!selected)return;reset();const current=version;
@@ -44,6 +68,7 @@ export function setupCardReader({root,getSpecies,today,addDose,addPending}){
    const response=await fetch('/api/read-vaccine-card',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image}),signal:controller.signal});const data=await response.json();if(current!==version)return;if(!response.ok)throw new Error(data.error||'No pudimos leer la foto.');
    status.textContent=data.vaccines.length?'Revisa lo que se leyó del carné. Si un producto no está identificado, quedará pendiente sin afectar el cálculo.':'No encontramos vacunas legibles. Prueba otra foto o utiliza el ingreso manual.';
    if(data.warning)review.append(node('p',data.warning));
+   extras.hidden=false;
    for(const row of data.vaccines){
     const card=node('article','');card.className='vaccine-result ocr-simple-card';
     const heading=node('h4',row.name||'Vacuna por identificar');

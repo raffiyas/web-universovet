@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "build": "node --check script.js && node --check herramientas/calculadora-vacunas/app.mjs",
-    "test:clinical": "node tests/vaccineCalculator.test.mjs && node tests/vaccinePlan.test.mjs"
+    "build": "node --check script.js && node --check herramientas/calculadora-vacunas/app.mjs && node --check herramientas/calculadora-vacunas/resultExperience.mjs",
+    "test:clinical": "node tests/vaccineCalculator.test.mjs && node tests/vaccinePlan.test.mjs",
+    "test:experience": "node tests/vaccineExperience.test.mjs"
   },
   "devDependencies": {}
 }

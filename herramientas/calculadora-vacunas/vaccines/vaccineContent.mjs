@@ -1,14 +1,15 @@
 export const clinicalGuidelineVersion = "WSAVA 2024";
 export const vaccineLabels = {
     dog: [
-        { value: "puppy", text: "Vacuna de cachorro / Puppy" }, { value: "sextuple", text: "Séxtuple" },
-        { value: "octuple", text: "Óctuple" }, { value: "polyvalent", text: "Polivalente" },
-        { value: "leptospira", text: "Leptospira" }, { value: "kennel", text: "Tos de las perreras" },
-        { value: "rabies", text: "Rabia" }, { value: "other", text: "Otra / No sé" },
+        { value: "sextuple", text: "Séxtuple" }, { value: "octuple", text: "Óctuple" },
+        { value: "rabies", text: "Antirrábica" }, { value: "kennel", text: "KC (tos de las perreras)" },
+        { value: "puppy", text: "Puppy (vacuna de cachorro)" },
+        { value: "polyvalent", text: "Otra polivalente" }, { value: "leptospira", text: "Leptospira" },
+        { value: "other", text: "Otra / No sé" },
     ],
     cat: [
-        { value: "feline3", text: "Triple felina" }, { value: "feline4", text: "Cuádruple felina" },
-        { value: "felv", text: "Leucemia felina" }, { value: "rabies", text: "Rabia" },
+        { value: "feline3", text: "Triple felina" }, { value: "felv", text: "Leucemia felina" },
+        { value: "rabies", text: "Antirrábica" }, { value: "feline4", text: "Cuádruple felina" },
         { value: "other", text: "Otra / No sé" },
     ],
 };

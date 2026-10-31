@@ -44,7 +44,7 @@ export function setupCardReader({root,getSpecies,today,addDose}){
    for(const row of data.vaccines){
     const card=node('article','');card.className='vaccine-result ocr-simple-card';
     const heading=node('h4',row.name||'Vacuna por identificar');
-    const validDate=/^\\d{4}-\\d{2}-\\d{2}$/.test(row.date||'')&&row.date<=today();
+    const validDate=/^\d{4}-\d{2}-\d{2}$/.test(row.date||'')&&row.date<=today();
     const summary=node('p',validDate?'Fecha indicada: '+row.date.split('-').reverse().join('/'):'Fecha pendiente de revisión');
     card.append(heading,summary);
     const edit=document.createElement('div');edit.className='ocr-edit';edit.hidden=true;
@@ -71,12 +71,12 @@ export function setupCardReader({root,getSpecies,today,addDose}){
     }
     confirm.addEventListener('click',save);
     select.addEventListener('change',()=>{if(select.value!=='other')product.value='';});
-    product.addEventListener('change',()=>{if(product.value){const p=vaccineProducts.find(v=>v.id===product.value);const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[p?.group];if(group&&[...select.options].some(o=>o.value===group))select.value=group;}});
-    const normalized=String(row.name||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-    const match=vaccineProducts.find(p=>p.species.includes(species)&&p.name.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()===normalized);
+    product.addEventListener('change',()=>{if(product.value){const p=vaccineProducts.find(v=>v.id===product.value);const group={puppy:'puppy',polyvalent:'polyvalent',rabies:'rabies',bordetella:'kennel'}[p?.group];if(group&&[...select.options].some(o=>o.value===group))select.value=group;else if(species==='cat'&&p?.group==='feline-core')select.value='feline3';}});
+    const normalized=String(row.name||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+    const match=vaccineProducts.find(p=>p.species.includes(species)&&p.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()===normalized);
     if(match){product.value=match.id;product.dispatchEvent(new Event('change'));}
-    else if(/\\b(antirrabica|rabia|rabies)\\b/i.test(normalized))select.value='rabies';
-    else if(/\\b(triple felina|felina triple)\\b/i.test(normalized)&&species==='cat')select.value='core';
+    else if(/\b(antirrabica|rabia|rabies)\b/i.test(normalized))select.value='rabies';
+    else if(/\b(triple felina|felina triple)\b/i.test(normalized)&&species==='cat')select.value='feline3';
     if(row.note)edit.append(node('p',row.note));
     edit.append(label,productLabel,dateLabel);
     actions.append(confirm,correction);

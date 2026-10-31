@@ -152,6 +152,7 @@ function updateHistoryChoice(){
  input.history=history;
  root.querySelector('#memory-form').hidden=history!=='some';
  root.querySelector('#manual-entry').hidden=history!=='card';
+ const reader=root.querySelector('.card-reader-host');if(reader)reader.hidden=history!=='card';
  if(history!=='card')root.querySelector('#manual-entry').open=false;
  root.querySelector('#never-choice').hidden=value!=='unknown';
 }

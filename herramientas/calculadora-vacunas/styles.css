@@ -91,3 +91,30 @@
 .vaccine-calendar li, #follow-ups li { padding: 10px 0; border-bottom: 1px solid #d8e6eb; }
 .vaccine-calendar p, #follow-ups p { margin: 4px 0; }
 @media (max-width: 680px) { .vaccine-dose-summary { grid-template-columns: 1fr; } .vaccine-practical { padding: 16px; } }
+
+
+/* Simplified carnet history step: accessible, high-contrast choices */
+.history-choices legend{font-size:1.3rem;color:#1a3a4a;font-weight:800;line-height:1.3}
+.history-choices>p{color:#36545c;margin:12px 0 18px}
+.history-choice-grid{display:grid;gap:12px}
+.vaccine-page .history-choice{display:flex;align-items:center;gap:16px;padding:18px;border:2px solid #adcad0;border-radius:16px;background:#fff;cursor:pointer;min-height:76px;color:#1a3a4a}
+.history-choice:has(input:checked){border-color:#147d75;background:#eaf7f5;box-shadow:inset 0 0 0 1px #147d75}
+.history-choice input{width:21px;height:21px;accent-color:#147d75;flex:none}
+.history-choice-icon{font-size:1.7rem;line-height:1}
+.history-choice strong{display:block;font-size:1.04rem;line-height:1.35}
+.history-choice small{display:block;color:#385660;font-size:.91rem;line-height:1.45;margin-top:4px}
+.history-never{display:flex;align-items:center;gap:10px;padding:14px;border-radius:12px;background:#f1f6f7;color:#1a3a4a;font-weight:650}
+.history-never input{width:20px;height:20px;accent-color:#147d75}
+.vaccine-page .card-reader-host{background:#edf7f6;border-radius:18px;padding:20px;margin-top:8px}
+.card-reader-host>h3{font-size:1.3rem}
+.card-reader-host .vaccine-controls{margin-top:12px}
+.ocr-simple-card{background:#fff;border:2px solid #c5dfe0;border-radius:16px;padding:18px;margin-top:16px;color:#1a3a4a}
+.ocr-simple-card h4{font-size:1.08rem;margin:0 0 9px;color:#1a3a4a}
+.ocr-simple-card>p{color:#355660}
+.ocr-simple-card .ocr-edit{padding:14px;background:#f4f9f9;border-radius:12px;margin-top:12px}
+.ocr-simple-card .ocr-edit[hidden]{display:none}
+.vaccine-manual-entry{margin-top:18px}
+.vaccine-page .vaccine-manual-entry>summary{font-size:1rem;color:#145e58}
+.vaccine-page .btn--primary{background:#147d75;color:#fff}
+.vaccine-page .btn--secondary{color:#164f4b;background:#fff;border:2px solid #91bdb9}
+@media(max-width:600px){.history-choice{padding:14px!important;gap:10px!important}.vaccine-page .card-reader-host{padding:16px}.card-reader-host .vaccine-controls .btn,.ocr-simple-card .vaccine-controls .btn{width:100%}}

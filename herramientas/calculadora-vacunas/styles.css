@@ -26,8 +26,21 @@
 .vaccine-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .vaccine-dose-form { display: grid; gap: 14px; padding: 18px; background: var(--bg); border-radius: 18px; }
 .vaccine-dose-form p { margin: 0; }
+#dose-fields,#memory-fields { display:grid; gap:16px; }
+#dose-status:empty,#memory-status:empty { display:none; }
+#dose-status,#memory-status { color:#176158; font-weight:600; }
 .vaccine-doses { padding-left: 20px; }
 .vaccine-doses li { margin-bottom: 8px; }
+.vaccine-page .vaccine-doses { list-style:none; padding:0; margin:0; }
+.vaccine-doses li { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px; border:1px solid #d8e6eb; border-radius:12px; background:white; }
+.vaccine-doses small { color:#4c626b; }
+.vaccine-doses button { min-width:60px; min-height:44px; }
+.vaccine-dose-summary { align-items:start; }
+.vaccine-page .vaccine-dose-item details { border:0; border-top:1px solid #d8e6eb; border-radius:0; padding:12px 0 0; margin-bottom:0; }
+.vaccine-page .vaccine-dose-item h4 { margin-top:0; }
+.vaccine-calendar { padding-left:22px; }
+.vaccine-dose-form #add-dose { justify-self:start; }
+@media(max-width:900px) { .vaccine-dose-summary { grid-template-columns:1fr!important; } .vaccine-page .vaccine-dose-form { padding:16px; } }
 .vaccine-doses button { border: 0; background: transparent; color: #9f1239; text-decoration: underline; }
 .vaccine-alert { background: #fff7ed; border: 1px solid #fdba74; border-radius: 14px; padding: 12px 14px; color: #7c2d12; }
 .vaccine-controls, .vaccine-share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 24px; }
@@ -60,6 +73,15 @@
 }
 
 .vaccine-panel h2{scroll-margin-top:130px;}
+.vaccine-next-step { padding:24px; border-radius:20px; background:#eaf7fa; border:1px solid #c5e4e7; }
+.vaccine-next-step h3 { font-size:1.35rem; }
+.vaccine-next-step p { margin:12px 0; max-width:65ch; }
+.vaccine-next-step .hero__actions { margin-top:20px; }
+.vaccine-next-step.needs-health-review { background:#fff7ed; border-color:#fdba74; }
+.vaccine-next-step .vaccine-disclaimer { color:#4c626b; margin-bottom:0; }
+.vaccine-result-detail .vaccine-results { margin-top:18px; }
+.vaccine-result-detail #alerts { display:grid; gap:10px; margin-top:16px; }
+@media(max-width:680px) { .vaccine-next-step { padding:18px; } .vaccine-next-step .btn { width:100%; white-space:normal; } }
 .vaccine-practical { padding: 22px; border: 1px solid #b9cdd2; border-radius: 20px; background: var(--soft); }
 .vaccine-dose-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 18px 0; }
 .vaccine-dose-item { padding: 16px; border-radius: 14px; background: white; border: 1px solid #d8e6eb; }

@@ -1,0 +1,18 @@
+/* Home utility feature: accessible, responsive, no new JavaScript */
+.home-tools{padding:clamp(48px,7vw,88px) 0;background:#f4fafb}
+.home-tools__heading{max-width:760px;margin:0 0 28px}
+.home-tools__heading .section__description{max-width:62ch}
+.home-tool-card{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:clamp(18px,3vw,32px);align-items:center;padding:clamp(22px,4vw,36px);border:1px solid #c9e3e2;border-radius:26px;background:linear-gradient(115deg,#fff 10%,#eaf7f5 100%);box-shadow:0 15px 40px rgba(26,58,74,.07)}
+.home-tool-card__icon{width:68px;height:68px;border-radius:20px;display:grid;place-items:center;background:#d9f0ec;font-size:2rem}
+.home-tool-card__eyebrow{display:block;font-size:.86rem;letter-spacing:.025em;color:#146d66;font-weight:750;margin-bottom:9px}
+.home-tool-card h3{color:#1a3a4a;font-size:clamp(1.3rem,2.4vw,1.8rem);line-height:1.25;margin:0 0 12px}
+.home-tool-card p{font-size:1rem;line-height:1.55;color:#335561;margin:0}
+.home-tool-card .home-tool-card__note{font-size:.87rem;margin-top:12px;color:#45616b}
+.home-tool-card__action{display:flex;flex-direction:column;gap:11px;align-items:center;text-align:center;min-width:225px}
+.home-tool-card__link{background:#147d75;color:#fff;border-radius:999px;text-decoration:none;padding:15px 21px;font-weight:750;min-height:52px;display:inline-flex;align-items:center;justify-content:center;gap:14px;white-space:nowrap;box-shadow:0 10px 22px rgba(20,125,117,.15)}
+.home-tool-card__link:hover{background:#0d625c;transform:translateY(-1px)}
+.home-tool-card__link:focus-visible{outline:3px solid #3447b6;outline-offset:4px}
+.home-tool-card__action>span{font-size:.83rem;color:#3f5b61}
+@media(max-width:900px){.home-tool-card{grid-template-columns:60px minmax(0,1fr)}.home-tool-card__icon{width:60px;height:60px}.home-tool-card__action{grid-column:2;align-items:flex-start;min-width:0}}
+@media(max-width:600px){.home-tools{padding:48px 0}.home-tool-card{grid-template-columns:1fr;gap:16px;border-radius:20px}.home-tool-card__action{grid-column:1;align-items:stretch}.home-tool-card__link{width:100%}.home-tool-card__icon{width:58px;height:58px}.home-tool-card__content p{font-size:.97rem}}
+@media(prefers-reduced-motion:reduce){.home-tool-card__link{transition:none}.home-tool-card__link:hover{transform:none}}

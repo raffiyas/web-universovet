@@ -25,6 +25,8 @@
     <p>También usamos este número para enviar promociones de la clínica. Si prefieres dejar de recibirlas, basta con responder al mismo WhatsApp y decirnos que no quieres más promociones. Puedes seguir agendando y consultando por ese canal.</p>
     <h2>Dónde guardamos la información</h2>
     <p>Registramos la atención y sus documentos en Mascotiva, el sistema de gestión de la clínica. La base de datos utiliza Supabase y está alojada en Oregón, Estados Unidos. Las conversaciones por WhatsApp y los correos también pueden permanecer en sus respectivas plataformas.</p>
+    <h2>Estadísticas de navegación</h2>
+    <p>Si aceptas las estadísticas, Google Analytics usa cookies para medir visitas y páginas consultadas. Guardamos tu elección en este navegador. Puedes cambiarla al pie de la página.</p>
     <h2>Conservación</h2>
     <p>Cuando registramos el fallecimiento de tu mascota, conservamos su ficha clínica y los exámenes asociados durante cinco años desde la fecha de ese registro para poder responder consultas sobre la atención recibida. Al cumplirse el plazo, eliminamos o anonimizamos los datos personales asociados a esa ficha, salvo que exista un fundamento legal para conservarlos.</p>
     <p>Si desconocemos el estado de tu mascota, revisamos su ficha al cumplirse cinco años desde la última atención. Si ya no hay un motivo que justifique conservar los datos personales, los eliminamos o anonimizamos.</p>
@@ -32,6 +34,13 @@
     <h2>Cómo consultar o ejercer tus derechos</h2>
     <p>Escribe a <a href="mailto:universovetcoquimbo@gmail.com">universovetcoquimbo@gmail.com</a> para conocer los datos que tenemos sobre ti, pedir una corrección o solicitar su eliminación, oposición al uso, bloqueo o portabilidad, según corresponda. Indica qué gestión necesitas para que podamos responderte.</p>
     <p>A partir del 1 de diciembre de 2026, si denegamos tu solicitud de ejercicio de derechos o vence el plazo legal sin que recibas respuesta, puedes reclamar ante la Agencia de Protección de Datos Personales.</p>
-  </main>
+  <div style="text-align:center;padding:1rem"><button hidden type="button" data-preferencias>Preferencias de estadísticas</button></div>
+    </main>
+<aside id="estadisticas" hidden aria-label="Cookies de estadísticas" style="position:fixed;bottom:0;left:0;right:0;z-index:10000;padding:1rem;background:white;color:#18404d;border-top:2px solid #18404d;text-align:center;max-height:80vh;overflow:auto">
+      <p>¿Nos permites usar cookies de Google Analytics para medir visitas y páginas consultadas? Puedes cambiar tu elección al pie de la página. <a href="/privacidad.html">Política de privacidad</a></p>
+      <button type="button" data-valor="si" style="padding:.6rem">Aceptar estadísticas</button>
+      <button type="button" data-valor="no" style="padding:.6rem">Rechazar estadísticas</button>
+    </aside>
+    <script src="/estadisticas.js"></script>
 </body>
 </html>

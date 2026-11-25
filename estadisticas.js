@@ -33,14 +33,20 @@
   }
   manage.hidden = false;
   apply(choice);
-  manage.onclick = () => { panel.hidden = false; panel.querySelector('button').focus(); };
+  let openedFromPreferences = false;
+  manage.onclick = () => {
+    openedFromPreferences = true;
+    panel.hidden = false;
+    panel.querySelector('button').focus({ preventScroll: true });
+  };
   for (const button of panel.querySelectorAll('button')) {
     button.onclick = () => {
       const value = button.dataset.valor;
       try { localStorage.setItem(key, value); } catch {}
       const reload = value === 'no' && document.getElementById('ga-script');
       apply(value);
-      manage.focus();
+      if (openedFromPreferences) manage.focus({ preventScroll: true });
+      openedFromPreferences = false;
       if (reload) location.reload();
     };
   }

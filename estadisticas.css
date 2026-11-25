@@ -1,0 +1,36 @@
+#estadisticas {
+  position: fixed;
+  z-index: 10000;
+  left: max(1rem, env(safe-area-inset-left));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  width: min(31rem, calc(100% - 2rem));
+  box-sizing: border-box;
+  max-height: 75vh;
+  overflow: auto;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid #bbdede;
+  border-radius: 1.4rem;
+  background: linear-gradient(120deg, #effcfb, #fff 64%, #f6f1ff);
+  box-shadow: 0 8px 32px #18404d26;
+  color: #18404d;
+  font-family: inherit;
+}
+#estadisticas h2 { margin: 0 0 .35rem; font-weight: 700; font-family: inherit; font-size: 1.15rem; line-height: 1.3; }
+#estadisticas p { margin: 0 0 .85rem; font-size: .95rem; line-height: 1.45; color: #25414a; }
+#estadisticas a { color: #18404d; text-decoration: underline; }
+.estadisticas-acciones { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+#estadisticas button {
+  min-height: 44px;
+  border: 1px solid #89c9c5;
+  border-radius: 2rem;
+  background: #dcf6f3;
+  color: #18404d;
+  font: inherit;
+  font-size: .92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+#estadisticas button:hover { background: #bcebe6; }
+#estadisticas :focus-visible, [data-preferencias]:focus-visible { outline: 3px solid #6b35d8; outline-offset: 2px; }
+[data-preferencias] { font: inherit; color: inherit; background: transparent; border: 0; text-decoration: underline; cursor: pointer; }
+@media (max-width: 25rem) { #estadisticas { padding: 1rem; } }

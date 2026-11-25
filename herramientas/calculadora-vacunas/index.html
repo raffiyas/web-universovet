@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JEDGQPSB9F"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-JEDGQPSB9F');</script>
+    
     <title>Calculadora de Vacunas para Perros y Gatos | UniversoVet</title>
     <meta name="description" content="Descubre qué vacunas puede necesitar tu perro o gato según edad, historial y estilo de vida. Orientación basada en recomendaciones veterinarias actuales.">
     <link rel="canonical" href="https://www.universovet.cl/herramientas/calculadora-vacunas">
@@ -17,7 +16,7 @@
     <link rel="stylesheet" href="/motion-accessibility.css">
     <link rel="stylesheet" href="/herramientas/calculadora-vacunas/styles.css">
 </head>
-<body>
+<body data-ga>
     <div class="topbar">
         <div class="container topbar__content">
             <a href="tel:+56935677904" class="topbar__link">☎️ <span>+56 9 3567 7904</span></a>
@@ -143,8 +142,15 @@
             <div><h3>Enlaces</h3><a href="/#servicios" class="footer__link">Servicios</a><a href="/planes" class="footer__link">Universo Preventivo</a></div>
         </div>
         <div class="container footer__bottom">© <span id="current-year"></span> UniversoVet – Medicina Veterinaria. Todos los derechos reservados.</div>
+    <div style="text-align:center;padding:1rem"><a href="/privacidad.html" style="color:inherit">Política de privacidad</a> · <button hidden type="button" data-preferencias>Preferencias de estadísticas</button></div>
     </footer>
 
     <button class="scroll-top" id="scroll-top" aria-label="Volver arriba">↑</button>
     <a href="https://wa.me/56935677904" class="whatsapp-fab js-whatsapp-cta" id="whatsapp-fab" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">💬<span class="whatsapp-fab__tooltip">Agenda por WhatsApp</span></a>
-<script src="/script.js"></script><script type="module" src="/herramientas/calculadora-vacunas/app.mjs"></script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Las vacunas esenciales son anuales?", "acceptedAnswer": {"@type": "Answer", "text": "No necesariamente. Tras una serie adecuada, algunas vacunas virales esenciales pueden tener intervalos de al menos tres años, según producto y criterio veterinario."}}, {"@type": "Question", "name": "¿Puede vacunarse un gato FeLV positivo contra FeLV?", "acceptedAnswer": {"@type": "Answer", "text": "Los gatos FeLV positivos no obtienen beneficio de esa vacuna preventiva. Deben recibir evaluación y seguimiento veterinario."}}]}</script></body></html>
+<script src="/script.js"></script><script type="module" src="/herramientas/calculadora-vacunas/app.mjs"></script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Las vacunas esenciales son anuales?", "acceptedAnswer": {"@type": "Answer", "text": "No necesariamente. Tras una serie adecuada, algunas vacunas virales esenciales pueden tener intervalos de al menos tres años, según producto y criterio veterinario."}}, {"@type": "Question", "name": "¿Puede vacunarse un gato FeLV positivo contra FeLV?", "acceptedAnswer": {"@type": "Answer", "text": "Los gatos FeLV positivos no obtienen beneficio de esa vacuna preventiva. Deben recibir evaluación y seguimiento veterinario."}}]}</script><aside id="estadisticas" hidden aria-label="Cookies de estadísticas" style="position:fixed;bottom:0;left:0;right:0;z-index:10000;padding:1rem;background:white;color:#18404d;border-top:2px solid #18404d;text-align:center;max-height:80vh;overflow:auto">
+      <p>¿Nos permites usar cookies de Google Analytics para medir visitas y páginas consultadas? Puedes cambiar tu elección al pie de la página. <a href="/privacidad.html">Política de privacidad</a></p>
+      <button type="button" data-valor="si" style="padding:.6rem">Aceptar estadísticas</button>
+      <button type="button" data-valor="no" style="padding:.6rem">Rechazar estadísticas</button>
+    </aside>
+    <script src="/estadisticas.js"></script>
+</body></html>

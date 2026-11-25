@@ -10,6 +10,7 @@
     main h1, main h2 { margin: 1.5rem 0 .5rem; line-height: 1.2; }
     main a { color: #18404d; text-decoration: underline; overflow-wrap: anywhere; }
   </style>
+    <link rel="stylesheet" href="/estadisticas.css">
 </head>
 <body>
   <main>
@@ -36,10 +37,13 @@
     <p>A partir del 1 de diciembre de 2026, si denegamos tu solicitud de ejercicio de derechos o vence el plazo legal sin que recibas respuesta, puedes reclamar ante la Agencia de Protección de Datos Personales.</p>
   <div style="text-align:center;padding:1rem"><button hidden type="button" data-preferencias>Preferencias de estadísticas</button></div>
     </main>
-<aside id="estadisticas" hidden aria-label="Cookies de estadísticas" style="position:fixed;bottom:0;left:0;right:0;z-index:10000;padding:1rem;background:white;color:#18404d;border-top:2px solid #18404d;text-align:center;max-height:80vh;overflow:auto">
+<aside id="estadisticas" hidden aria-label="Cookies de estadísticas">
+      <h2>Cookies de estadísticas</h2>
       <p>¿Nos permites usar cookies de Google Analytics para medir visitas y páginas consultadas? Puedes cambiar tu elección al pie de la página. <a href="/privacidad.html">Política de privacidad</a></p>
-      <button type="button" data-valor="si" style="padding:.6rem">Aceptar estadísticas</button>
-      <button type="button" data-valor="no" style="padding:.6rem">Rechazar estadísticas</button>
+      <div class="estadisticas-acciones">
+        <button type="button" data-valor="si">Aceptar estadísticas</button>
+        <button type="button" data-valor="no">Rechazar estadísticas</button>
+      </div>
     </aside>
     <script src="/estadisticas.js"></script>
 </body>

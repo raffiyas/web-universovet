@@ -139,7 +139,27 @@
     let currentTopic = null;
     let subtopicParent = 'servicios';
     const checks = Array.from(root.querySelectorAll('[data-exam-price]'));
-    const formatCLP = value => '
+    const formatCLP = value => '$' + new Intl.NumberFormat('es-CL').format(value);
+    function updateQuote(event) {
+      // Los paquetes no se suman junto a sus componentes.
+      const groups = [[4,0,1],[5,0,2],[6,0,3]];
+      if (event?.target.checked) {
+        const id = Number(event.target.dataset.examId);
+        for (const [pack,...parts] of groups) {
+          if (id === pack) parts.forEach(i => { checks[i].checked = false; });
+          else if (parts.includes(id)) checks[pack].checked = false;
+        }
+        if (id >= 4 && id <= 6) [4,5,6].filter(i=>i!==id).forEach(i=>{ checks[i].checked=false; });
+      }
+      const subtotal = checks.filter(x=>x.checked).reduce((s,x)=>s+Number(x.dataset.examPrice),0);
+      const fee = subtotal ? 5000 : 0;
+      root.querySelector('#uv-exam-subtotal').textContent = formatCLP(subtotal);
+      root.querySelector('#uv-exam-fee').textContent = formatCLP(fee);
+      root.querySelector('#uv-exam-total').textContent = formatCLP(subtotal+fee);
+    }
+    checks.forEach(x=>x.addEventListener('change',updateQuote));
+    function showMenu() {
+      currentTopic = null;
       heading.textContent = '¿En qué te podemos ayudar?';
       lead.hidden = false;
       topics.hidden = false;
@@ -201,111 +221,6 @@
         showTopic(button.dataset.uvSubtopic);
       }
     });
-    topics.addEventListener('click', (event) => {
-      const button = event.target.closest('[data-uv-topic]');
-      if (button) showTopic(button.dataset.uvTopic);
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && !panel.hidden) {
-        event.preventDefault();
-        closeChat();
-      }
-    });
-
-    // La solicitud de consentimiento conserva prioridad. En pantallas estrechas
-    // desplazamos el chat por encima del aviso, sin mover el documento.
-    const cookieBanner = document.getElementById('estadisticas');
-    function updateCookieClearance() {
-      let clearance = 0;
-      if (cookieBanner && !cookieBanner.hidden && window.innerWidth <= 900) {
-        const rect = cookieBanner.getBoundingClientRect();
-        if (rect.height > 0) clearance = Math.ceil(window.innerHeight - rect.top) + 8;
-      }
-      root.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');
-    }
-    updateCookieClearance();
-    window.addEventListener('resize', updateCookieClearance, { passive: true });
-    if (cookieBanner && 'MutationObserver' in window) {
-      const observer = new MutationObserver(updateCookieClearance);
-      observer.observe(cookieBanner, { attributes: true, attributeFilter: ['hidden', 'style', 'class'] });
-    }
-
-    // Para inspección y QA sin exponer datos personales.
-    root.dataset.ready = 'true';
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initGuidedChat, { once: true });
-  } else {
-    initGuidedChat();
-  }
-})();
- + value.toLocaleString('es-CL');
-    function updateQuote(event) {
-      // Los paquetes no se suman junto a sus componentes.
-      const groups = [[4,0,1],[5,0,2],[6,0,3]];
-      if (event?.target.checked) {
-        const id = Number(event.target.dataset.examId);
-        for (const [pack,...parts] of groups) {
-          if (id === pack) parts.forEach(i => { checks[i].checked = false; });
-          else if (parts.includes(id)) checks[pack].checked = false;
-        }
-        if (id >= 4 && id <= 6) [4,5,6].filter(i=>i!==id).forEach(i=>{ checks[i].checked=false; });
-      }
-      const subtotal = checks.filter(x=>x.checked).reduce((s,x)=>s+Number(x.dataset.examPrice),0);
-      const fee = subtotal ? 5000 : 0;
-      root.querySelector('#uv-exam-subtotal').textContent = formatCLP(subtotal);
-      root.querySelector('#uv-exam-fee').textContent = formatCLP(fee);
-      root.querySelector('#uv-exam-total').textContent = formatCLP(subtotal+fee);
-    }
-    checks.forEach(x=>x.addEventListener('change',updateQuote));
-    function showMenu() {
-      currentTopic = null;
-      heading.textContent = '¿En qué te podemos ayudar?';
-      lead.hidden = false;
-      topics.hidden = false;
-      answers.hidden = true;
-      back.hidden = true;
-      root.querySelectorAll('[data-uv-answer]').forEach((item) => { item.hidden = true; });
-      root.querySelector('#uv-chat-content').scrollTop = 0;
-      heading.focus({ preventScroll: true });
-    }
-
-    function showTopic(topic) {
-      if (!Object.hasOwn(CHAT_TOPICS, topic)) return;
-      heading.textContent = CHAT_TOPICS[topic];
-      lead.hidden = true;
-      topics.hidden = true;
-      answers.hidden = false;
-      back.hidden = false;
-      root.querySelectorAll('[data-uv-answer]').forEach((item) => {
-        item.hidden = item.getAttribute('data-uv-answer') !== topic;
-      });
-      root.querySelector('#uv-chat-content').scrollTop = 0;
-      heading.focus({ preventScroll: true });
-    }
-
-    function closeChat() {
-      if (panel.hidden) return;
-      panel.hidden = true;
-      launcher.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('uv-chat-is-open');
-      launcher.focus({ preventScroll: true });
-    }
-
-    function openChat() {
-      panel.hidden = false;
-      launcher.setAttribute('aria-expanded', 'true');
-      document.body.classList.add('uv-chat-is-open');
-      showMenu();
-    }
-
-    launcher.addEventListener('click', () => {
-      if (panel.hidden) openChat();
-      else closeChat();
-    });
-    closeButton.addEventListener('click', closeChat);
-    back.addEventListener('click', showMenu);
     topics.addEventListener('click', (event) => {
       const button = event.target.closest('[data-uv-topic]');
       if (button) showTopic(button.dataset.uvTopic);

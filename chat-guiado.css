@@ -219,3 +219,15 @@
   .uv-chat__launcher { transition: none; }
   .uv-chat__launcher:hover { transform: none; }
 }
+
+.uv-chat__prices{margin:0;display:grid;gap:0;font-size:.88rem}
+.uv-chat__prices>div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #e1edf0}
+.uv-chat__prices dt{flex:1;min-width:0}.uv-chat__prices dd{margin:0;text-align:right;color:var(--primary,#18404d);font-weight:800;max-width:57%}
+.uv-chat__exam{min-width:0;border:1px solid #dcebf0;border-radius:14px;padding:8px 12px}
+.uv-chat__exam legend{font-weight:800;color:var(--primary,#18404d);padding:0 5px}
+.uv-chat__exam label{display:flex;align-items:center;gap:9px;min-height:48px;border-bottom:1px solid #e1edf0;cursor:pointer;font-weight:500}
+.uv-chat__exam label:last-child{border-bottom:0}.uv-chat__exam label span{flex:1}.uv-chat__exam label strong{white-space:nowrap;font-size:.85rem}
+.uv-chat__exam input{width:19px;height:19px;flex-shrink:0;accent-color:#18404d}.uv-chat__exam input:focus-visible{outline:3px solid #6b35d8;outline-offset:3px}
+.uv-chat__quote{display:grid;gap:6px;padding:14px;border-radius:14px;background:#edf8f7;color:#18404d}.uv-chat__quote p{display:flex;justify-content:space-between;gap:10px}.uv-chat__quote p:last-child{border-top:1px solid #a9d5d2;padding-top:8px;font-weight:800}
+.uv-chat__answer h3{font-size:1rem;color:var(--primary,#18404d)}
+.uv-chat__topics button[data-uv-subtopic] span:last-child{margin-left:auto;color:var(--purple,#6b35d8)}

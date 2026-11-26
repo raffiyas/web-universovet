@@ -80,7 +80,7 @@
 <div data-uv-answer="desparasitacion" hidden><dl class="uv-chat__prices"><div><dt>0–2,5 kg</dt><dd>$1.500</dd></div><div><dt>2,5–5 kg</dt><dd>$2.000</dd></div><div><dt>5–10 kg</dt><dd>$2.500</dd></div><div><dt>10–15 kg</dt><dd>$3.000</dd></div><div><dt>15–20 kg</dt><dd>$3.500</dd></div><div><dt>20–25 kg</dt><dd>$4.000</dd></div><div><dt>25–30 kg</dt><dd>$4.500</dd></div><div><dt>30–35 kg</dt><dd>Consultar</dd></div><div><dt>35–40 kg</dt><dd>$5.000</dd></div><div><dt>40–45 kg</dt><dd>$5.500</dd></div><div><dt>45–50 kg</dt><dd>$6.000</dd></div></dl><p>Consulta con recepción para confirmar el tramo y producto adecuado.</p></div>
 <div data-uv-answer="procedimientos" hidden><dl class="uv-chat__prices"><div><dt>Castración felina</dt><dd>Consultar</dd></div><div><dt>Limpieza dental</dt><dd>Consultar</dd></div><div><dt>Curaciones</dt><dd>Consultar</dd></div></dl></div>
 <div data-uv-answer="otros" hidden><dl class="uv-chat__prices"><div><dt>Implantación de microchip</dt><dd>$18.000</dd></div><div><dt>Certificado veterinario de viaje</dt><dd>$15.000</dd></div><div><dt>Programa Cachorro</dt><dd>Desde $95.000</dd></div><div><dt>Pet shop</dt><dd>Consultar</dd></div></dl><a class="uv-chat__text-link" href="/planes#programa-cachorro">Conocer el Programa Cachorro</a></div>
-<div data-uv-answer="examenes" hidden><p>Selecciona los exámenes sanguíneos indicados para tu mascota. Sumaremos una única toma de muestra de $5.000 si se realizan en la misma extracción.</p><fieldset class="uv-chat__exam"><legend>Exámenes sanguíneos</legend><label><input type="checkbox" data-exam-price="16990" data-exam-id="0"><span>Hemograma</span><strong>$16.990</strong></label><label><input type="checkbox" data-exam-price="26990" data-exam-id="1"><span>Perfil bioquímico</span><strong>$26.990</strong></label><label><input type="checkbox" data-exam-price="18990" data-exam-id="2"><span>Perfil renal</span><strong>$18.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="3"><span>Perfil hepático</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="34990" data-exam-id="4"><span>Hemograma + perfil bioquímico</span><strong>$34.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="5"><span>Hemograma + perfil renal</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="28990" data-exam-id="6"><span>Hemograma + perfil hepático</span><strong>$28.990</strong></label><label><input type="checkbox" data-exam-price="31690" data-exam-id="7"><span>Test rápido FeLV/FIV</span><strong>$31.690</strong></label></fieldset><div class="uv-chat__quote" aria-live="polite"><p>Exámenes: <strong id="uv-exam-subtotal">$0</strong></p><p>Toma de muestra: <strong id="uv-exam-fee">$0</strong></p><p>Total estimado: <strong id="uv-exam-total">$0</strong></p></div><p class="uv-chat__hint">Los paquetes ya incluyen sus exámenes: evita seleccionarlos junto a sus componentes. No incluye consulta veterinaria.</p><h3>Otros exámenes frecuentes</h3><dl class="uv-chat__prices"><div><dt>Análisis de orina y sedimento</dt><dd>$23.990</dd></div><div><dt>Coproparasitario</dt><dd>$26.990</dd></div><div><dt>Test rápido Giardia</dt><dd>$24.990</dd></div><div><dt>Test rápido parvovirus</dt><dd>$23.990</dd></div><div><dt>Test rápido distemper</dt><dd>$23.990</dd></div></dl><p>Para muestras de orina, fecales u otras, confirma el método de obtención y su eventual costo con recepción.</p></div>
+<div data-uv-answer="examenes" hidden><p>Selecciona los exámenes sanguíneos indicados para tu mascota. Sumaremos una única toma de muestra de $5.000 si se realizan en la misma extracción.</p><fieldset class="uv-chat__exam"><legend>Exámenes sanguíneos</legend><label><input type="checkbox" data-exam-price="16990" data-exam-id="0"><span>Hemograma</span><strong>$16.990</strong></label><label><input type="checkbox" data-exam-price="26990" data-exam-id="1"><span>Perfil bioquímico</span><strong>$26.990</strong></label><label><input type="checkbox" data-exam-price="18990" data-exam-id="2"><span>Perfil renal</span><strong>$18.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="3"><span>Perfil hepático</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="34990" data-exam-id="4"><span>Hemograma + perfil bioquímico</span><strong>$34.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="5"><span>Hemograma + perfil renal</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="28990" data-exam-id="6"><span>Hemograma + perfil hepático</span><strong>$28.990</strong></label><label><input type="checkbox" data-exam-price="31690" data-exam-id="7"><span>Test rápido FeLV/FIV</span><strong>$31.690</strong></label></fieldset><p class="uv-chat__hint">Los paquetes ya incluyen sus exámenes: evita seleccionarlos junto a sus componentes. No incluye consulta veterinaria.</p><h3>Otros exámenes frecuentes</h3><dl class="uv-chat__prices"><div><dt>Análisis de orina y sedimento</dt><dd>$23.990</dd></div><div><dt>Coproparasitario</dt><dd>$26.990</dd></div><div><dt>Test rápido Giardia</dt><dd>$24.990</dd></div><div><dt>Test rápido parvovirus</dt><dd>$23.990</dd></div><div><dt>Test rápido distemper</dt><dd>$23.990</dd></div></dl><p>Para muestras de orina, fecales u otras, confirma el método de obtención y su eventual costo con recepción.</p></div>
             <div data-uv-answer="vacunas" hidden>
               <p>Las vacunas ayudan a prevenir enfermedades. El esquema depende de la especie, edad, antecedentes y exposición de cada mascota.</p>
               <p>Nuestra calculadora gratuita te entrega una <strong>orientación inicial</strong>, pero no reemplaza la evaluación veterinaria.</p>
@@ -98,6 +98,7 @@
           </div>
         </div>
 
+        <div class="uv-chat__quote" aria-live="polite" id="uv-chat-quote" hidden><p>Exámenes: <strong id="uv-exam-subtotal">$0</strong></p><p>Toma de muestra: <strong id="uv-exam-fee">$0</strong></p><p>Total estimado: <strong id="uv-exam-total">$0</strong></p></div>
         <div class="uv-chat__footer">
           <button type="button" class="uv-chat__back" id="uv-chat-back" hidden>← Volver al menú</button>
           <a class="uv-chat__reception" id="uv-chat-reception" target="_blank" rel="noopener noreferrer">Hablar con recepción</a>
@@ -160,6 +161,7 @@
     checks.forEach(x=>x.addEventListener('change',updateQuote));
     function showMenu() {
       currentTopic = null;
+      root.querySelector('#uv-chat-quote').hidden = true;
       heading.textContent = '¿En qué te podemos ayudar?';
       lead.hidden = false;
       topics.hidden = false;
@@ -173,6 +175,7 @@
     function showTopic(topic) {
       if (!Object.hasOwn(CHAT_TOPICS, topic)) return;
       currentTopic = topic;
+      root.querySelector('#uv-chat-quote').hidden = topic !== 'examenes';
       back.textContent = ["consultas","tarifasVacunas","peluqueria","desparasitacion","procedimientos","otros","examenes"].includes(topic) ? '← Volver' : '← Volver al menú';
       heading.textContent = CHAT_TOPICS[topic];
       lead.hidden = true;
@@ -237,9 +240,16 @@
     const cookieBanner = document.getElementById('estadisticas');
     function updateCookieClearance() {
       let clearance = 0;
+      root.classList.remove('uv-chat-side-cookie');
       if (cookieBanner && !cookieBanner.hidden && window.innerWidth <= 900) {
         const rect = cookieBanner.getBoundingClientRect();
         if (rect.height > 0) clearance = Math.ceil(window.innerHeight - rect.top) + 8;
+        // En vistas muy bajas y suficientemente anchas, colocar el chat al lado del aviso.
+        if (window.innerWidth >= 700 && window.innerHeight <= 500 && window.innerWidth - rect.right >= 260) {
+          clearance = 0;
+          root.classList.add('uv-chat-side-cookie');
+          root.style.setProperty('--uv-chat-side-width', Math.floor(window.innerWidth - rect.right - 20) + 'px');
+        } else root.classList.remove('uv-chat-side-cookie');
       }
       root.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');
       document.body.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');

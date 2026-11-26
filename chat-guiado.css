@@ -231,3 +231,14 @@
 .uv-chat__quote{display:grid;gap:6px;padding:14px;border-radius:14px;background:#edf8f7;color:#18404d}.uv-chat__quote p{display:flex;justify-content:space-between;gap:10px}.uv-chat__quote p:last-child{border-top:1px solid #a9d5d2;padding-top:8px;font-weight:800}
 .uv-chat__answer h3{font-size:1rem;color:var(--primary,#18404d)}
 .uv-chat__topics button[data-uv-subtopic] span:last-child{margin-left:auto;color:var(--purple,#6b35d8)}
+
+/* Un único acceso de atención; conservar el WhatsApp anterior si el chat no inicia. */
+.uv-chat-ready .whatsapp-fab { display: none !important; }
+.uv-chat__launcher { bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--uv-chat-cookie-clearance)); }
+.uv-chat-ready .scroll-top { right: max(22px, env(safe-area-inset-right)); bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--uv-chat-cookie-clearance, 0px) + 64px); }
+.uv-chat__panel { height: min(600px, calc(100dvh - 32px - var(--uv-chat-cookie-clearance))); max-height: none; }
+.uv-chat__topics button[data-uv-subtopic] { min-height: 48px; padding-block: 9px; }
+.uv-chat__topics button[data-uv-subtopic] span:first-child { flex: 0 0 24px; text-align: center; }
+@media (max-width:620px) {
+ .uv-chat-ready .scroll-top { right: max(12px, env(safe-area-inset-right)); bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--uv-chat-cookie-clearance, 0px) + 60px); }
+}

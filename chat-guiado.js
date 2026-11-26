@@ -7,7 +7,14 @@
     horarios: 'Horarios y ubicación',
     servicios: 'Servicios y valores',
     vacunas: 'Vacunas',
-    agendar: 'Agendar por WhatsApp'
+    agendar: 'Agendar por WhatsApp',
+    consultas: 'Consultas veterinarias',
+    tarifasVacunas: 'Precios de vacunas',
+    peluqueria: 'Peluquería y baño',
+    desparasitacion: 'Desparasitación',
+    procedimientos: 'Procedimientos veterinarios',
+    otros: 'Otros servicios y planes',
+    examenes: 'Exámenes de laboratorio'
   };
 
   function initGuidedChat() {
@@ -66,14 +73,18 @@
               <p><strong>Lunes a viernes:</strong> 10:00 a 19:00.<br><strong>Sábados:</strong> 10:00 a 14:00.</p>
               <a class="uv-chat__text-link" id="uv-chat-map" href="https://maps.app.goo.gl/6cHy2EJCaqD38Wv9A" target="_blank" rel="noopener noreferrer">📍 Cómo llegar con Google Maps</a>
             </div>
-            <div data-uv-answer="servicios" hidden>
-              <p>En Universo Vet ofrecemos <strong>consultas veterinarias, vacunas, desparasitación, peluquería y baño, corte de uñas y pet shop</strong>.</p>
-              <p>En nuestra web está publicado el <strong>Programa Cachorro desde $95.000</strong>. Los valores individuales de los demás servicios se confirman por WhatsApp, según lo que necesite tu mascota.</p>
-              <a class="uv-chat__text-link" href="/planes#programa-cachorro">Conocer el Programa Cachorro</a>
-            </div>
+            <div data-uv-answer="servicios" hidden><p>¿Qué servicio necesita tu mascota?</p><div class="uv-chat__topics"><button type="button" data-uv-subtopic="consultas">Consultas veterinarias<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="tarifasVacunas">Precios de vacunas<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="peluqueria">Peluquería y baño<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="desparasitacion">Desparasitación<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="procedimientos">Procedimientos veterinarios<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="otros">Otros servicios y planes<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="examenes">Exámenes de laboratorio<span aria-hidden="true">›</span></button></div></div>
+<div data-uv-answer="consultas" hidden><dl class="uv-chat__prices"><div><dt>Consulta general</dt><dd>$15.000</dd></div><div><dt>Control veterinario</dt><dd>$10.000</dd></div><div><dt>Teleconsulta</dt><dd>$20.000</dd></div><div><dt>Cardiología o respiratoria</dt><dd>Consultar</dd></div></dl></div>
+<div data-uv-answer="tarifasVacunas" hidden><dl class="uv-chat__prices"><div><dt>Puppy DP</dt><dd>$22.500</dd></div><div><dt>Polivalente (séxtuple u óctuple)</dt><dd>$18.000</dd></div><div><dt>Tos de las perreras (KC)</dt><dd>$22.500</dd></div><div><dt>Antirrábica (perros y gatos)</dt><dd>$18.000</dd></div><div><dt>Triple felina</dt><dd>$20.000</dd></div><div><dt>Leucemia felina</dt><dd>$22.000</dd></div></dl><p>El médico veterinario determinará qué vacuna corresponde según edad, antecedentes y salud.</p></div>
+<div data-uv-answer="peluqueria" hidden><dl class="uv-chat__prices"><div><dt>Baño XS / S / M</dt><dd>$15.000 / $18.000 / $22.000</dd></div><div><dt>Baño G / XG / XXG</dt><dd>$25.000 / $30.000 / $35.000</dd></div><div><dt>Peluquería XS / S / M</dt><dd>$25.000 / $30.000 / $35.000</dd></div><div><dt>Peluquería G / XG / XXG</dt><dd>$40.000 / $45.000 / $50.000</dd></div><div><dt>Corte de uñas simple</dt><dd>$10.000</dd></div><div><dt>Corte de uñas complejo</dt><dd>$15.000</dd></div><div><dt>Corte de uñas en consulta</dt><dd>$5.000</dd></div></dl><p>El precio final depende del tamaño y las condiciones del pelaje.</p></div>
+<div data-uv-answer="desparasitacion" hidden><dl class="uv-chat__prices"><div><dt>0–2,5 kg</dt><dd>$1.500</dd></div><div><dt>2,5–5 kg</dt><dd>$2.000</dd></div><div><dt>5–10 kg</dt><dd>$2.500</dd></div><div><dt>10–15 kg</dt><dd>$3.000</dd></div><div><dt>15–20 kg</dt><dd>$3.500</dd></div><div><dt>20–25 kg</dt><dd>$4.000</dd></div><div><dt>25–30 kg</dt><dd>$4.500</dd></div><div><dt>30–35 kg</dt><dd>Consultar</dd></div><div><dt>35–40 kg</dt><dd>$5.000</dd></div><div><dt>40–45 kg</dt><dd>$5.500</dd></div><div><dt>45–50 kg</dt><dd>$6.000</dd></div></dl><p>Consulta con recepción para confirmar el tramo y producto adecuado.</p></div>
+<div data-uv-answer="procedimientos" hidden><dl class="uv-chat__prices"><div><dt>Castración felina</dt><dd>Consultar</dd></div><div><dt>Limpieza dental</dt><dd>Consultar</dd></div><div><dt>Curaciones</dt><dd>Consultar</dd></div></dl></div>
+<div data-uv-answer="otros" hidden><dl class="uv-chat__prices"><div><dt>Implantación de microchip</dt><dd>$18.000</dd></div><div><dt>Certificado veterinario de viaje</dt><dd>$15.000</dd></div><div><dt>Programa Cachorro</dt><dd>Desde $95.000</dd></div><div><dt>Pet shop</dt><dd>Consultar</dd></div></dl><a class="uv-chat__text-link" href="/planes#programa-cachorro">Conocer el Programa Cachorro</a></div>
+<div data-uv-answer="examenes" hidden><p>Selecciona los exámenes sanguíneos indicados para tu mascota. Sumaremos una única toma de muestra de $5.000 si se realizan en la misma extracción.</p><fieldset class="uv-chat__exam"><legend>Exámenes sanguíneos</legend><label><input type="checkbox" data-exam-price="16990" data-exam-id="0"><span>Hemograma</span><strong>$16.990</strong></label><label><input type="checkbox" data-exam-price="26990" data-exam-id="1"><span>Perfil bioquímico</span><strong>$26.990</strong></label><label><input type="checkbox" data-exam-price="18990" data-exam-id="2"><span>Perfil renal</span><strong>$18.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="3"><span>Perfil hepático</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="34990" data-exam-id="4"><span>Hemograma + perfil bioquímico</span><strong>$34.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="5"><span>Hemograma + perfil renal</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="28990" data-exam-id="6"><span>Hemograma + perfil hepático</span><strong>$28.990</strong></label><label><input type="checkbox" data-exam-price="31690" data-exam-id="7"><span>Test rápido FeLV/FIV</span><strong>$31.690</strong></label></fieldset><div class="uv-chat__quote" aria-live="polite"><p>Exámenes: <strong id="uv-exam-subtotal">$0</strong></p><p>Toma de muestra: <strong id="uv-exam-fee">$0</strong></p><p>Total estimado: <strong id="uv-exam-total">$0</strong></p></div><p class="uv-chat__hint">Los paquetes ya incluyen sus exámenes: evita seleccionarlos junto a sus componentes. No incluye consulta veterinaria.</p><h3>Otros exámenes frecuentes</h3><dl class="uv-chat__prices"><div><dt>Análisis de orina y sedimento</dt><dd>$23.990</dd></div><div><dt>Coproparasitario</dt><dd>$26.990</dd></div><div><dt>Test rápido Giardia</dt><dd>$24.990</dd></div><div><dt>Test rápido parvovirus</dt><dd>$23.990</dd></div><div><dt>Test rápido distemper</dt><dd>$23.990</dd></div></dl><p>Para muestras de orina, fecales u otras, confirma el método de obtención y su eventual costo con recepción.</p></div>
             <div data-uv-answer="vacunas" hidden>
               <p>Las vacunas ayudan a prevenir enfermedades. El esquema depende de la especie, edad, antecedentes y exposición de cada mascota.</p>
               <p>Nuestra calculadora gratuita te entrega una <strong>orientación inicial</strong>, pero no reemplaza la evaluación veterinaria.</p>
+              <button type="button" class="uv-chat__back" data-uv-subtopic="tarifasVacunas">Consultar precios de vacunas</button>
               <a class="uv-chat__text-link" href="/herramientas/calculadora-vacunas">Abrir calculadora de vacunas</a>
               <p>¿Tienes dudas sobre vacunas específicas o tu mascota presenta síntomas? Mejor conversemos directamente con recepción para coordinar su evaluación.</p>
             </div>
@@ -125,7 +136,131 @@
     });
     updateBookingLink();
 
+    let currentTopic = null;
+    let subtopicParent = 'servicios';
+    const checks = Array.from(root.querySelectorAll('[data-exam-price]'));
+    const formatCLP = value => '
+      heading.textContent = '¿En qué te podemos ayudar?';
+      lead.hidden = false;
+      topics.hidden = false;
+      answers.hidden = true;
+      back.hidden = true;
+      root.querySelectorAll('[data-uv-answer]').forEach((item) => { item.hidden = true; });
+      root.querySelector('#uv-chat-content').scrollTop = 0;
+      heading.focus({ preventScroll: true });
+    }
+
+    function showTopic(topic) {
+      if (!Object.hasOwn(CHAT_TOPICS, topic)) return;
+      currentTopic = topic;
+      back.textContent = ["consultas","tarifasVacunas","peluqueria","desparasitacion","procedimientos","otros","examenes"].includes(topic) ? '← Volver' : '← Volver al menú';
+      heading.textContent = CHAT_TOPICS[topic];
+      lead.hidden = true;
+      topics.hidden = true;
+      answers.hidden = false;
+      back.hidden = false;
+      root.querySelectorAll('[data-uv-answer]').forEach((item) => {
+        item.hidden = item.getAttribute('data-uv-answer') !== topic;
+      });
+      root.querySelector('#uv-chat-content').scrollTop = 0;
+      heading.focus({ preventScroll: true });
+    }
+
+    function closeChat() {
+      if (panel.hidden) return;
+      checks.forEach(x=>{ x.checked=false; });
+      updateQuote();
+      message.value = DEFAULT_MESSAGE;
+      updateBookingLink();
+      panel.hidden = true;
+      launcher.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('uv-chat-is-open');
+      launcher.focus({ preventScroll: true });
+    }
+
+    function openChat() {
+      panel.hidden = false;
+      launcher.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('uv-chat-is-open');
+      showMenu();
+    }
+
+    launcher.addEventListener('click', () => {
+      if (panel.hidden) openChat();
+      else closeChat();
+    });
+    closeButton.addEventListener('click', closeChat);
+    back.addEventListener('click', () => {
+      if (["consultas","tarifasVacunas","peluqueria","desparasitacion","procedimientos","otros","examenes"].includes(currentTopic)) showTopic(subtopicParent);
+      else showMenu();
+    });
+    answers.addEventListener('click', event => {
+      const button = event.target.closest('[data-uv-subtopic]');
+      if (button) {
+        subtopicParent = currentTopic === 'vacunas' ? 'vacunas' : 'servicios';
+        showTopic(button.dataset.uvSubtopic);
+      }
+    });
+    topics.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-uv-topic]');
+      if (button) showTopic(button.dataset.uvTopic);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) {
+        event.preventDefault();
+        closeChat();
+      }
+    });
+
+    // La solicitud de consentimiento conserva prioridad. En pantallas estrechas
+    // desplazamos el chat por encima del aviso, sin mover el documento.
+    const cookieBanner = document.getElementById('estadisticas');
+    function updateCookieClearance() {
+      let clearance = 0;
+      if (cookieBanner && !cookieBanner.hidden && window.innerWidth <= 900) {
+        const rect = cookieBanner.getBoundingClientRect();
+        if (rect.height > 0) clearance = Math.ceil(window.innerHeight - rect.top) + 8;
+      }
+      root.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');
+    }
+    updateCookieClearance();
+    window.addEventListener('resize', updateCookieClearance, { passive: true });
+    if (cookieBanner && 'MutationObserver' in window) {
+      const observer = new MutationObserver(updateCookieClearance);
+      observer.observe(cookieBanner, { attributes: true, attributeFilter: ['hidden', 'style', 'class'] });
+    }
+
+    // Para inspección y QA sin exponer datos personales.
+    root.dataset.ready = 'true';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGuidedChat, { once: true });
+  } else {
+    initGuidedChat();
+  }
+})();
+ + value.toLocaleString('es-CL');
+    function updateQuote(event) {
+      // Los paquetes no se suman junto a sus componentes.
+      const groups = [[4,0,1],[5,0,2],[6,0,3]];
+      if (event?.target.checked) {
+        const id = Number(event.target.dataset.examId);
+        for (const [pack,...parts] of groups) {
+          if (id === pack) parts.forEach(i => { checks[i].checked = false; });
+          else if (parts.includes(id)) checks[pack].checked = false;
+        }
+        if (id >= 4 && id <= 6) [4,5,6].filter(i=>i!==id).forEach(i=>{ checks[i].checked=false; });
+      }
+      const subtotal = checks.filter(x=>x.checked).reduce((s,x)=>s+Number(x.dataset.examPrice),0);
+      const fee = subtotal ? 5000 : 0;
+      root.querySelector('#uv-exam-subtotal').textContent = formatCLP(subtotal);
+      root.querySelector('#uv-exam-fee').textContent = formatCLP(fee);
+      root.querySelector('#uv-exam-total').textContent = formatCLP(subtotal+fee);
+    }
+    checks.forEach(x=>x.addEventListener('change',updateQuote));
     function showMenu() {
+      currentTopic = null;
       heading.textContent = '¿En qué te podemos ayudar?';
       lead.hidden = false;
       topics.hidden = false;

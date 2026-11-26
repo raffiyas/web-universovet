@@ -80,7 +80,7 @@
 <div data-uv-answer="desparasitacion" hidden><dl class="uv-chat__prices"><div><dt>0–2,5 kg</dt><dd>$1.500</dd></div><div><dt>2,5–5 kg</dt><dd>$2.000</dd></div><div><dt>5–10 kg</dt><dd>$2.500</dd></div><div><dt>10–15 kg</dt><dd>$3.000</dd></div><div><dt>15–20 kg</dt><dd>$3.500</dd></div><div><dt>20–25 kg</dt><dd>$4.000</dd></div><div><dt>25–30 kg</dt><dd>$4.500</dd></div><div><dt>30–35 kg</dt><dd>Consultar</dd></div><div><dt>35–40 kg</dt><dd>$5.000</dd></div><div><dt>40–45 kg</dt><dd>$5.500</dd></div><div><dt>45–50 kg</dt><dd>$6.000</dd></div></dl><p>Consulta con recepción para confirmar el tramo y producto adecuado.</p></div>
 <div data-uv-answer="procedimientos" hidden><dl class="uv-chat__prices"><div><dt>Castración felina</dt><dd>Consultar</dd></div><div><dt>Limpieza dental</dt><dd>Consultar</dd></div><div><dt>Curaciones</dt><dd>Consultar</dd></div></dl></div>
 <div data-uv-answer="otros" hidden><dl class="uv-chat__prices"><div><dt>Implantación de microchip</dt><dd>$18.000</dd></div><div><dt>Certificado veterinario de viaje</dt><dd>$15.000</dd></div><div><dt>Programa Cachorro</dt><dd>Desde $95.000</dd></div><div><dt>Pet shop</dt><dd>Consultar</dd></div></dl><a class="uv-chat__text-link" href="/planes#programa-cachorro">Conocer el Programa Cachorro</a></div>
-<div data-uv-answer="examenes" hidden><p>Selecciona los exámenes sanguíneos indicados para tu mascota. Sumaremos una única toma de muestra de $5.000 si se realizan en la misma extracción.</p><fieldset class="uv-chat__exam"><legend>Exámenes sanguíneos</legend><label><input type="checkbox" data-exam-price="16990" data-exam-id="0"><span>Hemograma</span><strong>$16.990</strong></label><label><input type="checkbox" data-exam-price="26990" data-exam-id="1"><span>Perfil bioquímico</span><strong>$26.990</strong></label><label><input type="checkbox" data-exam-price="18990" data-exam-id="2"><span>Perfil renal</span><strong>$18.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="3"><span>Perfil hepático</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="34990" data-exam-id="4"><span>Hemograma + perfil bioquímico</span><strong>$34.990</strong></label><label><input type="checkbox" data-exam-price="24990" data-exam-id="5"><span>Hemograma + perfil renal</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-price="28990" data-exam-id="6"><span>Hemograma + perfil hepático</span><strong>$28.990</strong></label><label><input type="checkbox" data-exam-price="31690" data-exam-id="7"><span>Test rápido FeLV/FIV</span><strong>$31.690</strong></label></fieldset><p class="uv-chat__hint">Los paquetes ya incluyen sus exámenes: evita seleccionarlos junto a sus componentes. No incluye consulta veterinaria.</p><h3>Otros exámenes frecuentes</h3><dl class="uv-chat__prices"><div><dt>Análisis de orina y sedimento</dt><dd>$23.990</dd></div><div><dt>Coproparasitario</dt><dd>$26.990</dd></div><div><dt>Test rápido Giardia</dt><dd>$24.990</dd></div><div><dt>Test rápido parvovirus</dt><dd>$23.990</dd></div><div><dt>Test rápido distemper</dt><dd>$23.990</dd></div></dl><p>Para muestras de orina, fecales u otras, confirma el método de obtención y su eventual costo con recepción.</p></div>
+<div data-uv-answer="examenes" hidden><p>Selecciona los exámenes sanguíneos indicados para tu mascota. Sumaremos una única toma de muestra de $5.000 si se realizan en la misma extracción.</p><div class="uv-exam-tabs" role="group" aria-label="Tipos de examen"><button type="button" data-exam-tab="individual" aria-pressed="true">Individuales</button><button type="button" data-exam-tab="packs" aria-pressed="false">Packs</button><button type="button" data-exam-tab="otros" aria-pressed="false">Otros</button></div><fieldset class="uv-chat__exam" data-exam-view="individual"><legend>Exámenes sanguíneos individuales</legend><label><input type="checkbox" data-exam-id="h" data-exam-price="16990" data-components="h"><span>Hemograma</span><strong>$16.990</strong></label><label><input type="checkbox" data-exam-id="b" data-exam-price="26990" data-components="b"><span>Perfil bioquímico</span><strong>$26.990</strong></label><label><input type="checkbox" data-exam-id="r" data-exam-price="18990" data-components="r"><span>Perfil renal</span><strong>$18.990</strong></label><label><input type="checkbox" data-exam-id="l" data-exam-price="24990" data-components="l"><span>Perfil hepático</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-id="c" data-exam-price="23990" data-components="c"><span>Coagulación (TP y TTPA)</span><strong>$23.990</strong></label><label><input type="checkbox" data-exam-id="f" data-exam-price="31690" data-components="f"><span>Test rápido FeLV/FIV</span><strong>$31.690</strong></label><label><input type="checkbox" data-exam-id="s" data-exam-price="41650" data-components="s"><span>SDMA</span><strong>$41.650</strong></label><label><input type="checkbox" data-exam-id="t" data-exam-price="28390" data-components="t"><span>T4 total</span><strong>$28.390</strong></label></fieldset><fieldset class="uv-chat__exam" data-exam-view="packs" hidden><legend>Packs analíticos</legend><label><input type="checkbox" data-exam-id="hb" data-exam-price="34990" data-components="h,b"><span>Hemograma + perfil bioquímico</span><strong>$34.990</strong></label><label><input type="checkbox" data-exam-id="hbe" data-exam-price="44990" data-components="h,b,e"><span>Hemograma + perfil bioquímico + electrolitos</span><strong>$44.990</strong></label><label><input type="checkbox" data-exam-id="hbec" data-exam-price="49990" data-components="h,b,e,c"><span>Hemograma + perfil bioquímico + electrolitos + coagulación</span><strong>$49.990</strong></label><label><input type="checkbox" data-exam-id="hbc" data-exam-price="44990" data-components="h,b,c"><span>Hemograma + perfil bioquímico + coagulación</span><strong>$44.990</strong></label><label><input type="checkbox" data-exam-id="hl" data-exam-price="28990" data-components="h,l"><span>Hemograma + perfil hepático</span><strong>$28.990</strong></label><label><input type="checkbox" data-exam-id="hr" data-exam-price="24990" data-components="h,r"><span>Hemograma + perfil renal</span><strong>$24.990</strong></label><label><input type="checkbox" data-exam-id="be" data-exam-price="41650" data-components="b,e"><span>Perfil bioquímico + electrolitos</span><strong>$41.650</strong></label><label><input type="checkbox" data-exam-id="hc" data-exam-price="24990" data-components="h,c"><span>Hemograma + coagulación</span><strong>$24.990</strong></label></fieldset><p class="uv-chat__hint">Si eliges un pack que comparte exámenes con otra selección, se reemplazará la selección que se superpone. No incluye consulta veterinaria. Los exámenes de la pestaña Otros se cotizan por separado.</p><div data-exam-view="otros" hidden><h3>Otros exámenes frecuentes</h3><dl class="uv-chat__prices"><div><dt>Análisis de orina y sedimento</dt><dd>$23.990</dd></div><div><dt>Coproparasitario</dt><dd>$26.990</dd></div><div><dt>Test rápido Giardia</dt><dd>$24.990</dd></div><div><dt>Test rápido parvovirus</dt><dd>$23.990</dd></div><div><dt>Test rápido distemper</dt><dd>$23.990</dd></div></dl><p>Para muestras de orina, fecales u otras, confirma el método de obtención y su eventual costo con recepción.</p></div></div>
             <div data-uv-answer="vacunas" hidden>
               <p>Las vacunas ayudan a prevenir enfermedades. El esquema depende de la especie, edad, antecedentes y exposición de cada mascota.</p>
               <p>Nuestra calculadora gratuita te entrega una <strong>orientación inicial</strong>, pero no reemplaza la evaluación veterinaria.</p>
@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <div class="uv-chat__quote" aria-live="polite" id="uv-chat-quote" hidden><p>Exámenes: <strong id="uv-exam-subtotal">$0</strong></p><p>Toma de muestra: <strong id="uv-exam-fee">$0</strong></p><p>Total estimado: <strong id="uv-exam-total">$0</strong></p></div>
+        <div class="uv-chat__quote" aria-live="polite" id="uv-chat-quote" hidden><p>Exámenes: <strong id="uv-exam-subtotal">$0</strong></p><p>Toma de muestra: <strong id="uv-exam-fee">$0</strong></p><p>Total estimado: <strong id="uv-exam-total">$0</strong></p><button type="button" id="uv-exam-saving" class="uv-exam-saving" hidden></button></div>
         <div class="uv-chat__footer">
           <button type="button" class="uv-chat__back" id="uv-chat-back" hidden>← Volver al menú</button>
           <a class="uv-chat__reception" id="uv-chat-reception" target="_blank" rel="noopener noreferrer">Hablar con recepción</a>
@@ -141,24 +141,50 @@
     let subtopicParent = 'servicios';
     const checks = Array.from(root.querySelectorAll('[data-exam-price]'));
     const formatCLP = value => '$' + new Intl.NumberFormat('es-CL').format(value);
+    const savingButton = root.querySelector('#uv-exam-saving');
+    const components = item => item.dataset.components.split(',');
+    const selected = () => checks.filter(item => item.checked);
+    const cost = item => Number(item.dataset.examPrice);
+    let suggestedPack = null;
+    let suggestedItems = [];
     function updateQuote(event) {
-      // Los paquetes no se suman junto a sus componentes.
-      const groups = [[4,0,1],[5,0,2],[6,0,3]];
       if (event?.target.checked) {
-        const id = Number(event.target.dataset.examId);
-        for (const [pack,...parts] of groups) {
-          if (id === pack) parts.forEach(i => { checks[i].checked = false; });
-          else if (parts.includes(id)) checks[pack].checked = false;
-        }
-        if (id >= 4 && id <= 6) [4,5,6].filter(i=>i!==id).forEach(i=>{ checks[i].checked=false; });
+        const item = event.target;
+        const parts = components(item);
+        selected().filter(other => other !== item && components(other).some(part => parts.includes(part))).forEach(other => { other.checked = false; });
       }
-      const subtotal = checks.filter(x=>x.checked).reduce((s,x)=>s+Number(x.dataset.examPrice),0);
+      const chosen = selected();
+      const subtotal = chosen.reduce((sum,item) => sum + cost(item), 0);
       const fee = subtotal ? 5000 : 0;
       root.querySelector('#uv-exam-subtotal').textContent = formatCLP(subtotal);
       root.querySelector('#uv-exam-fee').textContent = formatCLP(fee);
       root.querySelector('#uv-exam-total').textContent = formatCLP(subtotal+fee);
+      suggestedPack = null;
+      suggestedItems = [];
+      let bestSaving = 0;
+      for (const pack of checks.filter(item => components(item).length > 1 && !item.checked)) {
+        const parts = components(pack);
+        const matches = chosen.filter(item => components(item).every(part => parts.includes(part)));
+        const covered = new Set(matches.flatMap(components));
+        if (matches.length < 2 || !parts.every(part => covered.has(part))) continue;
+        const savings = matches.reduce((sum,item) => sum + cost(item),0) - cost(pack);
+        if (savings > bestSaving) { bestSaving = savings; suggestedPack = pack; suggestedItems = matches; }
+      }
+      savingButton.hidden = !suggestedPack;
+      savingButton.textContent = suggestedPack ? 'Usar pack y ahorrar ' + formatCLP(bestSaving) : '';
     }
-    checks.forEach(x=>x.addEventListener('change',updateQuote));
+    checks.forEach(item => item.addEventListener('change',updateQuote));
+    savingButton.addEventListener('click', () => {
+      if (!suggestedPack) return;
+      suggestedItems.forEach(item => { item.checked = false; });
+      suggestedPack.checked = true;
+      updateQuote();
+      root.querySelector('[data-exam-tab="packs"]').click();
+    });
+    root.querySelectorAll('[data-exam-tab]').forEach(button => button.addEventListener('click', () => {
+      root.querySelectorAll('[data-exam-tab]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      root.querySelectorAll('[data-exam-view]').forEach(view => { view.hidden = view.dataset.examView !== button.dataset.examTab; });
+    }));
     function showMenu() {
       currentTopic = null;
       root.querySelector('#uv-chat-quote').hidden = true;

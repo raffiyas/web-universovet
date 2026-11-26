@@ -73,7 +73,7 @@
               <p><strong>Lunes a viernes:</strong> 10:00 a 19:00.<br><strong>Sábados:</strong> 10:00 a 14:00.</p>
               <a class="uv-chat__text-link" id="uv-chat-map" href="https://maps.app.goo.gl/6cHy2EJCaqD38Wv9A" target="_blank" rel="noopener noreferrer">📍 Cómo llegar con Google Maps</a>
             </div>
-            <div data-uv-answer="servicios" hidden><p>¿Qué servicio necesita tu mascota?</p><div class="uv-chat__topics"><button type="button" data-uv-subtopic="consultas">Consultas veterinarias<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="tarifasVacunas">Precios de vacunas<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="peluqueria">Peluquería y baño<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="desparasitacion">Desparasitación<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="procedimientos">Procedimientos veterinarios<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="otros">Otros servicios y planes<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="examenes">Exámenes de laboratorio<span aria-hidden="true">›</span></button></div></div>
+            <div data-uv-answer="servicios" hidden><p>¿Qué servicio necesita tu mascota?</p><div class="uv-chat__topics"><button type="button" data-uv-subtopic="consultas"><span aria-hidden="true">🩺</span>Consultas veterinarias<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="tarifasVacunas"><span aria-hidden="true">💉</span>Precios de vacunas<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="peluqueria"><span aria-hidden="true">✂️</span>Peluquería y baño<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="desparasitacion"><span aria-hidden="true">🛡️</span>Desparasitación<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="procedimientos"><span aria-hidden="true">📋</span>Procedimientos veterinarios<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="otros"><span aria-hidden="true">🐾</span>Otros servicios y planes<span aria-hidden="true">›</span></button><button type="button" data-uv-subtopic="examenes"><span aria-hidden="true">🔬</span>Exámenes de laboratorio<span aria-hidden="true">›</span></button></div></div>
 <div data-uv-answer="consultas" hidden><dl class="uv-chat__prices"><div><dt>Consulta general</dt><dd>$15.000</dd></div><div><dt>Control veterinario</dt><dd>$10.000</dd></div><div><dt>Teleconsulta</dt><dd>$20.000</dd></div><div><dt>Cardiología o respiratoria</dt><dd>Consultar</dd></div></dl></div>
 <div data-uv-answer="tarifasVacunas" hidden><dl class="uv-chat__prices"><div><dt>Puppy DP</dt><dd>$22.500</dd></div><div><dt>Polivalente (séxtuple u óctuple)</dt><dd>$18.000</dd></div><div><dt>Tos de las perreras (KC)</dt><dd>$22.500</dd></div><div><dt>Antirrábica (perros y gatos)</dt><dd>$18.000</dd></div><div><dt>Triple felina</dt><dd>$20.000</dd></div><div><dt>Leucemia felina</dt><dd>$22.000</dd></div></dl><p>El médico veterinario determinará qué vacuna corresponde según edad, antecedentes y salud.</p></div>
 <div data-uv-answer="peluqueria" hidden><dl class="uv-chat__prices"><div><dt>Baño XS / S / M</dt><dd>$15.000 / $18.000 / $22.000</dd></div><div><dt>Baño G / XG / XXG</dt><dd>$25.000 / $30.000 / $35.000</dd></div><div><dt>Peluquería XS / S / M</dt><dd>$25.000 / $30.000 / $35.000</dd></div><div><dt>Peluquería G / XG / XXG</dt><dd>$40.000 / $45.000 / $50.000</dd></div><div><dt>Corte de uñas simple</dt><dd>$10.000</dd></div><div><dt>Corte de uñas complejo</dt><dd>$15.000</dd></div><div><dt>Corte de uñas en consulta</dt><dd>$5.000</dd></div></dl><p>El precio final depende del tamaño y las condiciones del pelaje.</p></div>
@@ -242,6 +242,7 @@
         if (rect.height > 0) clearance = Math.ceil(window.innerHeight - rect.top) + 8;
       }
       root.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');
+      document.body.style.setProperty('--uv-chat-cookie-clearance', clearance + 'px');
     }
     updateCookieClearance();
     window.addEventListener('resize', updateCookieClearance, { passive: true });
@@ -252,6 +253,7 @@
 
     // Para inspección y QA sin exponer datos personales.
     root.dataset.ready = 'true';
+    document.body.classList.add('uv-chat-ready');
   }
 
   if (document.readyState === 'loading') {
